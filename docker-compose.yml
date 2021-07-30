@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  keystone:
+    container_name: keystone
+    image: node:14-alpine
+
+    command: sh -c "yarn install && yarn dev"
+
+    ports:
+      - 3000:3000
+
+    working_dir: /app
+
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
+
+    environment:
+      - DATABASE_URL=postgres://keystone:keystonepw@postgres:5432/ussf_portal_cms
+
+    links:
+      - postgres
+
+  postgres:
+    image: 'postgres:latest'
+
+    container_name: 'postgres'
+
+    ports:
+      - 5432:5432
+
+    environment:
+      POSTGRES_USER: keystone
+      POSTGRES_PASSWORD: keystonepw
+      POSTGRES_DB: ussf_portal_cms
+
+    volumes:
+      - portal-cms-data:/var/lib/postgresql/data/
+
+volumes:
+  portal-cms-data:
+  node_modules:
