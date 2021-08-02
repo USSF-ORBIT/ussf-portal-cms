@@ -5,21 +5,38 @@ const storage = new MemoryStorage(prefix)
 
 const directus = new Directus('http://localhost:8055', { storage })
 
-const bookmarks = 'bookmarks'
+const BOOKMARKS = 'testbookmark'
 
 const downBookmarks = async () => {
-  await directus.collections.deleteOne(bookmarks)
+  await directus.collections.deleteOne(BOOKMARKS)
 }
 
 const upBookmarks = async () => {
   // Seed bookmarks
   const bookmarkResult = await directus.collections.createOne({
-    collection: 'bookmarks',
-    note: 'Bookmarked Links',
+    collection: BOOKMARKS,
+    meta: {
+      note: 'Bookmarked Links from JS SDK',
+      hidden: false,
+      singleton: false,
+      archive_field: 'status',
+      archive_app_filter: true,
+      archive_value: 'archived',
+      unarchive_value: 'draft',
+      sort_fiel: 'sort',
+      accountability: 'all',
+    },
     fields: [
       {
-        field: 'Name',
+        field: 'title',
         type: 'string',
+        meta: {
+          interface: 'input',
+          display: 'raw',
+          readonly: false,
+          hidden: false,
+          width: 'full',
+        },
       },
       {
         field: 'URL',
@@ -43,6 +60,13 @@ const initDirectus = async () => {
   })
 
   console.log('authenticated!')
+
+  // Get bookmarks
+  const bookmarks = await directus.collections.readOne('bookmarks')
+  console.log(bookmarks)
+
+  const bookmarkFields = await directus.fields.readOne(8)
+  console.log(bookmarkFields)
 
   // this is not working right now, permissions errors with deleting collections??
   // await downBookmarks()
@@ -83,9 +107,6 @@ const initDirectus = async () => {
     console.log('added permission', permissionResult)
   }
   */
-
-  const bookmarks = await directus.collections.readOne('bookmarks')
-  console.log('Bookmarks (DB)', bookmarks)
 }
 
 initDirectus()
