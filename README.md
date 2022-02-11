@@ -20,12 +20,23 @@ $ docker compose up
 Set these variables for Keystone in a `.envrc.local` file.
 
 - `SESSION_SECRET` (must be a string at least 32 chars)
-- `DATABASE_URL` (URL to a running Postgres instance)
+- `KEYSTONE_DB_URL` (URL to a running Postgres instance)
 - `TEST_USERNAME` (string)
 - `TEST_EMAIL` (string - used to log in to Admin UI)
 - `TEST_PASSWORD` (must be a string at least 8 chars - used to log in to Admin UI)
 
-Environment variables for Postgres are set in the `docker-compose.yml` file. The initial database user created by Postgres will be `postgres` with the password set in the compose file. The database created will be named `keystone`, also set in the compose file.
+Environment variables for Postgres are set in the `docker-compose.yml` file.
+
+- POSTGRES_USER: keystone
+- POSTGRES_PASSWORD: keystonecms
+- POSTGRES_DB: keystone
+
+If running on standard port 5432, this makes the connection url one of the following:
+
+- `postgres://keystone:keystonecms@host.docker.internal:6666/keystone` (connecting from one docker container to another)
+- `postgres://keystone:keystonecms@0.0.0.0:5432/keystone` (connecting from host machine)
+
+Caveat: If you're also running Postgres on your local machine, you may run into some port conflicts with the Postgres Docker container. In the docker-compose file, you can map `5432` to an unused port to resolve.
 
 ### Keystone App
 
@@ -33,4 +44,4 @@ Environment variables for Postgres are set in the `docker-compose.yml` file. The
 - Build Keystone Docker image:
   - `docker build -t keystone .`
 - Run Docker image:
-  - `docker run -p 3000:3000 --env SESSION_SECRET=$SESSION_SECRET --env DATABASE_URL=$DATABASE_URL --env TEST_USERNAME=$TEST_USERNAME --env TEST_EMAIL=$TEST_EMAIL --env TEST_PASSWORD=$TEST_PASSWORD keystone`
+  - `docker run -p 3000:3000 --env SESSION_SECRET=$SESSION_SECRET --env KEYSTONE_DB_URL=$KEYSTONE_DB_URL --env TEST_USERNAME=$TEST_USERNAME --env TEST_EMAIL=$TEST_EMAIL --env TEST_PASSWORD=$TEST_PASSWORD keystone`

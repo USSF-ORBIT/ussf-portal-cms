@@ -20,9 +20,9 @@ export default withAuth(
     lists,
     db: {
       provider: 'postgresql',
-      url: process.env.DATABASE_URL || '',
+      url: process.env.KEYSTONE_DB_URL || '',
       enableLogging: true,
-      useMigrations: false,
+      useMigrations: false, // TODO - set to true after deploying
       onConnect: async ({ db }: KeystoneContext) => {
         // Create test user here
         // #TODO: Remove this when we have auth in place
