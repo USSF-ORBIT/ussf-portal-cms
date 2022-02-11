@@ -16,7 +16,6 @@ COPY . .
 ENV NODE_ENV development
 
 RUN yarn install --frozen-lockfile \
-    # && yarn keystone prisma migrate dev \
     && yarn build && yarn cache clean
 
 ARG BUILD
