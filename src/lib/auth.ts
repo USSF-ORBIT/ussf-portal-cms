@@ -34,11 +34,6 @@ const { withAuth } = createAuth({
   identityField: 'email',
   sessionData: 'name',
   secretField: 'password',
-  initFirstItem: {
-    // If there are no items in the database, keystone will ask you to create
-    // a new user, filling in these fields.
-    fields: ['name', 'email', 'password'],
-  },
 })
 
 // This defines how long people will remain logged in for.
