@@ -16,7 +16,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # renovate: tag=v2
         with:
-          node-version: '14.18.3'
+          node-version: '14.19.0'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
