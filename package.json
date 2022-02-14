@@ -28,6 +28,9 @@
     "@keystone-6/fields-document": "1.0.1",
     "typescript": "4.5.5"
   },
+  "prisma": {
+    "seed": "npx ts-node seed.ts"
+  },
   "devDependencies": {
     "@types/jest": "27.4.0",
     "@typescript-eslint/eslint-plugin": "5.11.0",
