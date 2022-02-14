@@ -30,14 +30,8 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: portal-client
           IMAGE_TAG: ${{ github.sha }}
-          DEV_CERT: ${{ secrets.SAML_CERT }}
-          TEST_CERT: ${{ secrets.C1_TEST_SAML_CERT }}
-          PROD_CERT: ${{ secrets.C1_PROD_SAML_CERT }}
 
         run: |
-          echo $DEV_CERT > dev-saml.pem
-          echo $TEST_CERT > test-saml.pem
-          echo $PROD_CERT > prod-saml.pem
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
