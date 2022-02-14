@@ -15,7 +15,8 @@ COPY . .
 
 ENV NODE_ENV development
 
-RUN yarn install --frozen-lockfile && yarn build && yarn cache clean
+RUN yarn install --frozen-lockfile \
+    && yarn build && yarn cache clean
 
 ARG BUILD
 
@@ -24,11 +25,19 @@ FROM node:14-alpine3.15
 
 WORKDIR /home/node
 
+COPY scripts/add-rds-cas.sh .
+
+RUN apk update \
+    && apk --no-cache --virtual add openssl ca-certificates wget unzip \
+    && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
+    && rm -rf /var/lib/apk/lists/*
+
 COPY --from=build /home/node /home/node
 
-ENV NODE_ENV production
+ENV NODE_ENV production 
+
 
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["./dumb-init", "yarn", "start"]
+CMD node_modules/.bin/keystone prisma migrate deploy ; ./dumb-init yarn start
