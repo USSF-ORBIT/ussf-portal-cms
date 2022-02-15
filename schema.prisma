@@ -12,11 +12,12 @@ generator client {
 }
 
 model User {
-  id       String @id @default(cuid())
-  name     String @default("")
-  email    String @unique @default("")
+  id       String  @id @default(cuid())
+  name     String  @default("")
+  email    String  @unique @default("")
   password String
-  posts    Post[] @relation("Post_author")
+  posts    Post[]  @relation("Post_author")
+  isAdmin  Boolean @default(false)
 }
 
 model Post {

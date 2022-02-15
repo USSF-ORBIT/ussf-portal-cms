@@ -1,6 +1,4 @@
 /*
-Welcome to the schema! The schema is the heart of Keystone.
-
 Here we define our 'lists', which will then be used both for the GraphQL
 API definition, our database tables, and our Admin UI layout.
 
@@ -17,6 +15,16 @@ A field: The individual bits of data on your list, each with its own type.
 // we get these even before code runs.
 import { list } from '@keystone-6/core'
 
+// Access Control
+// #TODO types
+const isAdmin = ({ session }: { session: any }) => session?.data.isAdmin
+const filterUser = ({ session }: any) => {
+  // if the user is an Admin, they can access all the users
+  if (session?.data.isAdmin) return true
+  // otherwise, filter for single user
+  return { email: { equals: session?.data.email } }
+}
+
 // We're using some common fields in the starter. Check out https://keystonejs.com/docs/apis/fields#fields-api
 // for the full list of fields.
 import {
@@ -25,6 +33,7 @@ import {
   password,
   timestamp,
   select,
+  checkbox,
 } from '@keystone-6/core/fields'
 // The document field is a more complicated field, so it's in its own package
 // Keystone aims to have all the base field types, but you can make your own
@@ -43,6 +52,17 @@ import { Lists } from '.keystone/types'
 export const lists: Lists = {
   // Here we define the user list.
   User: list({
+    access: {
+      operation: {
+        create: isAdmin,
+        update: isAdmin,
+        delete: isAdmin,
+      },
+      filter: {
+        query: filterUser,
+      },
+    },
+
     // Here are the fields that `User` will have. We want an email and password so they can log in
     // a name so we can refer to them, and a way to connect users to posts.
     fields: {
@@ -53,23 +73,52 @@ export const lists: Lists = {
         isFilterable: true,
       }),
       // The password field takes care of hiding details and hashing values
-      password: password({ validation: { isRequired: true } }),
+      password: password({
+        validation: { isRequired: true },
+        ui: {
+          itemView: {
+            fieldMode: ({ session }) => (isAdmin(session) ? 'edit' : 'hidden'),
+          },
+        },
+      }),
       // Relationships allow us to reference other lists. In this case,
       // we want a user to have many posts, and we are saying that the user
       // should be referencable by the 'author' field of posts.
       // Make sure you read the docs to understand how they work: https://keystonejs.com/docs/guides/relationships#understanding-relationships
-      posts: relationship({ ref: 'Post.author', many: true }),
+      posts: relationship({
+        ref: 'Post.author',
+        many: true,
+      }),
+      isAdmin: checkbox({
+        ui: {
+          itemView: {
+            fieldMode: ({ session }) => (isAdmin(session) ? 'edit' : 'hidden'),
+          },
+        },
+      }),
     },
     // Here we can configure the Admin UI. We want to show a user's name and posts in the Admin UI
     ui: {
       listView: {
         initialColumns: ['name', 'posts'],
       },
+      itemView: {
+        defaultFieldMode: ({ session }) => (isAdmin(session) ? 'edit' : 'read'),
+      },
+      hideCreate: ({ session }) => !isAdmin(session),
+      hideDelete: ({ session }) => !isAdmin(session),
     },
   }),
   // Our second list is the Posts list. We've got a few more fields here
   // so we have all the info we need for displaying posts.
   Post: list({
+    access: {
+      operation: {
+        create: isAdmin,
+        update: isAdmin,
+        delete: isAdmin,
+      },
+    },
     fields: {
       title: text(),
       // Having the status here will make it easy for us to choose whether to display
@@ -128,11 +177,22 @@ export const lists: Lists = {
         many: true,
       }),
     },
+    ui: {
+      isHidden: ({ session }) => !isAdmin(session),
+    },
   }),
   // Our final list is the tag list. This field is just a name and a relationship to posts
   Tag: list({
+    access: {
+      operation: {
+        create: isAdmin,
+        update: isAdmin,
+        delete: isAdmin,
+      },
+    },
     ui: {
-      isHidden: true,
+      isHidden: ({ session }) => !isAdmin(session),
+      hideCreate: ({ session }) => !isAdmin(session),
     },
     fields: {
       name: text(),

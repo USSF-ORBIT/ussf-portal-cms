@@ -13,6 +13,7 @@ type User {
     skip: Int! = 0
   ): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
+  isAdmin: Boolean
 }
 
 type PasswordState {
@@ -32,6 +33,7 @@ input UserWhereInput {
   name: StringFilter
   email: StringFilter
   posts: PostManyRelationFilter
+  isAdmin: BooleanFilter
 }
 
 input IDFilter {
@@ -85,10 +87,16 @@ input PostManyRelationFilter {
   none: PostWhereInput
 }
 
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
+}
+
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
   email: OrderDirection
+  isAdmin: OrderDirection
 }
 
 enum OrderDirection {
@@ -101,6 +109,7 @@ input UserUpdateInput {
   email: String
   password: String
   posts: PostRelateToManyForUpdateInput
+  isAdmin: Boolean
 }
 
 input PostRelateToManyForUpdateInput {
@@ -120,6 +129,7 @@ input UserCreateInput {
   email: String
   password: String
   posts: PostRelateToManyForCreateInput
+  isAdmin: Boolean
 }
 
 input PostRelateToManyForCreateInput {

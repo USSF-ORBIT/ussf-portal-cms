@@ -12,7 +12,7 @@ import type { KeystoneContext } from '@keystone-6/core/types'
 import { lists } from './src/schema'
 
 // Keystone auth is configured separately - check out the basic auth setup we are importing from our auth file.
-import { withAuth, session } from './src/lib/auth'
+import { session, withAuth } from './src/lib/auth'
 
 export default withAuth(
   // Using the config function helps typescript guide you to the available options.
@@ -35,6 +35,7 @@ export default withAuth(
               name: process.env.TEST_USERNAME || '',
               password: process.env.TEST_PASSWORD,
               email: process.env.TEST_EMAIL,
+              isAdmin: true,
             },
           })
         }
