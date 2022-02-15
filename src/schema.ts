@@ -89,6 +89,12 @@ export const lists: Lists = {
       posts: relationship({
         ref: 'Post.author',
         many: true,
+        ui: {
+          itemView: {
+            fieldMode: ({ session }) =>
+              session?.data.isAdmin ? 'edit' : 'hidden',
+          },
+        },
       }),
       isAdmin: checkbox({
         ui: {
