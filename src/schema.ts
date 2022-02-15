@@ -17,7 +17,9 @@ import { list } from '@keystone-6/core'
 
 // Access Control
 // #TODO types
-const isAdmin = ({ session }: { session: any }) => session?.data.isAdmin
+const isAdmin = ({ session }: any) => {
+  return session?.data.isAdmin
+}
 const filterUser = ({ session }: any) => {
   // if the user is an Admin, they can access all the users
   if (session?.data.isAdmin) return true
@@ -77,7 +79,8 @@ export const lists: Lists = {
         validation: { isRequired: true },
         ui: {
           itemView: {
-            fieldMode: ({ session }) => (isAdmin(session) ? 'edit' : 'hidden'),
+            fieldMode: ({ session }) =>
+              session?.data.isAdmin ? 'edit' : 'hidden',
           },
         },
       }),
@@ -92,7 +95,8 @@ export const lists: Lists = {
       isAdmin: checkbox({
         ui: {
           itemView: {
-            fieldMode: ({ session }) => (isAdmin(session) ? 'edit' : 'hidden'),
+            fieldMode: ({ session }) =>
+              session?.data.isAdmin ? 'edit' : 'hidden',
           },
         },
       }),
@@ -103,10 +107,11 @@ export const lists: Lists = {
         initialColumns: ['name', 'posts'],
       },
       itemView: {
-        defaultFieldMode: ({ session }) => (isAdmin(session) ? 'edit' : 'read'),
+        defaultFieldMode: ({ session }) =>
+          session?.data.isAdmin ? 'edit' : 'read',
       },
-      hideCreate: ({ session }) => !isAdmin(session),
-      hideDelete: ({ session }) => !isAdmin(session),
+      hideCreate: ({ session }) => !session?.data.isAdmin,
+      hideDelete: ({ session }) => !session?.data.isAdmin,
     },
   }),
   // Our second list is the Posts list. We've got a few more fields here
@@ -119,6 +124,9 @@ export const lists: Lists = {
         delete: isAdmin,
       },
     },
+    // ui: {
+    //   isHidden: ({ session }) => !session?.data.isAdmin,
+    // },
     fields: {
       title: text(),
       // Having the status here will make it easy for us to choose whether to display
@@ -177,9 +185,6 @@ export const lists: Lists = {
         many: true,
       }),
     },
-    ui: {
-      isHidden: ({ session }) => !isAdmin(session),
-    },
   }),
   // Our final list is the tag list. This field is just a name and a relationship to posts
   Tag: list({
@@ -191,8 +196,8 @@ export const lists: Lists = {
       },
     },
     ui: {
-      isHidden: ({ session }) => !isAdmin(session),
-      hideCreate: ({ session }) => !isAdmin(session),
+      isHidden: ({ session }) => !session?.data.isAdmin,
+      hideCreate: ({ session }) => !session?.data.isAdmin,
     },
     fields: {
       name: text(),
