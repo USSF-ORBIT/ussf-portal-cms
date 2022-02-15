@@ -17,10 +17,8 @@ import { list } from '@keystone-6/core'
 
 // Access Control
 // #TODO types
-const isAdmin = ({ session }: any) => {
-  return session?.data.isAdmin
-}
-const filterUser = ({ session }: any) => {
+const isAdmin = ({ session }: { session: any }) => session?.data.isAdmin
+const filterUser = ({ session }: { session: any }) => {
   // if the user is an Admin, they can access all the users
   if (session?.data.isAdmin) return true
   // otherwise, filter for single user
@@ -124,9 +122,9 @@ export const lists: Lists = {
         delete: isAdmin,
       },
     },
-    // ui: {
-    //   isHidden: ({ session }) => !session?.data.isAdmin,
-    // },
+    ui: {
+      isHidden: ({ session }) => !session?.data.isAdmin,
+    },
     fields: {
       title: text(),
       // Having the status here will make it easy for us to choose whether to display
@@ -197,7 +195,6 @@ export const lists: Lists = {
     },
     ui: {
       isHidden: ({ session }) => !session?.data.isAdmin,
-      hideCreate: ({ session }) => !session?.data.isAdmin,
     },
     fields: {
       name: text(),
