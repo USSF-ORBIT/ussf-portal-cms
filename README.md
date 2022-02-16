@@ -20,7 +20,7 @@ $ docker compose up
 Set these variables for Keystone in a `.envrc.local` file.
 
 - `SESSION_SECRET` (must be a string at least 32 chars)
-- `KEYSTONE_DB_URL` (URL to a running Postgres instance)
+- `DATABASE_URL` (URL to a running Postgres instance)
 - `TEST_USERNAME` (string)
 - `TEST_EMAIL` (string - used to log in to Admin UI)
 - `TEST_PASSWORD` (must be a string at least 8 chars - used to log in to Admin UI)
@@ -44,4 +44,4 @@ Caveat: If you're also running Postgres on your local machine, you may run into 
 - Build Keystone Docker image:
   - `docker build -t keystone .`
 - Run Docker image:
-  - `docker run -p 3000:3000 --env SESSION_SECRET=$SESSION_SECRET --env KEYSTONE_DB_URL=$KEYSTONE_DB_URL --env TEST_USERNAME=$TEST_USERNAME --env TEST_EMAIL=$TEST_EMAIL --env TEST_PASSWORD=$TEST_PASSWORD keystone`
+  - `docker run -p 3000:3000 --env SESSION_SECRET=$SESSION_SECRET --env DATABASE_URL=$DATABASE_URL --env TEST_USERNAME=$TEST_USERNAME --env TEST_EMAIL=$TEST_EMAIL --env TEST_PASSWORD=$TEST_PASSWORD keystone`
