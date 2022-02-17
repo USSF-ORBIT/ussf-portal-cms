@@ -9,21 +9,10 @@ A field: The individual bits of data on your list, each with its own type.
   you can see some of the lists in what we use below.
 
 */
-
 // Like the `config` function we use in keystone.ts, we use functions
 // for putting in our config so we get useful errors. With typescript,
 // we get these even before code runs.
 import { list } from '@keystone-6/core'
-
-// Access Control
-// #TODO types
-const isAdmin = ({ session }: { session: any }) => session?.data.isAdmin
-const filterUser = ({ session }: { session: any }) => {
-  // if the user is an Admin, they can access all the users
-  if (session?.data.isAdmin) return true
-  // otherwise, filter for single user
-  return { email: { equals: session?.data.email } }
-}
 
 // We're using some common fields in the starter. Check out https://keystonejs.com/docs/apis/fields#fields-api
 // for the full list of fields.
@@ -39,6 +28,7 @@ import {
 // Keystone aims to have all the base field types, but you can make your own
 // custom ones.
 import { document } from '@keystone-6/fields-document'
+import { Session } from '../types'
 
 // We are using Typescript, and we want our types experience to be as strict as it can be.
 // By providing the Keystone generated `Lists` type to our lists object, we refine
@@ -49,6 +39,26 @@ import { Lists } from '.keystone/types'
 // We have a users list, a blogs list, and tags for blog posts, so they can be filtered.
 // Each property on the exported object will become the name of a list (a.k.a. the `listKey`),
 // with the value being the definition of the list, including the fields.
+
+// to do this should work, get type from keystone repo and re-implement
+const isAdmin = ({ session }: { session: Session }) => session?.data.isAdmin
+
+// Access Control
+const filterUser = ({ session }: { session: Session }) => {
+  // if the user is an Admin, they can access all the users
+
+  if (session?.data.isAdmin) return true
+  // otherwise, filter for single user
+  return { email: { equals: session?.data.email } }
+}
+
+const filterPosts = ({ session }: { session: Session }) => {
+  // if the user is an Admin, they can access all the users
+  if (session?.data.isAdmin) return true
+
+  return false
+}
+
 export const lists: Lists = {
   // Here we define the user list.
   User: list({
@@ -114,8 +124,8 @@ export const lists: Lists = {
         defaultFieldMode: ({ session }) =>
           session?.data.isAdmin ? 'edit' : 'read',
       },
-      hideCreate: ({ session }) => !session?.data.isAdmin,
-      hideDelete: ({ session }) => !session?.data.isAdmin,
+      hideCreate: !isAdmin,
+      hideDelete: !isAdmin,
     },
   }),
   // Our second list is the Posts list. We've got a few more fields here
@@ -126,6 +136,9 @@ export const lists: Lists = {
         create: isAdmin,
         update: isAdmin,
         delete: isAdmin,
+      },
+      filter: {
+        query: filterPosts,
       },
     },
     ui: {
@@ -200,7 +213,7 @@ export const lists: Lists = {
       },
     },
     ui: {
-      isHidden: ({ session }) => !session?.data.isAdmin,
+      isHidden: !isAdmin,
     },
     fields: {
       name: text(),
