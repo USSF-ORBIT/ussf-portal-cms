@@ -1,8 +1,7 @@
 import { setupTestEnv, TestEnv } from '@keystone-6/core/testing'
 import { config } from '@keystone-6/core'
 import { KeystoneContext } from '@keystone-6/core/types'
-
-import { lists } from './schema'
+import { editReadAdminUI, isAdmin, lists, showHideAdminUI } from './schema'
 
 describe('Keystone schema', () => {
   let testEnv: TestEnv
@@ -154,6 +153,70 @@ describe('Keystone schema', () => {
       expect(errors![0].message).toMatch(
         /Access denied: You cannot perform the 'update' operation on the list 'User'./
       )
+    })
+    it('should hide sensitive UI fields if not admin', () => {
+      const session = {
+        listKey: 'User',
+        identityField: 'email',
+        secretField: 'password',
+        data: { email: 'user1@example.com', name: 'User 1', isAdmin: false },
+      }
+      const status = showHideAdminUI({ session })
+      expect(status).toBe('hidden')
+    })
+
+    it('should show edit mode for sensitive UI fields if admin', () => {
+      const session = {
+        listKey: 'User',
+        identityField: 'email',
+        secretField: 'password',
+        data: { email: 'admin@example.com', name: 'Admin', isAdmin: true },
+      }
+      const status = showHideAdminUI({ session })
+      expect(status).toBe('edit')
+    })
+
+    it('should make sensitive UI fields read-only if not admin', () => {
+      const session = {
+        listKey: 'User',
+        identityField: 'email',
+        secretField: 'password',
+        data: { email: 'user1@example.com', name: 'User 1', isAdmin: false },
+      }
+      const status = editReadAdminUI({ session })
+      expect(status).toBe('read')
+    })
+
+    it('should show edit mode for sensitive UI fields if admin', () => {
+      const session = {
+        listKey: 'User',
+        identityField: 'email',
+        secretField: 'password',
+        data: { email: 'admin@example.com', name: 'Admin', isAdmin: true },
+      }
+      const status = editReadAdminUI({ session })
+      expect(status).toBe('edit')
+    })
+
+    it('isAdmin should return true if admin', () => {
+      const session = {
+        listKey: 'User',
+        identityField: 'email',
+        secretField: 'password',
+        data: { email: 'admin@example.com', name: 'Admin', isAdmin: true },
+      }
+      const status = isAdmin({ session })
+      expect(status).toBe(true)
+    })
+    it('isAdmin should return false if not admin', () => {
+      const session = {
+        listKey: 'User',
+        identityField: 'email',
+        secretField: 'password',
+        data: { email: 'user1@example.com', name: 'User 1', isAdmin: false },
+      }
+      const status = isAdmin({ session })
+      expect(status).toBe(false)
     })
   }) //end of user block
 }) // end of describe

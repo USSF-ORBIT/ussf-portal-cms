@@ -41,7 +41,8 @@ import { Lists } from '.keystone/types'
 // with the value being the definition of the list, including the fields.
 
 // to do this should work, get type from keystone repo and re-implement
-const isAdmin = ({ session }: { session: Session }) => session?.data.isAdmin
+export const isAdmin = ({ session }: { session: Session }) =>
+  session?.data.isAdmin
 
 // Access Control
 const filterUser = ({ session }: { session: Session }) => {
@@ -58,6 +59,12 @@ const filterPosts = ({ session }: { session: Session }) => {
 
   return false
 }
+
+export const showHideAdminUI = ({ session }: { session: Session }) =>
+  session?.data.isAdmin ? 'edit' : 'hidden'
+
+export const editReadAdminUI = ({ session }: { session: Session }) =>
+  session?.data.isAdmin ? 'edit' : 'read'
 
 export const lists: Lists = {
   // Here we define the user list.
@@ -87,8 +94,7 @@ export const lists: Lists = {
         validation: { isRequired: true },
         ui: {
           itemView: {
-            fieldMode: ({ session }) =>
-              session?.data.isAdmin ? 'edit' : 'hidden',
+            fieldMode: showHideAdminUI,
           },
         },
       }),
@@ -101,16 +107,14 @@ export const lists: Lists = {
         many: true,
         ui: {
           itemView: {
-            fieldMode: ({ session }) =>
-              session?.data.isAdmin ? 'edit' : 'hidden',
+            fieldMode: showHideAdminUI,
           },
         },
       }),
       isAdmin: checkbox({
         ui: {
           itemView: {
-            fieldMode: ({ session }) =>
-              session?.data.isAdmin ? 'edit' : 'hidden',
+            fieldMode: showHideAdminUI,
           },
         },
       }),
@@ -121,8 +125,7 @@ export const lists: Lists = {
         initialColumns: ['name', 'posts'],
       },
       itemView: {
-        defaultFieldMode: ({ session }) =>
-          session?.data.isAdmin ? 'edit' : 'read',
+        defaultFieldMode: editReadAdminUI,
       },
       hideCreate: !isAdmin,
       hideDelete: !isAdmin,
@@ -142,7 +145,7 @@ export const lists: Lists = {
       },
     },
     ui: {
-      isHidden: ({ session }) => !session?.data.isAdmin,
+      isHidden: !isAdmin,
     },
     fields: {
       title: text(),
