@@ -1,9 +1,6 @@
-# https://github.com/Yelp/dumb-init/releases
-ARG DUMB_INIT_VERSION=1.2.5
-
 # Build container
 FROM node:14.19.0-slim AS build
-ARG DUMB_INIT_VERSION
+
 
 WORKDIR /home/node
 
