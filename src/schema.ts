@@ -40,14 +40,12 @@ import { Lists } from '.keystone/types'
 // Each property on the exported object will become the name of a list (a.k.a. the `listKey`),
 // with the value being the definition of the list, including the fields.
 
-// to do this should work, get type from keystone repo and re-implement
+// Access Control
 export const isAdmin = ({ session }: { session: Session }) =>
   session?.data.isAdmin
 
-// Access Control
 const filterUser = ({ session }: { session: Session }) => {
   // if the user is an Admin, they can access all the users
-
   if (session?.data.isAdmin) return true
   // otherwise, filter for single user
   return { email: { equals: session?.data.email } }
