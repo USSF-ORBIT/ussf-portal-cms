@@ -21,6 +21,6 @@ NEW_TASK_DEFINTION=$(jq -r --arg NEWIMAGE "$IMAGE" '.containerDefinitions[].imag
 NEW_TASK_INFO=$(aws ecs register-task-definition --cli-input-json file://tmp-ntd.json)
 NEW_REVISION=$(echo $NEW_TASK_INFO | jq '.taskDefinition.revision')
 aws ecs update-service --cluster app-portal-client-dev \
-                        --service portal-client \
+                        --service keystone \
                         --task-definition ${TASK_FAMILY}:${NEW_REVISION} \
                         --force-new-deployment
