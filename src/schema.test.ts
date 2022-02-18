@@ -6,7 +6,6 @@ import { editReadAdminUI, isAdmin, lists, showHideAdminUI } from './schema'
 describe('Keystone schema', () => {
   let testEnv: TestEnv
   let context: KeystoneContext
-  let testPost: Record<string, any>
 
   const testConfig = config({
     db: { provider: 'sqlite', url: 'file:./test-cms.db' },
@@ -21,7 +20,7 @@ describe('Keystone schema', () => {
     // Initialize database state
     // Create 1 admin user
     // Create 1 regular user
-    // Create 1 post
+
     await context.sudo().query.User.createMany({
       data: [
         {
@@ -36,11 +35,6 @@ describe('Keystone schema', () => {
           password: 'user1password',
         },
       ],
-    })
-
-    testPost = await context.sudo().query.Post.createOne({
-      data: { title: 'Test Post' },
-      query: 'id title',
     })
   })
 
@@ -75,34 +69,6 @@ describe('Keystone schema', () => {
         name: 'User 1',
         email: 'user1@example.com',
       })
-    })
-
-    it('should allow an admin user read posts', async () => {
-      const post = await context
-        .withSession({
-          email: adminUser.email,
-          data: { email: adminUser.email, isAdmin: true },
-        })
-        .query.Post.findOne({
-          where: { id: testPost.id },
-          query: 'id title',
-        })
-
-      expect(post.title).toBe('Test Post')
-    })
-
-    it('should not allow a regular user read posts', async () => {
-      const post = await context
-        .withSession({
-          email: user1.email,
-          data: { email: user1.email },
-        })
-        .query.Post.findOne({
-          where: { id: testPost.id },
-          query: 'id title',
-        })
-
-      expect(post).toBe(null)
     })
 
     it('should not allow regular user to view users', async () => {
