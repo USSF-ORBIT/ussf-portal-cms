@@ -16,7 +16,7 @@ import { list } from '@keystone-6/core'
 
 // We're using some common fields in the starter. Check out https://keystonejs.com/docs/apis/fields#fields-api
 // for the full list of fields.
-import { text, relationship, password, checkbox } from '@keystone-6/core/fields'
+import { text, password, checkbox } from '@keystone-6/core/fields'
 
 import { Session } from '../types'
 
@@ -86,7 +86,7 @@ export const lists: Lists = {
     // Here we can configure the Admin UI. We want to show a user's name and posts in the Admin UI
     ui: {
       listView: {
-        initialColumns: ['name', 'posts'],
+        initialColumns: ['name'],
       },
       itemView: {
         defaultFieldMode: editReadAdminUI,
