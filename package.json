@@ -7,6 +7,10 @@
     "url": "github:USSF-ORBIT/ussf-portal-cms"
   },
   "scripts": {
+    "services:up": "docker compose -f ${PORTAL_PATH}/docker-compose.services.yml up -d",
+    "services:down": "docker compose -f ${PORTAL_PATH}/docker-compose.services.yml down",
+    "portal:up": "docker compose -f ${PORTAL_PATH}/docker-compose.services.yml -f ${PORTAL_PATH}/docker-compose.client.yml up -d",
+    "portal:down": "docker compose -f ${PORTAL_PATH}/docker-compose.services.yml -f ${PORTAL_PATH}/docker-compose.client.yml down",
     "dev": "keystone dev",
     "start": "keystone start",
     "build": "keystone build",
