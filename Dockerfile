@@ -1,15 +1,11 @@
-# https://github.com/Yelp/dumb-init/releases
-ARG DUMB_INIT_VERSION=1.2.5
-
 # Build container
-FROM node:14-alpine3.15 AS build
-ARG DUMB_INIT_VERSION
+FROM node:14.19.0-slim AS build
+
 
 WORKDIR /home/node
 
-RUN apk add --no-cache build-base python2 yarn && \
-    wget -O dumb-init -q https://github.com/Yelp/dumb-init/releases/download/v${DUMB_INIT_VERSION}/dumb-init_${DUMB_INIT_VERSION}_x86_64 && \
-    chmod +x dumb-init
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl libc6 openssl python yarn dumb-init
 
 COPY . .
 
@@ -21,23 +17,23 @@ RUN yarn install --frozen-lockfile \
 ARG BUILD
 
 # Runtime container
-FROM node:14-alpine3.15
+FROM build AS runner
 
 WORKDIR /home/node
 
 COPY scripts/add-rds-cas.sh .
 
-RUN apk update \
-    && apk --no-cache --virtual add openssl ca-certificates wget unzip \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates wget unzip \
     && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
-    && rm -rf /var/lib/apk/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /home/node /home/node
 
-ENV NODE_ENV production 
+ENV NODE_ENV production
 
 
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD node_modules/.bin/keystone prisma migrate deploy ; ./dumb-init yarn start
+CMD node_modules/.bin/keystone prisma migrate deploy ; dumb-init node_modules/.bin/keystone start
