@@ -1,18 +1,11 @@
 import * as cookie from 'cookie'
 import type {
-  JSONValue,
-  KeystoneConfig,
   SessionStoreFunction,
   SessionStrategy,
 } from '@keystone-6/core/types'
 
+import type { SessionData } from '../../types'
 import redisClient from './redis'
-
-export const withAuth = (keystoneConfig: KeystoneConfig): KeystoneConfig => {
-  return {
-    ...keystoneConfig,
-  }
-}
 
 const redisSessionStore = ({
   client,
@@ -41,32 +34,24 @@ const redisSessionStore = ({
   })
 }
 
-const useSession = ({
+const MAX_AGE = 60 * 60 * 4
+const TOKEN_NAME = 'sid' // The key used to store the session in Redis
+
+export const sharedRedisSession = ({
   store: storeOption,
-  secret,
-  maxAge,
+  maxAge = MAX_AGE,
 }: {
   store: SessionStoreFunction
-  secret: string
-  maxAge: number
-  secure: boolean
-}): SessionStrategy<JSONValue> => {
-  if (!secret) {
-    throw new Error('You must specify a session secret to use sessions')
-  }
-
-  if (secret.length < 32) {
-    throw new Error('The session secret must be at least 32 characters long')
-  }
-
+  maxAge?: number
+}): SessionStrategy<SessionData> => {
   const store =
     typeof storeOption === 'function' ? storeOption({ maxAge }) : storeOption
   let isConnected = false
 
   return {
-    async get({ req, createContext }) {
+    async get({ req }) {
       const cookies = cookie.parse(req.headers.cookie || '')
-      const token = cookies['sid']
+      const token = cookies[TOKEN_NAME]
 
       if (!token) return
 
@@ -75,22 +60,24 @@ const useSession = ({
         isConnected = true
       }
 
-      return store.get(`sess:${token}`)
+      // TODO - types
+      const data = (await store.get(`sess:${token}`)) as SessionData | undefined
+      return data
     },
     async start({ res, data, createContext }) {
-      // TODO
+      // TODO - this should never be use because session will always be started by the portal client
+      console.log('start session', data)
       return ''
     },
     async end({ req, res, createContext }) {
-      // TODO
+      // TODO - log out
+      console.log('end session')
     },
   }
 }
 
-export const session = useSession({
-  secret: process.env.SESSION_SECRET || '',
+export const session = sharedRedisSession({
   maxAge: 60 * 60 * 4, // 4 hours
-  secure: process.env.NODE_ENV === 'production',
   store: redisSessionStore({
     client: redisClient,
   }),

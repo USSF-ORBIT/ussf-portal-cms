@@ -7,15 +7,15 @@ You can find all the config options here: https://keystonejs.com/docs/apis/confi
 */
 
 import { config } from '@keystone-6/core'
-import type { KeystoneContext } from '@keystone-6/core/types'
+// import type { KeystoneContext } from '@keystone-6/core/types'
 // Look in the schema file for how we define our lists, and how users interact with them through graphql or the Admin UI
 import { lists } from './src/schema'
 
 // Keystone auth is configured separately - check out the basic auth setup we are importing from our auth file.
 // import { session, withAuth } from './src/lib/auth'
-import { session, withAuth } from './src/lib/session'
+import { withSharedAuth } from './src/lib/auth'
 
-export default withAuth(
+export default withSharedAuth(
   // Using the config function helps typescript guide you to the available options.
   config({
     lists,
@@ -24,6 +24,7 @@ export default withAuth(
       url: `${process.env.DATABASE_URL}` || '',
       enableLogging: true,
       useMigrations: true,
+      /*
       onConnect: async ({ db }: KeystoneContext) => {
         // Create test user here
         // #TODO: Remove this when we have auth in place
@@ -41,16 +42,18 @@ export default withAuth(
           })
         }
       },
+      */
     },
     // This config allows us to set up features of the Admin UI https://keystonejs.com/docs/apis/config#ui
     ui: {
       // For our starter, we check that someone has session data before letting them see the Admin UI.
       isAccessAllowed: (context) => {
         console.log('check for session', context.session)
-        // TODO - check the user ivgroups here for access
-        return !!context.session?.passport?.user
+
+        // TODO - if no context.session: redirect to portal login page
+
+        return true // !!context.session?.passport?.user
       },
     },
-    session,
   })
 )

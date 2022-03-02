@@ -5,20 +5,13 @@ type User {
   id: ID!
   nameId: String
   name: String
-  email: String
-  password: PasswordState
   isAdmin: Boolean
   isEnabled: Boolean
-}
-
-type PasswordState {
-  isSet: Boolean!
 }
 
 input UserWhereUniqueInput {
   id: ID
   nameId: String
-  email: String
 }
 
 input UserWhereInput {
@@ -28,7 +21,6 @@ input UserWhereInput {
   id: IDFilter
   nameId: StringFilter
   name: StringFilter
-  email: StringFilter
   isAdmin: BooleanFilter
   isEnabled: BooleanFilter
 }
@@ -87,7 +79,6 @@ input UserOrderByInput {
   id: OrderDirection
   nameId: OrderDirection
   name: OrderDirection
-  email: OrderDirection
   isAdmin: OrderDirection
   isEnabled: OrderDirection
 }
@@ -100,8 +91,6 @@ enum OrderDirection {
 input UserUpdateInput {
   nameId: String
   name: String
-  email: String
-  password: String
   isAdmin: Boolean
   isEnabled: Boolean
 }
@@ -114,8 +103,6 @@ input UserUpdateArgs {
 input UserCreateInput {
   nameId: String
   name: String
-  email: String
-  password: String
   isAdmin: Boolean
   isEnabled: Boolean
 }

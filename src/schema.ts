@@ -16,7 +16,7 @@ import { list } from '@keystone-6/core'
 
 // We're using some common fields in the starter. Check out https://keystonejs.com/docs/apis/fields#fields-api
 // for the full list of fields.
-import { text, password, checkbox } from '@keystone-6/core/fields'
+import { text, checkbox } from '@keystone-6/core/fields'
 
 import { Session } from '../types'
 
@@ -34,7 +34,8 @@ const filterUser = ({ session }: { session: Session }) => {
   // if the user is an Admin, they can access all the users
   if (session?.data.isAdmin) return true
   // otherwise, filter for single user
-  return { email: { equals: session?.data.email } }
+  return true
+  // return { email: { equals: session?.data.email } }
 }
 
 export const showHideAdminUI = ({ session }: { session: Session }) =>
@@ -47,6 +48,7 @@ export const lists: Lists = {
   // Users
   User: list({
     fields: {
+      // TODO - userId?
       nameId: text({
         validation: {
           isRequired: true,
@@ -60,23 +62,6 @@ export const lists: Lists = {
       }),
 
       name: text({ validation: { isRequired: true } }),
-
-      // TODO - remove
-      email: text({
-        validation: { isRequired: true },
-        isIndexed: 'unique',
-        isFilterable: true,
-      }),
-
-      // TODO - remove
-      password: password({
-        validation: { isRequired: true },
-        ui: {
-          itemView: {
-            fieldMode: showHideAdminUI,
-          },
-        },
-      }),
 
       // Access
       isAdmin: checkbox({
@@ -101,10 +86,12 @@ export const lists: Lists = {
         create: () => false,
         delete: () => false,
       },
+      /*
       filter: {
         query: filterUser,
         update: filterUser,
       },
+      */
     },
 
     ui: {

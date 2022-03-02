@@ -15,8 +15,6 @@ model User {
   id        String  @id @default(cuid())
   nameId    String  @unique @default("")
   name      String  @default("")
-  email     String  @unique @default("")
-  password  String
   isAdmin   Boolean @default(false)
   isEnabled Boolean @default(false)
 }

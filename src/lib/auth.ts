@@ -1,49 +1,85 @@
-/*
-Welcome to the auth file! Here we have put a config to do basic auth in Keystone.
+import type {
+  KeystoneConfig,
+  SessionStoreFunction,
+  SessionStrategy,
+} from '@keystone-6/core/types'
 
-`createAuth` is an implementation for an email-password login out of the box.
-`statelessSessions` is a base implementation of session logic.
+import type { SessionData, KeystoneUser, AuthenticatedUser } from '../../types'
+import { session } from './session'
 
-For more on auth, check out: https://keystonejs.com/docs/apis/auth#authentication-api
-*/
+const USER_NAME_ID_FIELD = 'userId'
+const USER_LIST_KEY = 'User'
 
-import { createAuth } from '@keystone-6/auth'
+const withAuthData = (
+  _sessionStrategy: SessionStrategy<SessionData>
+): SessionStrategy<AuthenticatedUser> => {
+  const { get, ...sessionStrategy } = _sessionStrategy
 
-// See https://keystonejs.com/docs/apis/session#session-api for the session docs
-import { statelessSessions } from '@keystone-6/core/session'
+  // This loads the Keystone user from Postgres & adds to session
+  return {
+    ...sessionStrategy,
+    get: async ({ req, createContext }) => {
+      const sessionData = await get({ req, createContext })
+      const sudoContext = createContext({ sudo: true })
 
-let sessionSecret = process.env.SESSION_SECRET
+      if (
+        !sessionData ||
+        !sessionData.passport ||
+        !sessionData.passport.user ||
+        !sessionData.passport.user.userId ||
+        !sudoContext.query[USER_LIST_KEY]
+      ) {
+        return
+      }
 
-// Here is a best practice! It's fine to not have provided a session secret in dev,
-// however it should always be there in production.
-if (!sessionSecret) {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      'The SESSION_SECRET environment variable must be set in production'
-    )
-  } else {
-    sessionSecret = '-- DEV COOKIE SECRET; CHANGE ME --'
+      try {
+        const {
+          passport: { user },
+        } = sessionData
+
+        // Look up Keystone user
+        const data = await sudoContext.query[USER_LIST_KEY].findOne({
+          where: { nameId: user.userId },
+          query: `id nameId name isAdmin isEnabled`,
+        })
+
+        if (!data) {
+          console.log('No user in Keystone exists, create one')
+          // TODO - check access!
+          const keystoneUser = await sudoContext.query[USER_LIST_KEY].createOne(
+            {
+              data: {
+                name: 'Test User',
+                nameId: user.userId,
+                isAdmin: true,
+                isEnabled: true,
+              },
+              query: `id nameId name isAdmin isEnabled`,
+            }
+          )
+
+          return { ...user, ...keystoneUser }
+        }
+
+        return { ...user, ...data }
+      } catch (e) {
+        // ?
+        console.log(e)
+        return
+      }
+    },
   }
 }
 
-// Here we define how auth relates to our schemas.
-// What we are saying here is that we want to use the list `User`, and to log in
-// we will need their email and password.
-const { withAuth } = createAuth({
-  listKey: 'User',
-  identityField: 'email',
-  sessionData: 'name email isAdmin',
-  secretField: 'password',
-})
+// const checkSessionAccess = sessionUser
 
-// This defines how long people will remain logged in for.
-// This will get refreshed when they log back in.
-const sessionMaxAge = 60 * 60 * 24 * 30 // 30 days
+export const withSharedAuth = (
+  keystoneConfig: KeystoneConfig
+): KeystoneConfig => {
+  const sessionWithUser = withAuthData(session)
 
-// This defines how sessions should work. For more details, check out: https://keystonejs.com/docs/apis/session#session-api
-const session = statelessSessions({
-  maxAge: sessionMaxAge,
-  secret: sessionSecret,
-})
-
-export { withAuth, session }
+  return {
+    ...keystoneConfig,
+    session: sessionWithUser,
+  }
+}
