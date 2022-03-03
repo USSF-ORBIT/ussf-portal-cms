@@ -1,5 +1,6 @@
 import type { SessionUser, AuthenticatedUser } from '../../types'
 
+/** Session access (used before defining session) */
 // The user group values defined by SLAM
 const USER_GROUPS = {
   ADMIN: 'PORTAL_CMS_Admins',
@@ -32,17 +33,20 @@ export const isCMSAdmin = (user: SessionUser) => {
   return userGroups === USER_GROUPS.ADMIN
 }
 
+/** Access helpers */
 export const isAdmin = ({ session }: { session: AuthenticatedUser }) =>
   session?.isAdmin
 
-const filterUser = ({ session }: { session: AuthenticatedUser }) => {
+/** Filter helpers */
+export const isAdminOrSelf = ({ session }: { session: AuthenticatedUser }) => {
   // if the user is an Admin, they can access all the users
   if (session.isAdmin) return true
 
-  // otherwise, filter for single user
-  return { userId: { equals: session?.userId } }
+  // otherwise, only allow access to themself
+  return { userId: { equals: session.userId } }
 }
 
+/** UI helpers */
 export const showHideAdminUI = ({ session }: { session: AuthenticatedUser }) =>
   session?.isAdmin ? 'edit' : 'hidden'
 
