@@ -1,19 +1,10 @@
-export type Session = {
-  listKey: string
-  identityField: string
-  secretField: string
-  data: {
-    name: string
-    email: string
-    isAdmin: boolean
-  }
-}
-
 /**
  * ***********************
  * Types for User / Auth
  * ***********************
  * */
+
+// The raw data stored in Redis
 export type SessionData = {
   cookie: any // TODO
   passport: {

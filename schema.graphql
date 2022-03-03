@@ -3,7 +3,7 @@
 
 type User {
   id: ID!
-  nameId: String
+  userId: String
   name: String
   isAdmin: Boolean
   isEnabled: Boolean
@@ -11,7 +11,7 @@ type User {
 
 input UserWhereUniqueInput {
   id: ID
-  nameId: String
+  userId: String
 }
 
 input UserWhereInput {
@@ -19,7 +19,7 @@ input UserWhereInput {
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
   id: IDFilter
-  nameId: StringFilter
+  userId: StringFilter
   name: StringFilter
   isAdmin: BooleanFilter
   isEnabled: BooleanFilter
@@ -77,7 +77,7 @@ input BooleanFilter {
 
 input UserOrderByInput {
   id: OrderDirection
-  nameId: OrderDirection
+  userId: OrderDirection
   name: OrderDirection
   isAdmin: OrderDirection
   isEnabled: OrderDirection
@@ -89,7 +89,7 @@ enum OrderDirection {
 }
 
 input UserUpdateInput {
-  nameId: String
+  userId: String
   name: String
   isAdmin: Boolean
   isEnabled: Boolean
@@ -101,7 +101,7 @@ input UserUpdateArgs {
 }
 
 input UserCreateInput {
-  nameId: String
+  userId: String
   name: String
   isAdmin: Boolean
   isEnabled: Boolean

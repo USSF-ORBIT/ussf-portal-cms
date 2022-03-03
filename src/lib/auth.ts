@@ -1,24 +1,28 @@
-import type {
-  KeystoneConfig,
-  SessionStoreFunction,
-  SessionStrategy,
-} from '@keystone-6/core/types'
+import type { KeystoneConfig, SessionStrategy } from '@keystone-6/core/types'
 
 import type { SessionData, KeystoneUser, AuthenticatedUser } from '../../types'
-import { session } from './session'
+import { canAccessCMS, isCMSAdmin } from '../util/access'
 
-const USER_NAME_ID_FIELD = 'userId'
-const USER_LIST_KEY = 'User'
+import { session, SharedSessionStrategy } from './session'
 
 const withAuthData = (
-  _sessionStrategy: SessionStrategy<SessionData>
+  _sessionStrategy: SharedSessionStrategy<SessionData>
 ): SessionStrategy<AuthenticatedUser> => {
   const { get, ...sessionStrategy } = _sessionStrategy
 
   // This loads the Keystone user from Postgres & adds to session
   return {
     ...sessionStrategy,
+    start: () => {
+      // The shared session strategy should never "start" a new session
+      // this method should never be called but needs to exist to appease Keystone types
+      console.log('start session')
+      return Promise.reject(
+        new Error('ERROR: Invalid attempt to start a new session in Keystone')
+      )
+    },
     get: async ({ req, createContext }) => {
+      console.log('GET SESSION')
       const sessionData = await get({ req, createContext })
       const sudoContext = createContext({ sudo: true })
 
@@ -27,51 +31,58 @@ const withAuthData = (
         !sessionData.passport ||
         !sessionData.passport.user ||
         !sessionData.passport.user.userId ||
-        !sudoContext.query[USER_LIST_KEY]
+        !sudoContext.query.User
       ) {
         return
       }
 
+      const {
+        passport: { user },
+      } = sessionData
+
+      if (!canAccessCMS(user)) {
+        // NO ACCESS - redirect/error message?
+        console.log('User does not have access to CMS', user)
+        return
+      }
+
       try {
-        const {
-          passport: { user },
-        } = sessionData
-
         // Look up Keystone user
-        const data = await sudoContext.query[USER_LIST_KEY].findOne({
-          where: { nameId: user.userId },
-          query: `id nameId name isAdmin isEnabled`,
-        })
+        // TODO - filter on isEnabled: true
+        const keystoneUser = (await sudoContext.query.User.findOne({
+          where: { userId: user.userId },
+          query: `id userId name isAdmin isEnabled`,
+        })) as KeystoneUser
 
-        if (!data) {
-          console.log('No user in Keystone exists, create one')
-          // TODO - check access!
-          const keystoneUser = await sudoContext.query[USER_LIST_KEY].createOne(
-            {
-              data: {
-                name: 'Test User',
-                nameId: user.userId,
-                isAdmin: true,
-                isEnabled: true,
-              },
-              query: `id nameId name isAdmin isEnabled`,
-            }
-          )
+        if (!keystoneUser) {
+          console.log('No user in Keystone exists, create one for', user.userId)
+
+          const {
+            attributes: { givenname, surname },
+          } = user
+
+          const keystoneUser = (await sudoContext.query.User.createOne({
+            data: {
+              name: `${givenname} ${surname}`,
+              userId: user.userId,
+              isAdmin: isCMSAdmin(user),
+              isEnabled: true,
+            },
+            query: `id userId name isAdmin isEnabled`,
+          })) as KeystoneUser
 
           return { ...user, ...keystoneUser }
         }
 
-        return { ...user, ...data }
+        return { ...user, ...keystoneUser }
       } catch (e) {
         // ?
-        console.log(e)
-        return
+        console.log('ERROR FINDING/CREATING USER')
+        throw e
       }
     },
   }
 }
-
-// const checkSessionAccess = sessionUser
 
 export const withSharedAuth = (
   keystoneConfig: KeystoneConfig

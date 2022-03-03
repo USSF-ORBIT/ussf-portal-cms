@@ -37,21 +37,25 @@ const redisSessionStore = ({
 const MAX_AGE = 60 * 60 * 4
 const TOKEN_NAME = 'sid' // The key used to store the session in Redis
 
+// The shared session strategy will never "start" a new session
+export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'>
+
 export const sharedRedisSession = ({
   store: storeOption,
   maxAge = MAX_AGE,
 }: {
   store: SessionStoreFunction
   maxAge?: number
-}): SessionStrategy<SessionData> => {
+}): SharedSessionStrategy<SessionData> => {
   const store =
     typeof storeOption === 'function' ? storeOption({ maxAge }) : storeOption
   let isConnected = false
 
   return {
+    // Get session out of Redis store
     async get({ req }) {
       const cookies = cookie.parse(req.headers.cookie || '')
-      const token = cookies[TOKEN_NAME]
+      const token = cookies[`${TOKEN_NAME}`]
 
       if (!token) return
 
@@ -60,18 +64,14 @@ export const sharedRedisSession = ({
         isConnected = true
       }
 
-      // TODO - types
       const data = (await store.get(`sess:${token}`)) as SessionData | undefined
       return data
     },
-    async start({ res, data, createContext }) {
-      // TODO - this should never be use because session will always be started by the portal client
-      console.log('start session', data)
-      return ''
-    },
+
+    // Delete session from Redis store
     async end({ req, res, createContext }) {
       // TODO - log out
-      console.log('end session')
+      console.log('TODO end session')
     },
   }
 }
