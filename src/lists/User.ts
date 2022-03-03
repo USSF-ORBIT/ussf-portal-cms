@@ -70,7 +70,7 @@ const User: Lists.User = list({
       },
     }),
 
-    // TODO - should this be set on login based on SLAM access? does it ever need to be set manually?
+    // TODO - also disable on login if SLAM access has been revoked
     isEnabled: checkbox({
       isFilterable: true,
       access: {

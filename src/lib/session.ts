@@ -43,9 +43,17 @@ export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'>
 export const sharedRedisSession = ({
   store: storeOption,
   maxAge = MAX_AGE,
+  path = '/',
+  secure = process.env.NODE_ENV === 'production',
+  domain,
+  sameSite = 'lax',
 }: {
   store: SessionStoreFunction
   maxAge?: number
+  path?: string
+  secure?: boolean
+  domain?: string
+  sameSite?: true | false | 'lax' | 'strict' | 'none'
 }): SharedSessionStrategy<SessionData> => {
   const store =
     typeof storeOption === 'function' ? storeOption({ maxAge }) : storeOption
@@ -69,9 +77,33 @@ export const sharedRedisSession = ({
     },
 
     // Delete session from Redis store
-    async end({ req, res, createContext }) {
+    async end({ req, res }) {
       // TODO - log out
       console.log('TODO end session')
+      const cookies = cookie.parse(req.headers.cookie || '')
+      const token = cookies[`${TOKEN_NAME}`]
+
+      if (!token) return
+
+      if (!isConnected) {
+        await store.connect?.()
+        isConnected = true
+      }
+
+      await store.delete(`sess:${token}`)
+
+      res.setHeader(
+        'Set-Cookie',
+        cookie.serialize(TOKEN_NAME, '', {
+          maxAge: 0,
+          expires: new Date(),
+          httpOnly: true,
+          secure,
+          path,
+          sameSite,
+          domain,
+        })
+      )
     },
   }
 }

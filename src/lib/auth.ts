@@ -33,6 +33,7 @@ const withAuthData = (
         !sessionData.passport.user.userId ||
         !sudoContext.query.User
       ) {
+        console.log('NO SESSION, REDIRECT')
         return
       }
 
