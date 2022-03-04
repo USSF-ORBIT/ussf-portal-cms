@@ -5,7 +5,7 @@ services:
     container_name: cms
     image: "${IMAGE_TAG}"
     build:
-      context: ./ussf-portal-cms
+      context: .
       dockerfile: Dockerfile
       target: e2e
     restart: always
@@ -27,8 +27,7 @@ services:
 # Portal client
   app:
     build:
-      # TEMP: change branch to main after it is merged
-      context: ./ussf-portal-client
+      context: ../ussf-portal-client/
       dockerfile: Dockerfile
       target: e2e
     container_name: app
