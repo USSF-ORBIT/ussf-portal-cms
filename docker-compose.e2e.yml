@@ -5,7 +5,7 @@ services:
     container_name: cms
     image: "${IMAGE_TAG}"
     build:
-      context: .
+      context: ./ussf-portal-cms
       dockerfile: Dockerfile
       target: e2e
     restart: always
