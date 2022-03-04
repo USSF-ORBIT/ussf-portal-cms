@@ -38,9 +38,8 @@ const redisSessionStore = ({
 const TOKEN_NAME = 'sid' // The key used to store the session in Redis
 
 const SESSION_SECRET = process.env.SESSION_SECRET || ''
+const SESSION_DOMAIN = process.env.SESSION_DOMAIN || 'localhost'
 const SESSION_EXPIRATION = 60 * 60 * 4 // 4 hours
-
-const DOMAIN = 'localhost'
 
 // The shared session strategy will never "start" a new session
 export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'>
@@ -50,7 +49,7 @@ export const sharedRedisSession = ({
   maxAge = SESSION_EXPIRATION,
   path = '/',
   secure = process.env.NODE_ENV === 'production',
-  domain = DOMAIN,
+  domain = SESSION_DOMAIN,
   sameSite = 'strict',
 }: {
   store: SessionStoreFunction
@@ -70,6 +69,8 @@ export const sharedRedisSession = ({
       const cookies = cookie.parse(req.headers.cookie || '')
       const token = cookies[`${TOKEN_NAME}`]
 
+      console.log('get session from cookie', token)
+
       if (!token) return
 
       if (!isConnected) {
@@ -79,9 +80,12 @@ export const sharedRedisSession = ({
 
       const unsigned = unsign(token, SESSION_SECRET)
 
-      const data = (await store.get(`sess:${unsigned}`)) as
-        | SessionData
-        | undefined
+      console.log('unsign', unsigned)
+
+      const data = (await store.get(`sess:${token}`)) as SessionData | undefined
+
+      console.log('get session from redis', data)
+
       return data
     },
 

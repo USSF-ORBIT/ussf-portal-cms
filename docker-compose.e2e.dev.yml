@@ -1,6 +1,62 @@
 version: '3.8'
 
 services:
+# Portal client
+  app:
+    build:
+      context: https://github.com/USSF-ORBIT/ussf-portal-client.git#main
+      dockerfile: Dockerfile
+      target: e2e
+    container_name: app
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      SAML_ISSUER: ussf-portal-client
+      SAML_IDP_METADATA_URL: http://idp:8080/simplesaml/saml2/idp/metadata.php
+      REDIS_URL: redis://portal_redis:6379
+      MONGO_URL: mongodb://mongo:27017
+      MONGODB_DB: cypress-e2e
+      SESSION_SECRET: 'thisvaluecanbeanythingitisonlyforlocaldevelopment'
+    stdin_open: true
+    depends_on:
+      - mongo
+      - redis
+      - idp
+
+# Shared between CMS and Portal
+  redis:
+    container_name: portal_redis
+    image: redis:6.2
+    ports:
+      - '6379:6379'
+# Portal-specific services
+  mongo:
+    container_name: mongo
+    image: mongo:4.0.0
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: dev
+    volumes:
+      - portal_data:/data/db
+    ports:
+      - '27017:27017'
+
+  idp:
+    container_name: test-saml-idp
+    image: kristophjunge/test-saml-idp
+    restart: always
+    ports:
+      - '8080:8080'
+      - '8443:8443'
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: ussf-portal-client
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://localhost:3000/api/auth/login
+      SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: http://localhost:3000/api/auth/logout/callback
+    volumes:
+      - ./users.php:/var/www/simplesamlphp/config/authsources.php
+
+# CMS-specific services
   keystone-db:
     container_name: keystone-db
     image: postgres:14
@@ -15,4 +71,5 @@ services:
       - POSTGRES_DB=cypress
 
 volumes:
+  portal_data:
   cms_data:
