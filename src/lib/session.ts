@@ -3,6 +3,7 @@ import type {
   SessionStoreFunction,
   SessionStrategy,
 } from '@keystone-6/core/types'
+import { unsign } from 'cookie-signature'
 
 import type { SessionData } from '../../types'
 import redisClient from './redis'
@@ -34,19 +35,23 @@ const redisSessionStore = ({
   })
 }
 
-const MAX_AGE = 60 * 60 * 4
 const TOKEN_NAME = 'sid' // The key used to store the session in Redis
+
+const SESSION_SECRET = process.env.SESSION_SECRET || ''
+const SESSION_EXPIRATION = 60 * 60 * 4 // 4 hours
+
+const DOMAIN = 'localhost'
 
 // The shared session strategy will never "start" a new session
 export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'>
 
 export const sharedRedisSession = ({
   store: storeOption,
-  maxAge = MAX_AGE,
+  maxAge = SESSION_EXPIRATION,
   path = '/',
   secure = process.env.NODE_ENV === 'production',
-  domain,
-  sameSite = 'lax',
+  domain = DOMAIN,
+  sameSite = 'strict',
 }: {
   store: SessionStoreFunction
   maxAge?: number
@@ -72,7 +77,11 @@ export const sharedRedisSession = ({
         isConnected = true
       }
 
-      const data = (await store.get(`sess:${token}`)) as SessionData | undefined
+      const unsigned = unsign(token, SESSION_SECRET)
+
+      const data = (await store.get(`sess:${unsigned}`)) as
+        | SessionData
+        | undefined
       return data
     },
 

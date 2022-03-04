@@ -1,26 +1,49 @@
 describe('Authentication', () => {
+  Cypress.Cookies.defaults({
+    preserve: 'sid',
+  })
+
   it('requires a user to be logged in', () => {
     cy.clearCookies()
     cy.visit('/')
-    cy.contains('Sign In')
+    cy.contains("You don't have access to this page.")
   })
 
-  describe('logging in', () => {
-    it('can log in as the autocreated test user', () => {
-      cy.findByLabelText('email').type(Cypress.env('TEST_EMAIL'))
-      cy.findByLabelText('password').type(Cypress.env('TEST_PASSWORD'))
-      cy.findByRole('button', { name: 'Sign In' }).click()
+  describe.only('logging in', () => {
+    beforeEach(() => {
+      cy.intercept('GET', '/api/auth/logout').as('logout')
 
+      cy.intercept(
+        {
+          method: 'GET',
+          url: '**/simplesaml/saml2/idp/SingleLogoutService.php*',
+        },
+        {
+          statusCode: 200,
+          body: 'Logged out',
+        }
+      ).as('testIDPLogout')
+    })
+
+    it('a user can log into the test IDP', () => {
+      cy.loginTestIDP()
+      cy.getCookie('sid').should('exist')
+    })
+
+    it('a user can log into and out of Keystone', () => {
+      cy.getCookie('sid').should('exist')
+
+      cy.visit(`/`)
+      cy.contains('Keystone')
       cy.url().should('eq', Cypress.config().baseUrl + '/')
 
-      cy.findByRole('heading', { level: 1 }).contains('Dashboard')
+      /*
+      cy.contains('Log out').click()
+      cy.wait('@logout')
 
-      cy.findByRole('main').within(() => {
-        cy.findByRole('heading', { level: 3 })
-          .contains('Users')
-          .next()
-          .should('contain', '1 item')
-      })
+      cy.visit('/')
+      cy.url().should('match', /login/)
+      */
     })
   })
 })

@@ -25,3 +25,40 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import '@testing-library/cypress/add-commands'
+
+const PORTAL_URL = `http://localhost:3000`
+
+Cypress.Commands.add(
+  'loginTestIDP',
+  (
+    { username, password } = { username: 'cmsuser', password: 'cmsuserpass' }
+  ) => {
+    cy.clearCookies()
+
+    // Go to the portal log in page
+    cy.visit(`${PORTAL_URL}/login`)
+    cy.contains('Log In').click()
+
+    // IDP redirects to their login page
+    cy.url().should('contain', 'http://localhost:8080/simplesaml/')
+
+    cy.contains('Enter your username and password')
+    cy.findByLabelText('Username')
+      .clear()
+      .type(username)
+      .should('have.value', username)
+    cy.findByLabelText('Password').type(password)
+    cy.contains('Login').click()
+
+    cy.url().should('eq', `${PORTAL_URL}/`)
+  }
+)
+
+Cypress.Commands.add('preserveLoginCookies', () => {
+  // auto-preserve session cookie between tests
+  Cypress.Cookies.preserveOnce('sid')
+
+  // preserve IDP cookies to auto-login after starting session
+  Cypress.Cookies.preserveOnce('SimpleSAMLAuthTokenIdp')
+  Cypress.Cookies.preserveOnce('PHPSESSIDIDP')
+})
