@@ -4,7 +4,7 @@ services:
 # Portal client
   app:
     build:
-      context: https://github.com/USSF-ORBIT/ussf-portal-client.git#main
+      context: ../ussf-portal-client/
       dockerfile: Dockerfile
       target: e2e
     container_name: app
@@ -18,6 +18,7 @@ services:
       MONGO_URL: mongodb://mongo:27017
       MONGODB_DB: cypress-e2e
       SESSION_SECRET: 'thisvaluecanbeanythingitisonlyforlocaldevelopment'
+      SESSION_DOMAIN: 'localhost'
     stdin_open: true
     depends_on:
       - mongo

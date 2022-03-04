@@ -61,8 +61,6 @@ services:
     restart: always
     environment:
       MONGO_INITDB_DATABASE: dev
-    volumes:
-      - portal_data:/data/db
     ports:
       - '27017:27017'
 
