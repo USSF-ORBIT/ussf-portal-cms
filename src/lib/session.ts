@@ -82,7 +82,9 @@ export const sharedRedisSession = ({
 
       console.log('unsign', unsigned)
 
-      const data = (await store.get(`sess:${token}`)) as SessionData | undefined
+      const data = (await store.get(`sess:${unsigned}`)) as
+        | SessionData
+        | undefined
 
       console.log('get session from redis', data)
 
