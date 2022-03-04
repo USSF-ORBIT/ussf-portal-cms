@@ -31,6 +31,7 @@ jobs:
         with:
           repository: USSF-ORBIT/ussf-portal-client
           ref: 340-shared-session # TODO remove after merged
+          path: ./ussf-portal-client
 
       - name: Run LS
         run: 'ls'

@@ -28,7 +28,7 @@ services:
   app:
     build:
       # TEMP: change branch to main after it is merged
-      context: https://github.com/USSF-ORBIT/ussf-portal-client.git#340-shared-session
+      context: ./ussf-portal-client
       dockerfile: Dockerfile
       target: e2e
     container_name: app
