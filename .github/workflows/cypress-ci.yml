@@ -39,6 +39,10 @@ jobs:
         run: docker build -t $IMAGE_TAG .
         working-directory: ./ussf-portal-cms
 
+      - name: Echo docker config
+        run: docker-compose config
+        working-directory: ./ussf-portal-cms
+
       - name: Docker compose
         run: docker-compose -f docker-compose.e2e.yml up -d
         working-directory: ./ussf-portal-cms

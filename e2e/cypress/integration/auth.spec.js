@@ -1,8 +1,4 @@
 describe('Authentication', () => {
-  Cypress.Cookies.defaults({
-    preserve: 'sid',
-  })
-
   it('requires a user to be logged in', () => {
     cy.clearCookies()
     cy.visit('/')
@@ -10,21 +6,6 @@ describe('Authentication', () => {
   })
 
   describe.only('logging in', () => {
-    beforeEach(() => {
-      cy.intercept('GET', '/api/auth/logout').as('logout')
-
-      cy.intercept(
-        {
-          method: 'GET',
-          url: '**/simplesaml/saml2/idp/SingleLogoutService.php*',
-        },
-        {
-          statusCode: 200,
-          body: 'Logged out',
-        }
-      ).as('testIDPLogout')
-    })
-
     it('a user can log into the test IDP', () => {
       cy.loginTestIDP()
       cy.getCookie('sid').should('exist')

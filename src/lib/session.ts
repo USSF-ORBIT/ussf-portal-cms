@@ -69,8 +69,8 @@ export const sharedRedisSession = ({
       const cookies = cookie.parse(req.headers.cookie || '')
       const token = cookies[`${TOKEN_NAME}`]
 
+      // No matching cookie
       console.log('get session from cookie', token)
-
       if (!token) return
 
       if (!isConnected) {
@@ -79,13 +79,11 @@ export const sharedRedisSession = ({
       }
 
       const unsigned = unsign(token, SESSION_SECRET)
-
       console.log('unsign', unsigned)
 
-      const data = (await store.get(`sess:${unsigned}`)) as
-        | SessionData
-        | undefined
-
+      const data =
+        ((await store.get(`sess:${unsigned}`)) as unknown as SessionData) ||
+        undefined
       console.log('get session from redis', data)
 
       return data

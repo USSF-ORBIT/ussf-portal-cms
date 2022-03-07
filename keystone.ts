@@ -14,8 +14,11 @@ export default withSharedAuth(
     },
     ui: {
       // TODO - add redirect here if no session
-      // pageMiddleware: () => {},
+      // pageMiddleware: async ({ context, isValidSession }) => {},
       isAccessAllowed: (context) => {
+        // console.log('IMAGE TAG', 'test-auth.3')
+        console.log('check for session', context.session)
+        // return true
         return !!context.session
       },
     },
