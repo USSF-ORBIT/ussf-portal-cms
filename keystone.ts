@@ -13,6 +13,7 @@ export default withSharedAuth(
       useMigrations: true,
     },
     ui: {
+      publicPages: ['/custom-page'],
       // TODO - add redirect here if no session
       // pageMiddleware: async ({ context, isValidSession }) => {},
       isAccessAllowed: (context) => {

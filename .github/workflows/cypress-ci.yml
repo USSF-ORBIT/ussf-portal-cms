@@ -40,8 +40,12 @@ jobs:
         working-directory: ./ussf-portal-cms
 
       - name: Docker compose
-        run: docker-compose up -d
-        working-directory: ./ussf-portal-cms
+        run: |
+          cd ussf-portal-cms
+          docker-compose up -d
+          docker ps
+          docker-compose logs
+        # working-directory: ./ussf-portal-cms
         env:
           IMAGE_TAG: ${{ github.sha }}
 
