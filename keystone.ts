@@ -3,16 +3,6 @@ import { config } from '@keystone-6/core'
 import { lists } from './src/schema'
 // import { withSharedAuth } from './src/lib/auth'
 
-<<<<<<< HEAD
-export default withSharedAuth(
-  config({
-    lists,
-    db: {
-      provider: 'postgresql',
-      url: `${process.env.DATABASE_URL}` || '',
-      enableLogging: true,
-      useMigrations: true,
-=======
 export default config({
   lists,
   db: {
@@ -30,7 +20,6 @@ export default config({
       // console.log('check for session', context.session)
       return true
       // return !!context.session
->>>>>>> Remove session code, try fixing logs
     },
   },
 })
