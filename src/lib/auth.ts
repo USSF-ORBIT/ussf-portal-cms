@@ -16,7 +16,6 @@ const withAuthData = (
     start: () => {
       // The shared session strategy should never "start" a new session
       // this method should never be called but needs to exist to appease Keystone types
-      console.log('start session')
       return Promise.reject(
         new Error('ERROR: Invalid attempt to start a new session in Keystone')
       )

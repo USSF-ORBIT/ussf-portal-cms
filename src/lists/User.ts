@@ -15,7 +15,7 @@ const User: Lists.User = list({
       delete: () => false,
     },
     filter: {
-      query: isAdminOrSelf,
+      query: () => true, // isAdminOrSelf,
       update: isAdminOrSelf,
     },
   },
