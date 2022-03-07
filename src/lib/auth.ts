@@ -46,9 +46,6 @@ const withAuthData = (
         return
       }
 
-      return sessionData as unknown as AuthenticatedUser
-
-      /*
       try {
         // Look up Keystone user
         // TODO - filter on isEnabled: true
@@ -58,6 +55,9 @@ const withAuthData = (
         })) as KeystoneUser
 
         if (!keystoneUser) {
+          return sessionData as unknown as AuthenticatedUser
+
+          /*
           console.log('No user in Keystone exists, create one for', user.userId)
 
           const {
@@ -75,15 +75,16 @@ const withAuthData = (
           })) as KeystoneUser
 
           return { ...user, ...keystoneUser }
+          */
         }
 
         return { ...user, ...keystoneUser }
       } catch (e) {
         // ?
         console.log('ERROR FINDING/CREATING USER')
+        console.error(e)
         throw e
       }
-      */
     },
   }
 }

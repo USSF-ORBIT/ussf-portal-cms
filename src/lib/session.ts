@@ -37,7 +37,7 @@ const redisSessionStore = ({
 
 const TOKEN_NAME = 'sid' // The key used to store the session in Redis
 
-const SESSION_SECRET = process.env.SESSION_SECRET || ''
+const SESSION_SECRET = `${process.env.SESSION_SECRET}`
 const SESSION_DOMAIN = process.env.SESSION_DOMAIN || 'localhost'
 const SESSION_EXPIRATION = 60 * 60 * 4 // 4 hours
 
@@ -78,7 +78,7 @@ export const sharedRedisSession = ({
         isConnected = true
       }
 
-      const unsigned = unsign(token, SESSION_SECRET)
+      const unsigned = unsign(token, SESSION_SECRET) || token
       console.log('unsign', unsigned)
 
       const data =
