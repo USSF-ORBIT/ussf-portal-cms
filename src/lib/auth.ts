@@ -1,7 +1,7 @@
 import type { KeystoneConfig, SessionStrategy } from '@keystone-6/core/types'
 
 import type { SessionData, KeystoneUser, AuthenticatedUser } from '../../types'
-// import { canAccessCMS, isCMSAdmin } from '../util/access'
+import { canAccessCMS, isCMSAdmin } from '../util/access'
 
 import { session, SharedSessionStrategy } from './session'
 
@@ -23,9 +23,6 @@ const withAuthData = (
     get: async ({ req, createContext }) => {
       console.log('GET SESSION')
       const sessionData = await get({ req, createContext })
-      return sessionData as unknown as AuthenticatedUser
-
-      /*
       const sudoContext = createContext({ sudo: true })
 
       if (
@@ -49,6 +46,9 @@ const withAuthData = (
         return
       }
 
+      return sessionData as unknown as AuthenticatedUser
+
+      /*
       try {
         // Look up Keystone user
         // TODO - filter on isEnabled: true
