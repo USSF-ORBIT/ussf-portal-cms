@@ -42,6 +42,8 @@ jobs:
       - name: Echo docker config
         run: docker-compose config
         working-directory: ./ussf-portal-cms
+        env:
+          IMAGE_TAG: ${{ github.sha }}
 
       - name: Docker compose
         run: docker-compose up -d
