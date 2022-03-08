@@ -26,3 +26,8 @@ coverage
 .envrc.*
 
 tsconfig.tsbuildinfo
+
+# Cypress artifacts
+cypress/screenshots
+cypress/videos
+cypress/reports

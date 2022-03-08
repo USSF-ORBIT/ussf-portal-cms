@@ -21,7 +21,9 @@
     "pre-commit": "lint-staged",
     "test": "jest --runInBand --testTimeout=60000",
     "test:watch": "jest --watch --runInBand --testTimeout=60000",
-    "release": "standard-version -t ''"
+    "release": "standard-version -t ''",
+    "cypress:install": "yarn --cwd e2e/ install",
+    "cypress:dev": "yarn --cwd e2e/ cypress open"
   },
   "dependencies": {
     "@babel/core": "7.17.2",

@@ -36,3 +36,8 @@ public/
 
 # Generated files
 CHANGELOG.md
+
+# Cypress artifacts
+cypress/screenshots
+cypress/videos
+cypress/reports

@@ -5,4 +5,9 @@ node_modules
 Dockerfile
 Dockerfile.dev
 .git
+.github
+.husky
 .envrc*
+e2e
+docs
+docker-compose*

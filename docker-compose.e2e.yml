@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  cms:
+    container_name: cms
+    image: "${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: e2e
+    restart: always
+    ports:
+      - '3001:3001'
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgres://keystone:keystonecms@keystone-db:5432/cypress
+      TEST_USERNAME: Admin
+      TEST_PASSWORD: adminpassword
+      TEST_EMAIL: admin@example.com
+      CYPRESS_TEST_PASSWORD: adminpassword
+      CYPRESS_TEST_EMAIL: admin@example.com
+    depends_on:
+      - keystone-db
+
+  keystone-db:
+    container_name: keystone-db
+    image: postgres:14
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - cms_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=keystonecms
+      - POSTGRES_USER=keystone
+      - POSTGRES_DB=cypress
+
+volumes:
+  cms_data:

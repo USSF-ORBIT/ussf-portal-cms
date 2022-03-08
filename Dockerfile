@@ -1,37 +1,56 @@
-# Build container
-FROM node:14.19.0-slim AS build
-
-
-WORKDIR /home/node
+##--------- Stage: builder ---------##
+FROM node:14.19.0-slim AS builder
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends openssl libc6 openssl python yarn dumb-init
+    && apt-get install -y --no-install-recommends libc6 yarn
+
+WORKDIR /app
 
 COPY . .
 
 ENV NODE_ENV development
 
-RUN yarn install --frozen-lockfile \
-    && yarn build && yarn cache clean
+RUN yarn install --frozen-lockfile
 
-ARG BUILD
+RUN yarn build
 
+# Install only production deps this time
+RUN yarn install --production --ignore-scripts --prefer-offline
+
+##--------- Stage: e2e ---------##
+# E2E image for running tests (same as prod but without certs)
+FROM node:14.19.0-slim AS e2e
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+
+ENV NODE_ENV production
+
+EXPOSE 3000
+ENV NEXT_TELEMETRY_DISABLED 1
+
+CMD node_modules/.bin/keystone prisma migrate deploy ; dumb-init node_modules/.bin/keystone start
+
+##--------- Stage: runner ---------##
 # Runtime container
-FROM build AS runner
+FROM node:14.19.0-slim AS runner
 
-WORKDIR /home/node
+WORKDIR /app
 
 COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates wget unzip \
+    && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init \
     && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /home/node /home/node
+COPY --from=builder /app /app
 
 ENV NODE_ENV production
-
 
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
