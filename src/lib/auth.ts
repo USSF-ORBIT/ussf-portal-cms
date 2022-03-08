@@ -100,20 +100,26 @@ const extendGraphqlSchema = graphQLSchemaExtension<Context>({
   `,
   resolvers: {
     Query: {
-      authenticatedItem: (root, args, { session, db }) => {
-        console.log('AUTH ITEM RESOLVER', session)
-
+      authenticatedItem: async (root, args, { session, db }) => {
         if (typeof session?.userId === 'string') {
+          const user = await db.User.findOne({
+            where: { userId: session.userId },
+          })
+          // console.log('look for user', session.userId, user)
+
+          /*
+          const labelField = Object.keys(data.authenticatedItem).filter(
+            (x) => x !== '__typename' && x !== 'id'
+          )[0]
+          */
+
           return {
-            id: session.id,
             __typename: 'User',
             listKey: 'User',
             label: session.userId,
+            itemId: session.id,
+            ...user,
           }
-
-          const user = db.User.findOne({ where: { userId: session.userId } })
-          console.log('look for user', session.userId, user)
-          return user
         }
 
         return null
