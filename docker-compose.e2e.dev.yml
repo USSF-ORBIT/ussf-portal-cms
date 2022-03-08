@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  keystone-db:
+    container_name: keystone-db
+    image: postgres:14
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - cms_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=keystonecms
+      - POSTGRES_USER=keystone
+      - POSTGRES_DB=cypress
+
+volumes:
+  cms_data:

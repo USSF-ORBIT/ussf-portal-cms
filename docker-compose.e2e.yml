@@ -17,8 +17,7 @@ services:
       TEST_USERNAME: Admin
       TEST_PASSWORD: adminpassword
       TEST_EMAIL: admin@example.com
-      CYPRESS_TEST_PASSWORD: adminpassword
-      CYPRESS_TEST_EMAIL: admin@example.com
+      SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
     depends_on:
       - keystone-db
 
@@ -28,12 +27,7 @@ services:
     restart: always
     ports:
       - '5432:5432'
-    volumes:
-      - cms_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_PASSWORD=keystonecms
       - POSTGRES_USER=keystone
       - POSTGRES_DB=cypress
-
-volumes:
-  cms_data:

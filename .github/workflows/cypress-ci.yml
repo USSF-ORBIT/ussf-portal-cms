@@ -27,7 +27,7 @@ jobs:
         working-directory: ./ussf-portal-cms
 
       - name: Docker compose
-        run: docker-compose up -d
+        run: docker-compose -f docker-compose.e2e.yml up -d
         working-directory: ./ussf-portal-cms
         env:
           IMAGE_TAG: ${{ github.sha }}
@@ -41,6 +41,8 @@ jobs:
         uses: cypress-io/github-action@90f0f494f47dd0a22ac4759978de892d3e3fd340 # tag=v3.0.2
         env:
           CYPRESS_BASE_URL: http://localhost:3001
+          CYPRESS_TEST_PASSWORD: adminpassword
+          CYPRESS_TEST_EMAIL: admin@example.com
         with:
           install-command: yarn install --frozen-lockfile
           working-directory: ./ussf-portal-cms/e2e
