@@ -158,7 +158,8 @@ branches:
         # Required. Require branches to be up to date before merging.
         strict: true
         # Required. The list of status checks to require in order to merge into this branch
-        contexts: ['lint-and-test', 'action-semantic-pull-request']
+        contexts:
+          ['lint-and-test', 'action-semantic-pull-request', 'cypress-run']
       # Required. Enforce all configured restrictions for administrators. Set to true to enforce required status checks for repository administrators. Set to null to disable.
       enforce_admins: true
       # Commits pushed to matching branches must have verified signatures. Set to false to disable.
