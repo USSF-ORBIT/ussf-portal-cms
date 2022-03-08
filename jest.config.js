@@ -1,6 +1,6 @@
 module.exports = {
   roots: ['<rootDir>', '<rootDir>/src/'],
-  testPathIgnorePatterns: ['/node_modules/', '.keystone/'],
+  testPathIgnorePatterns: ['/node_modules/', '.keystone/', 'e2e/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
