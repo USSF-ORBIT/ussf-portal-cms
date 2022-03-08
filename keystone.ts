@@ -17,9 +17,9 @@ export default config({
     // pageMiddleware: async ({ context, isValidSession }) => {},
     isAccessAllowed: (context) => {
       console.log('IMAGE TAG', process.env.IMAGE_TAG)
-      // console.log('check for session', context.session)
-      return true
-      // return !!context.session
+      console.log('check for session', context.session)
+      // return true
+      return !!context.session
     },
   },
 })
