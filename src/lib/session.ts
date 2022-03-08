@@ -70,7 +70,7 @@ export const sharedRedisSession = ({
       const token = cookies[`${TOKEN_NAME}`]
 
       // No matching cookie
-      console.log('get session from cookie', token)
+      // console.log('get session from cookie', token)
       if (!token) return
 
       if (!isConnected) {
@@ -79,12 +79,12 @@ export const sharedRedisSession = ({
       }
 
       const unsigned = unsign(token, SESSION_SECRET) || token
-      console.log('unsign', unsigned)
+      // console.log('unsign', unsigned)
 
       const data =
         ((await store.get(`sess:${unsigned}`)) as unknown as SessionData) ||
         undefined
-      console.log('get session from redis', data)
+      // console.log('get session from redis', data)
 
       return data
     },
@@ -92,7 +92,7 @@ export const sharedRedisSession = ({
     // Delete session from Redis store
     async end({ req, res }) {
       // TODO - log out
-      console.log('TODO end session')
+      // console.log('TODO end session')
       const cookies = cookie.parse(req.headers.cookie || '')
       const token = cookies[`${TOKEN_NAME}`]
 

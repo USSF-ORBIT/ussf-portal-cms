@@ -16,11 +16,12 @@ export default withSharedAuth(
       publicPages: ['/custom-page'],
       // TODO - add redirect here if no session
       // pageMiddleware: async ({ context, isValidSession }) => {},
+      enableSessionItem: true,
       isAccessAllowed: (context) => {
-        console.log('IMAGE TAG', process.env.IMAGE_TAG)
-        console.log('check for session', context.session)
+        // console.log('IMAGE TAG', process.env.IMAGE_TAG)
+        // console.log('check for session', context.session)
         // return true
-        return !!context.session
+        return context.session !== undefined
       },
     },
   })

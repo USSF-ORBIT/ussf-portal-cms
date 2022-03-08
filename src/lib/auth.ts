@@ -1,9 +1,11 @@
 import type { KeystoneConfig, SessionStrategy } from '@keystone-6/core/types'
+import { graphQLSchemaExtension } from '@keystone-6/core'
 
 import type { SessionData, KeystoneUser, AuthenticatedUser } from '../../types'
 import { canAccessCMS, isCMSAdmin } from '../util/access'
 
 import { session, SharedSessionStrategy } from './session'
+import type { Context } from '.keystone/types'
 
 const withAuthData = (
   _sessionStrategy: SharedSessionStrategy<SessionData>
@@ -21,7 +23,7 @@ const withAuthData = (
       )
     },
     get: async ({ req, createContext }) => {
-      console.log('GET SESSION')
+      // console.log('GET SESSION')
       const sessionData = await get({ req, createContext })
       const sudoContext = createContext({ sudo: true })
 
@@ -32,7 +34,7 @@ const withAuthData = (
         !sessionData.passport.user.userId ||
         !sudoContext.query.User
       ) {
-        console.log('NO SESSION, REDIRECT')
+        // console.log('NO SESSION, REDIRECT')
         return
       }
 
@@ -42,7 +44,7 @@ const withAuthData = (
 
       if (!canAccessCMS(user)) {
         // NO ACCESS - redirect/error message?
-        console.log('User does not have access to CMS', user)
+        // console.log('User does not have access to CMS', user)
         return
       }
 
@@ -57,7 +59,7 @@ const withAuthData = (
         if (!keystoneUser) {
           // return sessionData as unknown as AuthenticatedUser
 
-          console.log('No user in Keystone exists, create one for', user.userId)
+          // console.log('No user in Keystone exists, create one for', user.userId)
 
           const {
             attributes: { givenname, surname },
@@ -79,13 +81,46 @@ const withAuthData = (
         return { ...user, ...keystoneUser }
       } catch (e) {
         // ?
-        console.log('ERROR FINDING/CREATING USER')
+        // console.log('ERROR FINDING/CREATING USER')
         console.error(e)
         throw e
       }
     },
   }
 }
+
+const extendGraphqlSchema = graphQLSchemaExtension<Context>({
+  typeDefs: `
+    type Query {
+      """ Authenticated Item """
+      authenticatedItem: AuthenticatedItem
+    }
+
+    union AuthenticatedItem = User
+  `,
+  resolvers: {
+    Query: {
+      authenticatedItem: (root, args, { session, db }) => {
+        console.log('AUTH ITEM RESOLVER', session)
+
+        if (typeof session?.userId === 'string') {
+          return {
+            id: session.id,
+            __typename: 'User',
+            listKey: 'User',
+            label: session.userId,
+          }
+
+          const user = db.User.findOne({ where: { userId: session.userId } })
+          console.log('look for user', session.userId, user)
+          return user
+        }
+
+        return null
+      },
+    },
+  },
+})
 
 export const withSharedAuth = (
   keystoneConfig: KeystoneConfig
@@ -95,5 +130,6 @@ export const withSharedAuth = (
   return {
     ...keystoneConfig,
     session: sessionWithUser,
+    extendGraphqlSchema,
   }
 }
