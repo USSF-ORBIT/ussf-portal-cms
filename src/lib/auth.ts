@@ -55,9 +55,8 @@ const withAuthData = (
         })) as KeystoneUser
 
         if (!keystoneUser) {
-          return sessionData as unknown as AuthenticatedUser
+          // return sessionData as unknown as AuthenticatedUser
 
-          /*
           console.log('No user in Keystone exists, create one for', user.userId)
 
           const {
@@ -75,7 +74,6 @@ const withAuthData = (
           })) as KeystoneUser
 
           return { ...user, ...keystoneUser }
-          */
         }
 
         return { ...user, ...keystoneUser }
