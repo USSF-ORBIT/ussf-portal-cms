@@ -10,11 +10,6 @@ describe('Authentication', () => {
   })
 
   describe('logging in', () => {
-    it('can access literally ANY PAGE', () => {
-      cy.visit(`/custom-page`)
-      cy.contains('This is a custom Admin UI Page')
-    })
-
     it('a user can log into the test IDP', () => {
       cy.loginTestIDP()
       cy.getCookie('sid').should('exist')

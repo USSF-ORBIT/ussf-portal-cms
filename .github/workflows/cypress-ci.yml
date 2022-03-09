@@ -24,7 +24,6 @@ jobs:
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
         with:
           repository: USSF-ORBIT/ussf-portal-client
-          ref: 340-shared-session # TODO remove after merged
           path: ./ussf-portal-client
 
       - name: Build image for testing
@@ -53,12 +52,8 @@ jobs:
           working-directory: ./ussf-portal-cms/e2e
           build: npx cypress info
 
-      - name: Keystone DB logs
-        if: always()
-        run: docker logs keystone-db
-
-      - name:
-        if: always()
+      - name: Keystone server logs
+        if: failure()
         run: docker logs cms
 
       - name: Upload logs

@@ -23,7 +23,6 @@ const withAuthData = (
       )
     },
     get: async ({ req, createContext }) => {
-      console.log('GET SESSION')
       const sessionData = await get({ req, createContext })
       const sudoContext = createContext({ sudo: true })
 
@@ -34,7 +33,6 @@ const withAuthData = (
         !sessionData.passport.user.userId ||
         !sudoContext.query.User
       ) {
-        console.log('NO SESSION, REDIRECT')
         return
       }
 
@@ -44,7 +42,6 @@ const withAuthData = (
 
       if (!canAccessCMS(user)) {
         // NO ACCESS - redirect/error message?
-        console.log('User does not have access to CMS', user)
         return
       }
 
@@ -57,10 +54,6 @@ const withAuthData = (
         })) as KeystoneUser
 
         if (!keystoneUser) {
-          // return sessionData as unknown as AuthenticatedUser
-
-          console.log('No user in Keystone exists, create one for', user.userId)
-
           const {
             attributes: { givenname, surname },
           } = user
@@ -75,15 +68,12 @@ const withAuthData = (
             query: `id userId name isAdmin isEnabled`,
           })) as KeystoneUser
 
-          console.log('USER CREATED, RETURN', keystoneUser)
           return { ...user, ...keystoneUser }
         }
 
-        console.log('USER FOUND, RETURN', keystoneUser)
         return { ...user, ...keystoneUser }
       } catch (e) {
-        // ?
-        console.log('ERROR FINDING/CREATING USER')
+        // Prisma error most likely
         console.error(e)
         throw e
       }
@@ -107,13 +97,6 @@ const extendGraphqlSchema = graphQLSchemaExtension<Context>({
           const user = await db.User.findOne({
             where: { userId: session.userId },
           })
-          console.log('look for user', session.userId, user)
-
-          /*
-          const labelField = Object.keys(data.authenticatedItem).filter(
-            (x) => x !== '__typename' && x !== 'id'
-          )[0]
-          */
 
           return {
             __typename: 'User',
