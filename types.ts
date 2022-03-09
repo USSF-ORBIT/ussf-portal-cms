@@ -26,7 +26,7 @@ export interface SAMLUser {
     givenname: string
     surname: string
     userprincipalname: string
-    userGroups: string[]
+    userGroups: string[] | string
   }
 }
 

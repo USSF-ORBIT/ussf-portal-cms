@@ -14,11 +14,11 @@ export const canAccessCMS = (user: SessionUser) => {
     attributes: { userGroups },
   } = user
 
-  if (Array.isArray(userGroups)) {
-    return userGroups.find((i) => USER_GROUPS_LIST.includes(i))
-  }
+  const groupsList: string[] = Array.isArray(userGroups)
+    ? userGroups
+    : userGroups.split(',')
 
-  return USER_GROUPS_LIST.includes(userGroups)
+  return !!groupsList.find((i) => USER_GROUPS_LIST.includes(i))
 }
 
 export const isCMSAdmin = (user: SessionUser) => {
@@ -26,11 +26,11 @@ export const isCMSAdmin = (user: SessionUser) => {
     attributes: { userGroups },
   } = user
 
-  if (Array.isArray(userGroups)) {
-    return userGroups.includes(USER_GROUPS.ADMIN)
-  }
+  const groupsList: string[] = Array.isArray(userGroups)
+    ? userGroups
+    : userGroups.split(',')
 
-  return userGroups === USER_GROUPS.ADMIN
+  return groupsList.includes(USER_GROUPS.ADMIN)
 }
 
 /** Access helpers */
