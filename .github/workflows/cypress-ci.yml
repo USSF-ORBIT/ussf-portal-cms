@@ -52,6 +52,14 @@ jobs:
           install-command: yarn install --frozen-lockfile
           working-directory: ./ussf-portal-cms/e2e
 
+      - name: Keystone DB logs
+        if: always()
+        run: docker logs keystone-db
+
+      - name:
+        if: always()
+        run: docker logs cms
+
       - name: Upload logs
         uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # tag=v3
         if: always()
