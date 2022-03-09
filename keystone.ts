@@ -17,7 +17,9 @@ export default withSharedAuth(
       // TODO - add redirect here if no session
       // pageMiddleware: async ({ context, isValidSession }) => {},
       enableSessionItem: true,
-      isAccessAllowed: (context) => context.session !== undefined,
+      isAccessAllowed: async (context) => {
+        return !!context.session
+      },
     },
   })
 )

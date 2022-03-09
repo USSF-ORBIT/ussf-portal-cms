@@ -1,11 +1,15 @@
 describe('Authentication', () => {
-  it('requires a user to be logged in', () => {
-    cy.clearCookies()
-    cy.visit('/')
-    cy.contains("You don't have access to this page.")
+  describe('without being logged in', () => {
+    it('requires a user to be logged in', () => {
+      cy.clearCookies()
+      cy.clearCookie('sid')
+      cy.getCookie('sid').should('not.exist')
+      cy.visit('/')
+      cy.contains("You don't have access to this page.")
+    })
   })
 
-  describe.only('logging in', () => {
+  describe('logging in', () => {
     it('can access literally ANY PAGE', () => {
       cy.visit(`/custom-page`)
       cy.contains('This is a custom Admin UI Page')
@@ -20,8 +24,9 @@ describe('Authentication', () => {
       cy.getCookie('sid').should('exist')
 
       cy.visit(`/`)
-      cy.contains('Keystone')
       cy.url().should('eq', Cypress.config().baseUrl + '/')
+      cy.reload()
+      cy.contains('Signed in as JOHN.HENKE.562270783@testusers.cce.af.mil')
 
       /*
       cy.contains('Log out').click()
