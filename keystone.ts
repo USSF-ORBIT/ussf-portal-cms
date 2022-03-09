@@ -17,12 +17,7 @@ export default withSharedAuth(
       // TODO - add redirect here if no session
       // pageMiddleware: async ({ context, isValidSession }) => {},
       enableSessionItem: true,
-      isAccessAllowed: (context) => {
-        // console.log('IMAGE TAG', process.env.IMAGE_TAG)
-        // console.log('check for session', context.session)
-        // return true
-        return context.session !== undefined
-      },
+      isAccessAllowed: (context) => context.session !== undefined,
     },
   })
 )

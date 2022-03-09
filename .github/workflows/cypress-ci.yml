@@ -51,6 +51,7 @@ jobs:
         with:
           install-command: yarn install --frozen-lockfile
           working-directory: ./ussf-portal-cms/e2e
+          build: npx cypress info
 
       - name: Keystone DB logs
         if: always()
