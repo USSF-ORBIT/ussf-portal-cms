@@ -33,7 +33,10 @@ Cypress.Commands.add(
   (
     { username, password } = { username: 'cmsuser', password: 'cmsuserpass' }
   ) => {
-    cy.clearCookies()
+    // Make sure we're logged out of the portal first
+    cy.clearCookie('sid')
+    cy.clearCookie('SimpleSAMLAuthTokenIdp')
+    cy.clearCookie('PHPSESSIDIDP')
 
     // Go to the portal log in page
     cy.visit(`${PORTAL_URL}/login`)

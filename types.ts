@@ -6,7 +6,7 @@
 
 // The raw data stored in Redis
 export type SessionData = {
-  cookie: any // TODO
+  cookie: { [key: string]: string }
   passport: {
     user: SessionUser
   }

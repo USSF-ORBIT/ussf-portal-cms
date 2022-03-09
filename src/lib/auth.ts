@@ -101,8 +101,8 @@ const extendGraphqlSchema = graphQLSchemaExtension<Context>({
           return {
             __typename: 'User',
             listKey: 'User',
-            label: session.userId,
-            itemId: session.id,
+            label: user.userId,
+            itemId: user.id,
             ...user,
           }
         }

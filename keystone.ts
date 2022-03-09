@@ -13,12 +13,13 @@ export default withSharedAuth(
       useMigrations: true,
     },
     ui: {
-      // TODO - add redirect here if no session
-      // pageMiddleware: async ({ context, isValidSession }) => {},
-      enableSessionItem: true,
-      isAccessAllowed: async (context) => {
-        return !!context.session
+      /*
+      pageMiddleware: async ({ context, isValidSession }) => {
+      // TODO - add redirect to portal login here if no session
       },
+      */
+      enableSessionItem: true,
+      isAccessAllowed: ({ session }) => !!session,
     },
   })
 )

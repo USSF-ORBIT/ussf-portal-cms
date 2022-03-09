@@ -88,8 +88,6 @@ export const sharedRedisSession = ({
 
     // Delete session from Redis store
     async end({ req, res }) {
-      // TODO - log out
-      // console.log('TODO end session')
       const cookies = cookie.parse(req.headers.cookie || '')
       const token = cookies[`${TOKEN_NAME}`]
 
