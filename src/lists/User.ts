@@ -46,7 +46,6 @@ const User: Lists.User = list({
       isFilterable: true,
       access: {
         read: () => true,
-        create: () => false,
         update: () => false,
       },
       ui: {
@@ -70,7 +69,6 @@ const User: Lists.User = list({
       },
     }),
 
-    // TODO - also disable on login if SLAM access has been revoked
     isEnabled: checkbox({
       isFilterable: true,
       access: {

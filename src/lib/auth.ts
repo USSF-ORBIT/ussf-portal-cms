@@ -42,7 +42,6 @@ const withAuthData = (
 
       try {
         // Look up Keystone user
-        // TODO - filter on isEnabled: true
         let keystoneUser = (await sudoContext.query.User.findOne({
           where: { userId: user.userId },
           query: `id userId name isAdmin isEnabled`,
@@ -50,8 +49,8 @@ const withAuthData = (
 
         if (!canAccessCMS(user)) {
           // NO ACCESS
-          if (keystoneUser) {
-            // User existed previous - disable them
+          if (keystoneUser && keystoneUser.isEnabled) {
+            // User was enabled but now does not have access from SLAM
             keystoneUser = (await sudoContext.query.User.updateOne({
               where: { userId: user.userId },
               data: { isEnabled: false },
@@ -64,6 +63,7 @@ const withAuthData = (
         }
 
         if (!keystoneUser) {
+          // No existing user, create one
           const {
             attributes: { givenname, surname },
           } = user
@@ -80,6 +80,7 @@ const withAuthData = (
 
           return { ...user, ...keystoneUser }
         } else {
+          // User was disabled but now has access from SLAM
           if (!keystoneUser.isEnabled && canAccessCMS(user)) {
             // Re-enable user
             keystoneUser = (await sudoContext.query.User.updateOne({
@@ -89,6 +90,7 @@ const withAuthData = (
             })) as KeystoneUser
           }
 
+          // User was admin but is no longer admin in SLAM
           if (keystoneUser.isAdmin && !isCMSAdmin(user)) {
             // Revoke admin access
             keystoneUser = (await sudoContext.query.User.updateOne({
@@ -98,6 +100,7 @@ const withAuthData = (
             })) as KeystoneUser
           }
 
+          // User was not admin but is now an admin in SLAM
           if (!keystoneUser.isAdmin && isCMSAdmin(user)) {
             // Grant admin access
             keystoneUser = (await sudoContext.query.User.updateOne({
