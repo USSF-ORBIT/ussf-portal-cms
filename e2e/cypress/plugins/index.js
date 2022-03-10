@@ -13,21 +13,30 @@
 // the project's config changing)
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { seedDB } = require('../support/seed')
+const { seedRevokeUsers, seedGrantUsers } = require('../support/seed')
 
 /**
  * @type {Cypress.PluginConfig}
  */
 // eslint-disable-next-line no-unused-vars
-module.exports = (on, config) => {
+module.exports = (on) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 
   on('task', {
-    async 'db:seed:staleusers'() {
+    async 'db:seed:revokeusers'() {
       try {
-        await seedDB()
-        console.log('Database seeded')
+        await seedRevokeUsers()
+        console.log('Database seeded with users whose access should be revoked')
+      } catch (e) {
+        console.log(e)
+      }
+      return null
+    },
+    async 'db:seed:grantusers'() {
+      try {
+        await seedGrantUsers()
+        console.log('Database seeded with users whose access should be granted')
       } catch (e) {
         console.log(e)
       }

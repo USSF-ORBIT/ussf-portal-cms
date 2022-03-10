@@ -43,7 +43,7 @@ const withAuthData = (
       try {
         // Look up Keystone user
         // TODO - filter on isEnabled: true
-        const keystoneUser = (await sudoContext.query.User.findOne({
+        let keystoneUser = (await sudoContext.query.User.findOne({
           where: { userId: user.userId },
           query: `id userId name isAdmin isEnabled`,
         })) as KeystoneUser
@@ -52,12 +52,14 @@ const withAuthData = (
           // NO ACCESS
           if (keystoneUser) {
             // User existed previous - disable them
-            await sudoContext.query.User.updateOne({
+            keystoneUser = (await sudoContext.query.User.updateOne({
               where: { userId: user.userId },
               data: { isEnabled: false },
-            })
+              query: `id userId name isAdmin isEnabled`,
+            })) as KeystoneUser
           }
 
+          // Return nothing: no access, no session
           return
         }
 
@@ -77,17 +79,36 @@ const withAuthData = (
           })) as KeystoneUser
 
           return { ...user, ...keystoneUser }
-        }
+        } else {
+          if (!keystoneUser.isEnabled && canAccessCMS(user)) {
+            // Re-enable user
+            keystoneUser = (await sudoContext.query.User.updateOne({
+              where: { userId: user.userId },
+              data: { isEnabled: true },
+              query: `id userId name isAdmin isEnabled`,
+            })) as KeystoneUser
+          }
 
-        if (keystoneUser && keystoneUser.isAdmin && !isCMSAdmin(user)) {
-          // Revoke admin access
-          await sudoContext.query.User.updateOne({
-            where: { userId: user.userId },
-            data: { isAdmin: false },
-          })
-        }
+          if (keystoneUser.isAdmin && !isCMSAdmin(user)) {
+            // Revoke admin access
+            keystoneUser = (await sudoContext.query.User.updateOne({
+              where: { userId: user.userId },
+              data: { isAdmin: false },
+              query: `id userId name isAdmin isEnabled`,
+            })) as KeystoneUser
+          }
 
-        return { ...user, ...keystoneUser }
+          if (!keystoneUser.isAdmin && isCMSAdmin(user)) {
+            // Grant admin access
+            keystoneUser = (await sudoContext.query.User.updateOne({
+              where: { userId: user.userId },
+              data: { isAdmin: true },
+              query: `id userId name isAdmin isEnabled`,
+            })) as KeystoneUser
+          }
+
+          return { ...user, ...keystoneUser }
+        }
       } catch (e) {
         // Prisma error most likely
         console.error(e)
