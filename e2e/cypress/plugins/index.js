@@ -13,7 +13,7 @@
 // the project's config changing)
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { seedRevokeUsers, seedGrantUsers } = require('../support/seed')
+const { seedRevokeUsers, seedGrantUsers } = require('../database/seed')
 
 /**
  * @type {Cypress.PluginConfig}
