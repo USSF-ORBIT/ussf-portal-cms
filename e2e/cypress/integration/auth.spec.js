@@ -1,3 +1,5 @@
+// The structure of these tests is verbose because Cypress doesn't allow visiting multiple top-level domains in a single test
+// Therefore in order to test logging in, the loginTestIDP command has to be run in a separate test from visiting Keystone URLs
 describe('Authentication', () => {
   describe('without being logged in', () => {
     it('requires a user to be logged in', () => {
@@ -82,12 +84,13 @@ describe('Authentication', () => {
 
   describe('syncing user state with SLAM groups', () => {
     describe('revoking access', () => {
-      before(() => {
-        // Reset the database
-        cy.task('db:seed:revokeusers')
-      })
-
       it('can log into the test IDP as a CMS admin', () => {
+        // Reset the database
+        /* normally this would happen in a before hook, but it was reseeding before
+        EVERY test instead of just once (possibly because of visiting multiple
+          super-domains) - https://github.com/cypress-io/cypress/issues/1987 */
+        cy.task('db:seed:revokeusers')
+
         cy.loginTestIDP({ username: 'cmsadmin', password: 'cmsadminpass' })
       })
 
@@ -190,12 +193,13 @@ describe('Authentication', () => {
     })
 
     describe('granting access', () => {
-      before(() => {
-        // Reset the database
-        cy.task('db:seed:grantusers')
-      })
-
       it('can log into the test IDP as a CMS admin', () => {
+        // Reset the database
+        /* normally this would happen in a before hook, but it was reseeding before
+        EVERY test instead of just once (possibly because of visiting multiple
+          super-domains) - https://github.com/cypress-io/cypress/issues/1987 */
+        cy.task('db:seed:grantusers')
+
         cy.loginTestIDP({ username: 'cmsadmin', password: 'cmsadminpass' })
       })
 
