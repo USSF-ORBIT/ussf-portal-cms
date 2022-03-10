@@ -5,6 +5,7 @@
   "private": true,
   "devDependencies": {
     "@testing-library/cypress": "8.0.2",
-    "cypress": "9.4.1"
+    "cypress": "9.4.1",
+    "pg": "8.7.3"
   }
 }

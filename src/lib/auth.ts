@@ -40,11 +40,6 @@ const withAuthData = (
         passport: { user },
       } = sessionData
 
-      if (!canAccessCMS(user)) {
-        // NO ACCESS - redirect/error message?
-        return
-      }
-
       try {
         // Look up Keystone user
         // TODO - filter on isEnabled: true
@@ -52,6 +47,19 @@ const withAuthData = (
           where: { userId: user.userId },
           query: `id userId name isAdmin isEnabled`,
         })) as KeystoneUser
+
+        if (!canAccessCMS(user)) {
+          // NO ACCESS
+          if (keystoneUser) {
+            // User existed previous - disable them
+            await sudoContext.query.User.updateOne({
+              where: { userId: user.userId },
+              data: { isEnabled: false },
+            })
+          }
+
+          return
+        }
 
         if (!keystoneUser) {
           const {
@@ -69,6 +77,14 @@ const withAuthData = (
           })) as KeystoneUser
 
           return { ...user, ...keystoneUser }
+        }
+
+        if (keystoneUser && keystoneUser.isAdmin && !isCMSAdmin(user)) {
+          // Revoke admin access
+          await sudoContext.query.User.updateOne({
+            where: { userId: user.userId },
+            data: { isAdmin: false },
+          })
         }
 
         return { ...user, ...keystoneUser }
