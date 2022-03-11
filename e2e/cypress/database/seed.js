@@ -1,6 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Client } = require('pg')
 
+const dropAndCreateUsersTable = async (client) => {
+  // Drop
+  await client.query(`DROP TABLE IF EXISTS "public"."User";`)
+
+  // Create schema
+  await client.query(`CREATE TABLE "public"."User" (
+    "id" text NOT NULL,
+    "name" text NOT NULL DEFAULT ''::text,
+    "isAdmin" bool NOT NULL DEFAULT false,
+    "isEnabled" bool NOT NULL DEFAULT false,
+    "userId" text NOT NULL DEFAULT ''::text,
+    "createdAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "syncedAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+);`)
+}
+
 module.exports.seedRevokeUsers = async () => {
   const connectionString =
     'postgres://keystone:keystonecms@0.0.0.0:5432/cypress'
@@ -9,20 +27,7 @@ module.exports.seedRevokeUsers = async () => {
 
   try {
     await client.connect()
-    console.log('Connected correctly to server')
-
-    // Drop
-    await client.query(`DROP TABLE IF EXISTS "public"."User";`)
-
-    // Create schema
-    await client.query(`CREATE TABLE "public"."User" (
-    "id" text NOT NULL,
-    "name" text NOT NULL DEFAULT ''::text,
-    "isAdmin" bool NOT NULL DEFAULT false,
-    "isEnabled" bool NOT NULL DEFAULT false,
-    "userId" text NOT NULL DEFAULT ''::text,
-    PRIMARY KEY ("id")
-);`)
+    await dropAndCreateUsersTable(client)
 
     // These users are intentionally out-of-sync with their access in the test users SAML file for testing purposes
     await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "userId") VALUES
@@ -47,20 +52,7 @@ module.exports.seedGrantUsers = async () => {
 
   try {
     await client.connect()
-    console.log('Connected correctly to server')
-
-    // Drop
-    await client.query(`DROP TABLE IF EXISTS "public"."User";`)
-
-    // Create schema
-    await client.query(`CREATE TABLE "public"."User" (
-    "id" text NOT NULL,
-    "name" text NOT NULL DEFAULT ''::text,
-    "isAdmin" bool NOT NULL DEFAULT false,
-    "isEnabled" bool NOT NULL DEFAULT false,
-    "userId" text NOT NULL DEFAULT ''::text,
-    PRIMARY KEY ("id")
-);`)
+    await dropAndCreateUsersTable(client)
 
     // These users are intentionally out-of-sync with their access in the test users SAML file for testing purposes
     await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "userId") VALUES
