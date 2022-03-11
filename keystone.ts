@@ -13,6 +13,7 @@ export default withSharedAuth(
       useMigrations: true,
     },
     ui: {
+      publicPages: ['/api/sysinfo'],
       /*
       pageMiddleware: async ({ context, isValidSession }) => {
       // TODO - add redirect to portal login here if no session
