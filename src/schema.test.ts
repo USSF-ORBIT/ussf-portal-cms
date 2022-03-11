@@ -149,50 +149,17 @@ describe('Keystone schema', () => {
         )
       })
 
-      it('can disable and enable other users', async () => {
-        let data = await context
-          .withSession(adminSession)
-          .query.User.updateOne({
+      it('cannot update the isEnabled field', async () => {
+        expect(
+          context.withSession(adminSession).query.User.updateOne({
             where: { userId: 'user1@example.com' },
             data: {
               isEnabled: false,
             },
             query: 'id name userId isAdmin isEnabled',
           })
-
-        expect(data).toMatchObject({
-          id: expect.any(String),
-          ...testUsers[1],
-          name: 'User 1',
-          isEnabled: false,
-        })
-
-        data = await context.withSession(adminSession).query.User.updateOne({
-          where: { userId: 'user1@example.com' },
-          data: {
-            isEnabled: true,
-          },
-          query: 'id name userId isAdmin isEnabled',
-        })
-
-        expect(data).toMatchObject({
-          id: expect.any(String),
-          ...testUsers[1],
-          name: 'User 1',
-        })
-      })
-
-      it('cannot disable themselves', async () => {
-        expect(
-          context.withSession(adminSession).query.User.updateOne({
-            where: { userId: 'admin@example.com' },
-            data: {
-              isEnabled: false,
-            },
-            query: 'id name userId isAdmin isEnabled',
-          })
         ).rejects.toThrow(
-          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"admin@example.com"}'. You cannot update the fields ["isEnabled"].`
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isEnabled"].`
         )
       })
 
