@@ -8,10 +8,10 @@ module.exports = {
   transformIgnorePatterns: ['node_modules/(?!(.keystone)/)'],
   coverageThreshold: {
     global: {
-      statements: 80,
+      statements: 70,
       branches: 75,
-      functions: 80,
-      lines: 80,
+      functions: 60,
+      lines: 70,
     },
   },
 }
