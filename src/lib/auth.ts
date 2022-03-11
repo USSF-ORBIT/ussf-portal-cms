@@ -41,76 +41,51 @@ const withAuthData = (
       } = sessionData
 
       try {
+        // Determine access based on SAML session data
+        const userHasAccess = canAccessCMS(user)
+        const userIsAdmin = isCMSAdmin(user)
+
         // Look up Keystone user
         let keystoneUser = (await sudoContext.query.User.findOne({
           where: { userId: user.userId },
           query: `id userId name isAdmin isEnabled`,
         })) as KeystoneUser
 
-        if (!canAccessCMS(user)) {
+        if (!userHasAccess && !keystoneUser) {
           // NO ACCESS
-          if (keystoneUser && keystoneUser.isEnabled) {
-            // User was enabled but now does not have access from SLAM
-            keystoneUser = (await sudoContext.query.User.updateOne({
-              where: { userId: user.userId },
-              data: { isEnabled: false },
-              query: `id userId name isAdmin isEnabled`,
-            })) as KeystoneUser
-          }
-
-          // Return nothing: no access, no session
           return
         }
 
-        if (!keystoneUser) {
+        if (userHasAccess && !keystoneUser) {
           // No existing user, create one
           const {
             attributes: { givenname, surname },
           } = user
 
-          const keystoneUser = (await sudoContext.query.User.createOne({
+          keystoneUser = (await sudoContext.query.User.createOne({
             data: {
               name: `${givenname} ${surname}`,
               userId: user.userId,
-              isAdmin: isCMSAdmin(user),
-              isEnabled: true,
+              isAdmin: userIsAdmin,
+              isEnabled: userHasAccess,
             },
             query: `id userId name isAdmin isEnabled`,
           })) as KeystoneUser
 
           return { ...user, ...keystoneUser }
         } else {
-          // User was disabled but now has access from SLAM
-          if (!keystoneUser.isEnabled && canAccessCMS(user)) {
-            // Re-enable user
-            keystoneUser = (await sudoContext.query.User.updateOne({
-              where: { userId: user.userId },
-              data: { isEnabled: true },
-              query: `id userId name isAdmin isEnabled`,
-            })) as KeystoneUser
-          }
+          // keep isEnabled & isAdmin in sync with SAML session data
+          keystoneUser = (await sudoContext.query.User.updateOne({
+            where: { userId: user.userId },
+            data: {
+              isEnabled: userHasAccess,
+              isAdmin: userIsAdmin,
+              syncedAt: new Date(),
+            },
+            query: `id userId name isAdmin isEnabled`,
+          })) as KeystoneUser
 
-          // User was admin but is no longer admin in SLAM
-          if (keystoneUser.isAdmin && !isCMSAdmin(user)) {
-            // Revoke admin access
-            keystoneUser = (await sudoContext.query.User.updateOne({
-              where: { userId: user.userId },
-              data: { isAdmin: false },
-              query: `id userId name isAdmin isEnabled`,
-            })) as KeystoneUser
-          }
-
-          // User was not admin but is now an admin in SLAM
-          if (!keystoneUser.isAdmin && isCMSAdmin(user)) {
-            // Grant admin access
-            keystoneUser = (await sudoContext.query.User.updateOne({
-              where: { userId: user.userId },
-              data: { isAdmin: true },
-              query: `id userId name isAdmin isEnabled`,
-            })) as KeystoneUser
-          }
-
-          return { ...user, ...keystoneUser }
+          return userHasAccess ? { ...user, ...keystoneUser } : undefined
         }
       } catch (e) {
         // Prisma error most likely

@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core'
-import { text, checkbox } from '@keystone-6/core/fields'
+import { text, checkbox, timestamp } from '@keystone-6/core/fields'
 
 import { isAdminOrSelf } from '../util/access'
 
@@ -28,7 +28,7 @@ const User: Lists.User = list({
     hideCreate: true,
     hideDelete: true,
     listView: {
-      initialColumns: ['userId', 'name', 'isAdmin', 'isEnabled'],
+      initialColumns: ['userId', 'name', 'isAdmin', 'isEnabled', 'syncedAt'],
     },
   },
 
@@ -72,31 +72,67 @@ const User: Lists.User = list({
     isEnabled: checkbox({
       isFilterable: true,
       access: {
-        update: ({ session, item }) => {
-          if (session.isAdmin) {
-            // Admin cannot change whether they're enabled
-            if (session.userId === item.userId) return false
-
-            // Admin can change whether other users are enabled
-            return true
-          }
-
-          return false
-        },
+        // Access can only be set using SLAM groups
+        update: () => false,
       },
       ui: {
         itemView: {
-          fieldMode: ({ session, item }) => {
-            if (session.isAdmin) {
-              // Admin cannot change whether they're enabled
-              if (session.userId === item.userId) return 'read'
+          fieldMode: () => 'read',
+        },
+      },
+    }),
 
-              // Admin can change whether other users are enabled
-              return 'edit'
-            }
+    syncedAt: timestamp({
+      label: 'Last synced with SLAM at',
+      defaultValue: {
+        kind: 'now',
+      },
+      validation: {
+        isRequired: true,
+      },
+      access: {
+        update: () => false,
+      },
+      ui: {
+        itemView: {
+          fieldMode: () => 'read',
+        },
+      },
+    }),
 
-            return 'hidden'
-          },
+    createdAt: timestamp({
+      defaultValue: {
+        kind: 'now',
+      },
+      validation: {
+        isRequired: true,
+      },
+      access: {
+        update: () => false,
+      },
+      ui: {
+        itemView: {
+          fieldMode: () => 'read',
+        },
+      },
+    }),
+
+    updatedAt: timestamp({
+      defaultValue: {
+        kind: 'now',
+      },
+      validation: {
+        isRequired: true,
+      },
+      db: {
+        updatedAt: true,
+      },
+      access: {
+        update: () => false,
+      },
+      ui: {
+        itemView: {
+          fieldMode: () => 'read',
         },
       },
     }),
