@@ -20,6 +20,12 @@ jobs:
         with:
           path: ./ussf-portal-cms
 
+      - name: Check out portal client
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
+        with:
+          repository: USSF-ORBIT/ussf-portal-client
+          path: ./ussf-portal-client
+
       - name: Build image for testing
         env:
           IMAGE_TAG: ${{ github.sha }}
@@ -41,11 +47,14 @@ jobs:
         uses: cypress-io/github-action@90f0f494f47dd0a22ac4759978de892d3e3fd340 # tag=v3.0.2
         env:
           CYPRESS_BASE_URL: http://localhost:3001
-          CYPRESS_TEST_PASSWORD: adminpassword
-          CYPRESS_TEST_EMAIL: admin@example.com
         with:
           install-command: yarn install --frozen-lockfile
           working-directory: ./ussf-portal-cms/e2e
+          build: npx cypress info
+
+      - name: Keystone server logs
+        if: failure()
+        run: docker logs cms
 
       - name: Upload logs
         uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # tag=v3

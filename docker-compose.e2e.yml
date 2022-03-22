@@ -14,13 +14,70 @@ services:
     environment:
       PORT: 3001
       DATABASE_URL: postgres://keystone:keystonecms@keystone-db:5432/cypress
-      TEST_USERNAME: Admin
-      TEST_PASSWORD: adminpassword
-      TEST_EMAIL: admin@example.com
+      REDIS_URL: redis://portal_redis:6379
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
+      SESSION_DOMAIN: localhost
+    stdin_open: true
     depends_on:
       - keystone-db
+      - app
+      - redis
 
+# Portal client
+  app:
+    build:
+      context: ../ussf-portal-client/
+      dockerfile: Dockerfile
+      target: e2e
+    container_name: app
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      SAML_ISSUER: ussf-portal-client
+      SAML_IDP_METADATA_URL: http://idp:8080/simplesaml/saml2/idp/metadata.php
+      REDIS_URL: redis://portal_redis:6379
+      MONGO_URL: mongodb://mongo:27017
+      MONGODB_DB: cypress-e2e
+      SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
+      SESSION_DOMAIN: localhost
+    stdin_open: true
+    depends_on:
+      - mongo
+      - redis
+      - idp
+
+# Shared between CMS and Portal
+  redis:
+    container_name: portal_redis
+    image: redis:6.2
+    ports:
+      - '6379:6379'
+# Portal-specific services
+  mongo:
+    container_name: mongo
+    image: mongo:4.0.0
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: dev
+    ports:
+      - '27017:27017'
+
+  idp:
+    container_name: test-saml-idp
+    image: kristophjunge/test-saml-idp
+    restart: always
+    ports:
+      - '8080:8080'
+      - '8443:8443'
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: ussf-portal-client
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://localhost:3000/api/auth/login
+      SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE: http://localhost:3000/api/auth/logout/callback
+    volumes:
+      - ./users.php:/var/www/simplesamlphp/config/authsources.php
+
+# CMS-specific services
   keystone-db:
     container_name: keystone-db
     image: postgres:14

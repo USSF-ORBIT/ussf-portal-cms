@@ -1,21 +1,9 @@
-/*
-This file is what keystone uses to start the app.
-
-It looks at the default export, and expects a Keystone config object.
-
-You can find all the config options here: https://keystonejs.com/docs/apis/config
-*/
-
 import { config } from '@keystone-6/core'
-import type { KeystoneContext } from '@keystone-6/core/types'
-// Look in the schema file for how we define our lists, and how users interact with them through graphql or the Admin UI
+
 import { lists } from './src/schema'
+import { withSharedAuth } from './src/lib/auth'
 
-// Keystone auth is configured separately - check out the basic auth setup we are importing from our auth file.
-import { session, withAuth } from './src/lib/auth'
-
-export default withAuth(
-  // Using the config function helps typescript guide you to the available options.
+export default withSharedAuth(
   config({
     lists,
     db: {
@@ -23,29 +11,15 @@ export default withAuth(
       url: `${process.env.DATABASE_URL}` || '',
       enableLogging: true,
       useMigrations: true,
-      onConnect: async ({ db }: KeystoneContext) => {
-        // Create test user here
-        // #TODO: Remove this when we have auth in place
-        const testUser = await db.User.findOne({
-          where: { email: process.env.TEST_EMAIL },
-        })
-        if (!testUser) {
-          await db.User.createOne({
-            data: {
-              name: process.env.TEST_USERNAME || '',
-              password: process.env.TEST_PASSWORD,
-              email: process.env.TEST_EMAIL,
-              isAdmin: true,
-            },
-          })
-        }
-      },
     },
-    // This config allows us to set up features of the Admin UI https://keystonejs.com/docs/apis/config#ui
     ui: {
-      // For our starter, we check that someone has session data before letting them see the Admin UI.
-      isAccessAllowed: (context) => !!context.session?.data,
+      /*
+      pageMiddleware: async ({ context, isValidSession }) => {
+      // TODO - add redirect to portal login here if no session
+      },
+      */
+      enableSessionItem: true,
+      isAccessAllowed: ({ session }) => !!session,
     },
-    session,
   })
 )

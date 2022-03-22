@@ -28,6 +28,6 @@ coverage
 tsconfig.tsbuildinfo
 
 # Cypress artifacts
-cypress/screenshots
-cypress/videos
-cypress/reports
+e2e/cypress/screenshots
+e2e/cypress/videos
+e2e/cypress/reports

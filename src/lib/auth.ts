@@ -1,49 +1,141 @@
-/*
-Welcome to the auth file! Here we have put a config to do basic auth in Keystone.
+import type { KeystoneConfig, SessionStrategy } from '@keystone-6/core/types'
+import { graphQLSchemaExtension } from '@keystone-6/core'
 
-`createAuth` is an implementation for an email-password login out of the box.
-`statelessSessions` is a base implementation of session logic.
+import type { SessionData, KeystoneUser, AuthenticatedUser } from '../../types'
+import { canAccessCMS, isCMSAdmin } from '../util/access'
 
-For more on auth, check out: https://keystonejs.com/docs/apis/auth#authentication-api
-*/
+import { session, SharedSessionStrategy } from './session'
+import type { Context } from '.keystone/types'
 
-import { createAuth } from '@keystone-6/auth'
+const withAuthData = (
+  _sessionStrategy: SharedSessionStrategy<SessionData>
+): SessionStrategy<AuthenticatedUser> => {
+  const { get, ...sessionStrategy } = _sessionStrategy
 
-// See https://keystonejs.com/docs/apis/session#session-api for the session docs
-import { statelessSessions } from '@keystone-6/core/session'
+  // This loads the Keystone user from Postgres & adds to session
+  return {
+    ...sessionStrategy,
+    start: () => {
+      // The shared session strategy should never "start" a new session
+      // this method should never be called but needs to exist to appease Keystone types
+      return Promise.reject(
+        new Error('ERROR: Invalid attempt to start a new session in Keystone')
+      )
+    },
+    get: async ({ req, createContext }) => {
+      const sessionData = await get({ req, createContext })
+      const sudoContext = createContext({ sudo: true })
 
-let sessionSecret = process.env.SESSION_SECRET
+      if (
+        !sessionData ||
+        !sessionData.passport ||
+        !sessionData.passport.user ||
+        !sessionData.passport.user.userId ||
+        !sudoContext.query.User
+      ) {
+        return
+      }
 
-// Here is a best practice! It's fine to not have provided a session secret in dev,
-// however it should always be there in production.
-if (!sessionSecret) {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      'The SESSION_SECRET environment variable must be set in production'
-    )
-  } else {
-    sessionSecret = '-- DEV COOKIE SECRET; CHANGE ME --'
+      const {
+        passport: { user },
+      } = sessionData
+
+      try {
+        // Determine access based on SAML session data
+        const userHasAccess = canAccessCMS(user)
+        const userIsAdmin = isCMSAdmin(user)
+
+        // Look up Keystone user
+        let keystoneUser = (await sudoContext.query.User.findOne({
+          where: { userId: user.userId },
+          query: `id userId name isAdmin isEnabled`,
+        })) as KeystoneUser
+
+        if (!userHasAccess && !keystoneUser) {
+          // NO ACCESS
+          return
+        }
+
+        if (userHasAccess && !keystoneUser) {
+          // No existing user, create one
+          const {
+            attributes: { givenname, surname },
+          } = user
+
+          keystoneUser = (await sudoContext.query.User.createOne({
+            data: {
+              name: `${givenname} ${surname}`,
+              userId: user.userId,
+              isAdmin: userIsAdmin,
+              isEnabled: userHasAccess,
+            },
+            query: `id userId name isAdmin isEnabled`,
+          })) as KeystoneUser
+
+          return { ...user, ...keystoneUser }
+        } else {
+          // keep isEnabled & isAdmin in sync with SAML session data
+          keystoneUser = (await sudoContext.query.User.updateOne({
+            where: { userId: user.userId },
+            data: {
+              isEnabled: userHasAccess,
+              isAdmin: userIsAdmin,
+              syncedAt: new Date(),
+            },
+            query: `id userId name isAdmin isEnabled`,
+          })) as KeystoneUser
+
+          return userHasAccess ? { ...user, ...keystoneUser } : undefined
+        }
+      } catch (e) {
+        // Prisma error most likely
+        console.error(e)
+        throw e
+      }
+    },
   }
 }
 
-// Here we define how auth relates to our schemas.
-// What we are saying here is that we want to use the list `User`, and to log in
-// we will need their email and password.
-const { withAuth } = createAuth({
-  listKey: 'User',
-  identityField: 'email',
-  sessionData: 'name email isAdmin',
-  secretField: 'password',
+const extendGraphqlSchema = graphQLSchemaExtension<Context>({
+  typeDefs: `
+    type Query {
+      """ Authenticated Item """
+      authenticatedItem: AuthenticatedItem
+    }
+
+    union AuthenticatedItem = User
+  `,
+  resolvers: {
+    Query: {
+      authenticatedItem: async (root, args, { session, db }) => {
+        if (typeof session?.userId === 'string') {
+          const user = await db.User.findOne({
+            where: { userId: session.userId },
+          })
+
+          return {
+            __typename: 'User',
+            listKey: 'User',
+            label: user.userId,
+            itemId: user.id,
+            ...user,
+          }
+        }
+
+        return null
+      },
+    },
+  },
 })
 
-// This defines how long people will remain logged in for.
-// This will get refreshed when they log back in.
-const sessionMaxAge = 60 * 60 * 24 * 30 // 30 days
+export const withSharedAuth = (
+  keystoneConfig: KeystoneConfig
+): KeystoneConfig => {
+  const sessionWithUser = withAuthData(session)
 
-// This defines how sessions should work. For more details, check out: https://keystonejs.com/docs/apis/session#session-api
-const session = statelessSessions({
-  maxAge: sessionMaxAge,
-  secret: sessionSecret,
-})
-
-export { withAuth, session }
+  return {
+    ...keystoneConfig,
+    session: sessionWithUser,
+    extendGraphqlSchema,
+  }
+}

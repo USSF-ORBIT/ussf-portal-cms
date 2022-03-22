@@ -1,7 +1,7 @@
 import { setupTestEnv, TestEnv } from '@keystone-6/core/testing'
 import { config } from '@keystone-6/core'
 import { KeystoneContext } from '@keystone-6/core/types'
-import { editReadAdminUI, isAdmin, lists, showHideAdminUI } from './schema'
+import { lists } from './schema'
 
 describe('Keystone schema', () => {
   let testEnv: TestEnv
@@ -11,6 +11,22 @@ describe('Keystone schema', () => {
     db: { provider: 'sqlite', url: 'file:./test-cms.db' },
     lists,
   })
+
+  const testUsers = [
+    {
+      name: 'Admin User',
+      userId: 'admin@example.com',
+      isAdmin: true,
+      isEnabled: true,
+    },
+    {
+      name: 'User 1',
+      userId: 'user1@example.com',
+      isAdmin: false,
+      isEnabled: true,
+    },
+  ]
+
   beforeAll(async () => {
     testEnv = await setupTestEnv({ config: testConfig })
     context = testEnv.testArgs.context
@@ -22,19 +38,7 @@ describe('Keystone schema', () => {
     // Create 1 regular user
 
     await context.sudo().query.User.createMany({
-      data: [
-        {
-          name: 'Admin User',
-          email: 'admin@example.com',
-          password: 'adminpassword',
-          isAdmin: true,
-        },
-        {
-          name: 'User 1',
-          email: 'user1@example.com',
-          password: 'user1password',
-        },
-      ],
+      data: testUsers,
     })
   })
 
@@ -43,146 +47,293 @@ describe('Keystone schema', () => {
   })
 
   describe('Users', () => {
-    let adminUser: Record<string, any>
-    let user1: Record<string, any>
+    describe('as an admin user', () => {
+      const adminSession = {
+        name: 'Admin User',
+        userId: 'admin@example.com',
+        isAdmin: true,
+        isEnabled: true,
+      }
 
-    it('should allow an admin user view users', async () => {
-      adminUser = await context.query.User.findOne({
-        where: { email: 'admin@example.com' },
-        query: 'id name email isAdmin',
+      it('can view all users', async () => {
+        const data = await context
+          .withSession(adminSession)
+          .query.User.findMany({
+            query: 'id name userId isAdmin isEnabled',
+          })
+
+        expect(data).toHaveLength(2)
+        data.forEach((user, index) => {
+          expect(user).toMatchObject({
+            id: expect.any(String),
+            ...testUsers[index],
+          })
+        })
       })
 
-      // With Admin User in session, look up user1
+      it('can update itself', async () => {
+        const data = await context
+          .withSession(adminSession)
+          .query.User.updateOne({
+            where: { userId: 'admin@example.com' },
+            data: {
+              name: 'Admin New Name',
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
 
-      user1 = await context
-        .withSession({
-          email: adminUser.email,
-          data: { email: adminUser.email, isAdmin: true },
+        expect(data).toMatchObject({
+          id: expect.any(String),
+          ...testUsers[0],
+          name: 'Admin New Name',
         })
-        .query.User.findOne({
-          where: { email: 'user1@example.com' },
-          query: 'id name email isAdmin',
+      })
+
+      it('can update other users', async () => {
+        let data = await context
+          .withSession(adminSession)
+          .query.User.updateOne({
+            where: { userId: 'user1@example.com' },
+            data: {
+              name: 'Test User 1 New Name',
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+
+        expect(data).toMatchObject({
+          id: expect.any(String),
+          ...testUsers[1],
+          name: 'Test User 1 New Name',
         })
 
-      expect(user1).toMatchObject({
-        id: expect.any(String),
+        data = await context.withSession(adminSession).query.User.updateOne({
+          where: { userId: 'user1@example.com' },
+          data: {
+            name: 'User 1',
+          },
+          query: 'id name userId isAdmin isEnabled',
+        })
+
+        expect(data).toMatchObject({
+          id: expect.any(String),
+          ...testUsers[1],
+          name: 'User 1',
+        })
+      })
+
+      it('cannot update the userId field', async () => {
+        expect(
+          context.withSession(adminSession).query.User.updateOne({
+            where: { userId: 'user1@example.com' },
+            data: {
+              userId: 'testUser1',
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+        ).rejects.toThrow(
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["userId"].`
+        )
+      })
+
+      it('cannot update the isAdmin field', async () => {
+        expect(
+          context.withSession(adminSession).query.User.updateOne({
+            where: { userId: 'user1@example.com' },
+            data: {
+              isAdmin: true,
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+        ).rejects.toThrow(
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isAdmin"].`
+        )
+      })
+
+      it('cannot update the isEnabled field', async () => {
+        expect(
+          context.withSession(adminSession).query.User.updateOne({
+            where: { userId: 'user1@example.com' },
+            data: {
+              isEnabled: false,
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+        ).rejects.toThrow(
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isEnabled"].`
+        )
+      })
+
+      it('cannot create users', async () => {
+        expect(
+          context.withSession(adminSession).query.User.createOne({
+            data: {
+              name: 'Test User 2',
+              userId: 'testUser2',
+              isAdmin: false,
+              isEnabled: true,
+            },
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'create' operation on the list 'User'./
+        )
+      })
+
+      it('cannot delete users', async () => {
+        expect(
+          context.withSession(adminSession).query.User.deleteOne({
+            where: {
+              userId: 'user1@example.com',
+            },
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'delete' operation on the list 'User'./
+        )
+      })
+    })
+
+    describe('as a non admin user', () => {
+      const userSession = {
         name: 'User 1',
-        email: 'user1@example.com',
+        userId: 'user1@example.com',
+        isAdmin: false,
+        isEnabled: true,
+      }
+
+      it('can only view themselves', async () => {
+        const data = await context
+          .withSession(userSession)
+          .query.User.findMany({
+            query: 'id name userId isAdmin isEnabled',
+          })
+
+        expect(data).toHaveLength(1)
+        expect(data[0]).toMatchObject({
+          id: expect.any(String),
+          ...testUsers[1],
+        })
+      })
+
+      it('cannot query other users', async () => {
+        const data = await context.withSession(userSession).query.User.findOne({
+          where: { userId: 'admin@example.com' },
+          query: 'id name userId isAdmin',
+        })
+
+        expect(data).toBe(null)
+      })
+
+      it('can update itself', async () => {
+        let data = await context.withSession(userSession).query.User.updateOne({
+          where: { userId: 'user1@example.com' },
+          data: {
+            name: 'User 1 New Name',
+          },
+          query: 'id name userId isAdmin isEnabled',
+        })
+
+        expect(data).toMatchObject({
+          id: expect.any(String),
+          ...testUsers[1],
+          name: 'User 1 New Name',
+        })
+
+        data = await context.withSession(userSession).query.User.updateOne({
+          where: { userId: 'user1@example.com' },
+          data: {
+            name: 'User 1',
+          },
+          query: 'id name userId isAdmin isEnabled',
+        })
+
+        expect(data).toMatchObject({
+          id: expect.any(String),
+          ...testUsers[1],
+          name: 'User 1',
+        })
+      })
+
+      it('cannot update other users', async () => {
+        expect(
+          context.withSession(userSession).query.User.updateOne({
+            where: { userId: 'admin@example.com' },
+            data: {
+              name: 'Admin User New Name',
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+        ).rejects.toThrow(
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"admin@example.com"}'. It may not exist.`
+        )
+      })
+
+      it('cannot update the userId field', async () => {
+        expect(
+          context.withSession(userSession).query.User.updateOne({
+            where: { userId: 'user1@example.com' },
+            data: {
+              userId: 'testUser1',
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+        ).rejects.toThrow(
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["userId"].`
+        )
+      })
+
+      it('cannot update the isAdmin field', async () => {
+        expect(
+          context.withSession(userSession).query.User.updateOne({
+            where: { userId: 'user1@example.com' },
+            data: {
+              isAdmin: true,
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+        ).rejects.toThrow(
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isAdmin"].`
+        )
+      })
+
+      it('cannot update the isEnabled field', async () => {
+        expect(
+          context.withSession(userSession).query.User.updateOne({
+            where: { userId: 'user1@example.com' },
+            data: {
+              isEnabled: true,
+            },
+            query: 'id name userId isAdmin isEnabled',
+          })
+        ).rejects.toThrow(
+          `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isEnabled"].`
+        )
+      })
+
+      it('cannot create users', async () => {
+        expect(
+          context.withSession(userSession).query.User.createOne({
+            data: {
+              name: 'Test User 2',
+              userId: 'testUser2',
+              isAdmin: false,
+              isEnabled: true,
+            },
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'create' operation on the list 'User'./
+        )
+      })
+
+      it('cannot delete users', async () => {
+        expect(
+          context.withSession(userSession).query.User.deleteOne({
+            where: {
+              userId: 'user1@example.com',
+            },
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'delete' operation on the list 'User'./
+        )
       })
     })
-
-    it('should not allow regular user to view users', async () => {
-      const data = await context
-        .withSession({
-          email: user1.email,
-          data: { email: user1.email },
-          isAdmin: false,
-        })
-        .query.User.findOne({
-          where: { email: 'admin@example.com' },
-          query: 'id name email isAdmin',
-        })
-
-      expect(data).toBeNull()
-    })
-
-    it('should allow a regular user to view themselves', async () => {
-      const data = await context
-        .withSession({
-          email: 'user1@example.com',
-          data: { email: 'user1@example.com' },
-        })
-        .query.User.findOne({
-          where: { email: 'user1@example.com' },
-          query: 'id email name isAdmin',
-        })
-
-      expect(data).toMatchObject(user1)
-    })
-    it('should not allow regular user to update users', async () => {
-      const { data, errors } = await context
-        .withSession({
-          itemId: user1.id,
-          data: { name: 'User 1', email: 'user1@example.com', isAdmin: false },
-        })
-        .graphql.raw({
-          query: `mutation update($id: ID!, $name: String) {
-            updateUser(where: { id: $id}, data: { name: $name }){
-              id
-            }
-          }`,
-          variables: { id: user1.id, name: 'Updated User 1' },
-        })
-
-      expect(data!.updateUser).toBeNull()
-      expect(errors).toHaveLength(1)
-      expect(errors![0].message).toMatch(
-        /Access denied: You cannot perform the 'update' operation on the list 'User'./
-      )
-    })
-    it('should hide sensitive UI fields if not admin', () => {
-      const session = {
-        listKey: 'User',
-        identityField: 'email',
-        secretField: 'password',
-        data: { email: 'user1@example.com', name: 'User 1', isAdmin: false },
-      }
-      const status = showHideAdminUI({ session })
-      expect(status).toBe('hidden')
-    })
-
-    it('should show edit mode for sensitive UI fields if admin', () => {
-      const session = {
-        listKey: 'User',
-        identityField: 'email',
-        secretField: 'password',
-        data: { email: 'admin@example.com', name: 'Admin', isAdmin: true },
-      }
-      const status = showHideAdminUI({ session })
-      expect(status).toBe('edit')
-    })
-
-    it('should make sensitive UI fields read-only if not admin', () => {
-      const session = {
-        listKey: 'User',
-        identityField: 'email',
-        secretField: 'password',
-        data: { email: 'user1@example.com', name: 'User 1', isAdmin: false },
-      }
-      const status = editReadAdminUI({ session })
-      expect(status).toBe('read')
-    })
-
-    it('should show edit mode for sensitive UI fields if admin', () => {
-      const session = {
-        listKey: 'User',
-        identityField: 'email',
-        secretField: 'password',
-        data: { email: 'admin@example.com', name: 'Admin', isAdmin: true },
-      }
-      const status = editReadAdminUI({ session })
-      expect(status).toBe('edit')
-    })
-
-    it('isAdmin should return true if admin', () => {
-      const session = {
-        listKey: 'User',
-        identityField: 'email',
-        secretField: 'password',
-        data: { email: 'admin@example.com', name: 'Admin', isAdmin: true },
-      }
-      const status = isAdmin({ session })
-      expect(status).toBe(true)
-    })
-    it('isAdmin should return false if not admin', () => {
-      const session = {
-        listKey: 'User',
-        identityField: 'email',
-        secretField: 'password',
-        data: { email: 'user1@example.com', name: 'User 1', isAdmin: false },
-      }
-      const status = isAdmin({ session })
-      expect(status).toBe(false)
-    })
-  }) //end of user block
-}) // end of describe
+  })
+})

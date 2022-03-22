@@ -12,9 +12,12 @@ generator client {
 }
 
 model User {
-  id       String  @id @default(cuid())
-  name     String  @default("")
-  email    String  @unique @default("")
-  password String
-  isAdmin  Boolean @default(false)
+  id        String   @id @default(cuid())
+  userId    String   @unique @default("")
+  name      String   @default("")
+  isAdmin   Boolean  @default(false)
+  isEnabled Boolean  @default(false)
+  syncedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
