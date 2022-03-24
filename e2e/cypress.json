@@ -2,5 +2,8 @@
   "baseUrl": "http://localhost:3001",
   "viewportWidth": 1024,
   "viewportHeight": 768,
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "env": {
+    "portal_url": "http://localhost:3000"
+  }
 }

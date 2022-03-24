@@ -2,12 +2,18 @@
 // Therefore in order to test logging in, the loginTestIDP command has to be run in a separate test from visiting Keystone URLs
 describe('Authentication', () => {
   describe('without being logged in', () => {
-    it('requires a user to be logged in', () => {
+    it('redirects a user to the portal log in page', () => {
       cy.clearCookies()
       cy.clearCookie('sid')
       cy.getCookie('sid').should('not.exist')
       cy.visit('/')
-      cy.contains("You don't have access to this page.")
+      cy.url().should(
+        'eq',
+        `${Cypress.env('portal_url')}/login?redirectTo=${encodeURIComponent(
+          Cypress.config().baseUrl + '/'
+        )}`
+      )
+      cy.contains('Space Force Portal Login')
     })
   })
 
@@ -35,7 +41,7 @@ describe('Authentication', () => {
         cy.findByRole('button', { name: 'Links and signout' }).click()
         cy.findByRole('button', { name: 'Sign out' }).click()
 
-        cy.contains("You don't have access to this page.")
+        cy.contains('Space Force Portal Login')
       })
     })
 
@@ -62,7 +68,7 @@ describe('Authentication', () => {
         cy.findByRole('button', { name: 'Links and signout' }).click()
         cy.findByRole('button', { name: 'Sign out' }).click()
 
-        cy.contains("You don't have access to this page.")
+        cy.contains('Space Force Portal Login')
       })
     })
 
@@ -75,9 +81,13 @@ describe('Authentication', () => {
         cy.getCookie('sid').should('exist')
 
         cy.visit(`/`)
-        cy.url().should('eq', Cypress.config().baseUrl + '/')
-        cy.reload()
-        cy.contains("You don't have access to this page.")
+        cy.url().should(
+          'eq',
+          `${Cypress.env('portal_url')}/login?redirectTo=${encodeURIComponent(
+            Cypress.config().baseUrl + '/'
+          )}`
+        )
+        cy.contains('Space Force Portal Login')
       })
     })
   })
@@ -132,9 +142,13 @@ describe('Authentication', () => {
         cy.getCookie('sid').should('exist')
 
         cy.visit(`/`)
-        cy.url().should('eq', Cypress.config().baseUrl + '/')
-        cy.reload()
-        cy.contains("You don't have access to this page.")
+        cy.url().should(
+          'eq',
+          `${Cypress.env('portal_url')}/login?redirectTo=${encodeURIComponent(
+            Cypress.config().baseUrl + '/'
+          )}`
+        )
+        cy.contains('Space Force Portal Login')
       })
 
       it('can log into the test IDP as a user with no CMS admin access', () => {
