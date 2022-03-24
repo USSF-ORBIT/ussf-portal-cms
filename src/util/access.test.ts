@@ -25,6 +25,7 @@ const testUser = {
     subject:
       '/C=US/O=U.S. Government/OU=DoD/OU=PKI/OU=CONTRACTOR/CN=CAMPBELL.BERNADETTE.5244446289',
   },
+  accessAllowed: true as const,
 }
 
 const testSession = {
