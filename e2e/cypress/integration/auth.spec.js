@@ -81,13 +81,8 @@ describe('Authentication', () => {
         cy.getCookie('sid').should('exist')
 
         cy.visit(`/`)
-        cy.url().should(
-          'eq',
-          `${Cypress.env('portal_url')}/login?redirectTo=${encodeURIComponent(
-            Cypress.config().baseUrl + '/'
-          )}`
-        )
-        cy.contains('Space Force Portal Login')
+        cy.url().should('eq', Cypress.config().baseUrl + '/no-access')
+        cy.contains("You don't have access to this page.")
       })
     })
   })
@@ -142,13 +137,8 @@ describe('Authentication', () => {
         cy.getCookie('sid').should('exist')
 
         cy.visit(`/`)
-        cy.url().should(
-          'eq',
-          `${Cypress.env('portal_url')}/login?redirectTo=${encodeURIComponent(
-            Cypress.config().baseUrl + '/'
-          )}`
-        )
-        cy.contains('Space Force Portal Login')
+        cy.url().should('eq', Cypress.config().baseUrl + '/no-access')
+        cy.contains("You don't have access to this page.")
       })
 
       it('can log into the test IDP as a user with no CMS admin access', () => {
