@@ -61,7 +61,7 @@
     "standard-version": "9.3.2"
   },
   "engines": {
-    "node": "14.19.0"
+    "node": "14.19.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
