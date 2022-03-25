@@ -17,6 +17,7 @@ services:
       REDIS_URL: redis://portal_redis:6379
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
       SESSION_DOMAIN: localhost
+      PORTAL_URL: http://localhost:3000
     stdin_open: true
     depends_on:
       - keystone-db
