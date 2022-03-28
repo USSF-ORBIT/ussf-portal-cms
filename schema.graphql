@@ -14,6 +14,14 @@ type Query {
   ): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
+  bookmarks(
+    where: BookmarkWhereInput! = {}
+    orderBy: [BookmarkOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Bookmark!]
+  bookmark(where: BookmarkWhereUniqueInput!): Bookmark
+  bookmarksCount(where: BookmarkWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -154,6 +162,66 @@ input UserCreateInput {
   updatedAt: DateTime
 }
 
+type Bookmark {
+  id: ID!
+  url: String
+  label: String
+  description: String
+  keywords: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input BookmarkWhereUniqueInput {
+  id: ID
+}
+
+input BookmarkWhereInput {
+  AND: [BookmarkWhereInput!]
+  OR: [BookmarkWhereInput!]
+  NOT: [BookmarkWhereInput!]
+  id: IDFilter
+  url: StringFilter
+  label: StringFilter
+  description: StringFilter
+  keywords: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+}
+
+input BookmarkOrderByInput {
+  id: OrderDirection
+  url: OrderDirection
+  label: OrderDirection
+  description: OrderDirection
+  keywords: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input BookmarkUpdateInput {
+  url: String
+  label: String
+  description: String
+  keywords: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input BookmarkUpdateArgs {
+  where: BookmarkWhereUniqueInput!
+  data: BookmarkUpdateInput!
+}
+
+input BookmarkCreateInput {
+  url: String
+  label: String
+  description: String
+  keywords: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -169,6 +237,15 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createBookmark(data: BookmarkCreateInput!): Bookmark
+  createBookmarks(data: [BookmarkCreateInput!]!): [Bookmark]
+  updateBookmark(
+    where: BookmarkWhereUniqueInput!
+    data: BookmarkUpdateInput!
+  ): Bookmark
+  updateBookmarks(data: [BookmarkUpdateArgs!]!): [Bookmark]
+  deleteBookmark(where: BookmarkWhereUniqueInput!): Bookmark
+  deleteBookmarks(where: [BookmarkWhereUniqueInput!]!): [Bookmark]
   endSession: Boolean!
 }
 

@@ -21,3 +21,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
+
+model Bookmark {
+  id          String   @id @default(cuid())
+  url         String   @default("")
+  label       String   @default("")
+  description String   @default("")
+  keywords    String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
