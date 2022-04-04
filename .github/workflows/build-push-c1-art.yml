@@ -18,6 +18,7 @@ jobs:
           C1_REPOSITORY: ${{ secrets.C1_REPOSITORY }}
 
         run: |
+          sudo sh scripts/add-dod-cas.sh
           docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
           docker build -t $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
           docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
