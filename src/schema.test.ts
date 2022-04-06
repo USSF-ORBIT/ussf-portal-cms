@@ -336,4 +336,181 @@ describe('Keystone schema', () => {
       })
     })
   })
+
+  describe('Bookmarks', () => {
+    describe('as an admin user', () => {
+      const adminSession = {
+        name: 'Admin User',
+        userId: 'admin@example.com',
+        isAdmin: true,
+        isEnabled: true,
+      }
+
+      const testBookmark = {
+        url: 'http://www.example.com',
+        label: 'Example Bookmark',
+        description: 'This is an example link',
+        keywords: 'example bookmark testing',
+      }
+
+      it('can create new bookmarks', async () => {
+        const data = await context
+          .withSession(adminSession)
+          .query.Bookmark.createOne({
+            data: testBookmark,
+            query: 'id url label description keywords createdAt updatedAt',
+          })
+
+        expect(data).toMatchObject({
+          id: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          ...testBookmark,
+        })
+
+        // createdAt & updatedAt should be equal at the time of creation
+        expect(data.createdAt).toBe(data.updatedAt)
+      })
+
+      it('can query all bookmarks', async () => {
+        const data = await context
+          .withSession(adminSession)
+          .query.Bookmark.findMany({
+            query: 'id url label description keywords createdAt updatedAt',
+          })
+
+        expect(data).toHaveLength(1)
+        expect(data[0]).toMatchObject({
+          id: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          ...testBookmark,
+        })
+      })
+
+      it('can update a bookmark', async () => {
+        const existingBookmarks = await context
+          .withSession(adminSession)
+          .query.Bookmark.findMany({
+            query: 'id',
+          })
+
+        const data = await context
+          .withSession(adminSession)
+          .query.Bookmark.updateOne({
+            where: { id: existingBookmarks[0].id },
+            data: {
+              label: 'Updated Example',
+            },
+            query: 'id url label description keywords createdAt updatedAt',
+          })
+
+        expect(data).toMatchObject({
+          id: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          ...testBookmark,
+          label: 'Updated Example',
+        })
+
+        // updatedAt should be different after an update
+        expect(data.createdAt).not.toBe(data.updatedAt)
+      })
+
+      it('cannot delete bookmarks', async () => {
+        const existingBookmarks = await context
+          .withSession(adminSession)
+          .query.Bookmark.findMany({
+            query: 'id',
+          })
+
+        expect(
+          context.withSession(adminSession).query.Bookmark.deleteOne({
+            where: { id: existingBookmarks[0].id },
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'delete' operation on the list 'Bookmark'./
+        )
+      })
+    })
+
+    describe('as a non admin user', () => {
+      const userSession = {
+        name: 'User 1',
+        userId: 'user1@example.com',
+        isAdmin: false,
+        isEnabled: true,
+      }
+
+      const testBookmark = {
+        url: 'http://www.example.com',
+        label: 'Updated Example',
+        description: 'This is an example link',
+        keywords: 'example bookmark testing',
+      }
+
+      it('can query all bookmarks', async () => {
+        const data = await context
+          .withSession(userSession)
+          .query.Bookmark.findMany({
+            query: 'id url label description keywords createdAt updatedAt',
+          })
+
+        expect(data).toHaveLength(1)
+        expect(data[0]).toMatchObject({
+          id: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          ...testBookmark,
+        })
+      })
+
+      it('cannot create bookmarks', async () => {
+        expect(
+          context.withSession(userSession).query.Bookmark.createOne({
+            data: testBookmark,
+            query: 'id url label description keywords createdAt updatedAt',
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'create' operation on the list 'Bookmark'./
+        )
+      })
+
+      it('cannot update bookmarks', async () => {
+        const existingBookmarks = await context
+          .withSession(userSession)
+          .query.Bookmark.findMany({
+            query: 'id',
+          })
+
+        expect(
+          context.withSession(userSession).query.Bookmark.updateOne({
+            where: { id: existingBookmarks[0].id },
+            data: {
+              label: 'Updated by a non admin',
+            },
+            query: 'id url label description keywords createdAt updatedAt',
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'update' operation on the list 'Bookmark'./
+        )
+      })
+
+      it('cannot delete bookmarks', async () => {
+        const existingBookmarks = await context
+          .withSession(userSession)
+          .query.Bookmark.findMany({
+            query: 'id',
+          })
+
+        expect(
+          context.withSession(userSession).query.Bookmark.deleteOne({
+            where: { id: existingBookmarks[0].id },
+          })
+        ).rejects.toThrow(
+          /Access denied: You cannot perform the 'delete' operation on the list 'Bookmark'./
+        )
+      })
+    })
+  })
 })
