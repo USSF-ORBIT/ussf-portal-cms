@@ -1,0 +1,26 @@
+name: Automated Docker Build Main Push C1 Artifactory
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push-aws:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
+
+      - name: Build, tag, and push image to C1 Artifactory
+        id: build-c1-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          C1_REGISTRY: ${{ secrets.C1_REGISTRY }}
+          C1_REPOSITORY: ${{ secrets.C1_REPOSITORY }}
+
+        run: |
+          sudo sh scripts/add-dod-cas.sh
+          docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
+          docker build -t $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
+          docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG"
+          docker logout $C1_REGISTRY
