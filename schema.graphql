@@ -22,6 +22,14 @@ type Query {
   ): [Bookmark!]
   bookmark(where: BookmarkWhereUniqueInput!): Bookmark
   bookmarksCount(where: BookmarkWhereInput! = {}): Int
+  collections(
+    where: CollectionWhereInput! = {}
+    orderBy: [CollectionOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Collection!]
+  collection(where: CollectionWhereUniqueInput!): Collection
+  collectionsCount(where: CollectionWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -222,6 +230,84 @@ input BookmarkCreateInput {
   updatedAt: DateTime
 }
 
+type Collection {
+  id: ID!
+  title: String
+  bookmarks(
+    where: BookmarkWhereInput! = {}
+    orderBy: [BookmarkOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Bookmark!]
+  bookmarksCount(where: BookmarkWhereInput! = {}): Int
+  showInSitesApps: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CollectionWhereUniqueInput {
+  id: ID
+}
+
+input CollectionWhereInput {
+  AND: [CollectionWhereInput!]
+  OR: [CollectionWhereInput!]
+  NOT: [CollectionWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  bookmarks: BookmarkManyRelationFilter
+  showInSitesApps: BooleanFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+}
+
+input BookmarkManyRelationFilter {
+  every: BookmarkWhereInput
+  some: BookmarkWhereInput
+  none: BookmarkWhereInput
+}
+
+input CollectionOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  showInSitesApps: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input CollectionUpdateInput {
+  title: String
+  bookmarks: BookmarkRelateToManyForUpdateInput
+  showInSitesApps: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input BookmarkRelateToManyForUpdateInput {
+  disconnect: [BookmarkWhereUniqueInput!]
+  set: [BookmarkWhereUniqueInput!]
+  create: [BookmarkCreateInput!]
+  connect: [BookmarkWhereUniqueInput!]
+}
+
+input CollectionUpdateArgs {
+  where: CollectionWhereUniqueInput!
+  data: CollectionUpdateInput!
+}
+
+input CollectionCreateInput {
+  title: String
+  bookmarks: BookmarkRelateToManyForCreateInput
+  showInSitesApps: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input BookmarkRelateToManyForCreateInput {
+  create: [BookmarkCreateInput!]
+  connect: [BookmarkWhereUniqueInput!]
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -246,6 +332,15 @@ type Mutation {
   updateBookmarks(data: [BookmarkUpdateArgs!]!): [Bookmark]
   deleteBookmark(where: BookmarkWhereUniqueInput!): Bookmark
   deleteBookmarks(where: [BookmarkWhereUniqueInput!]!): [Bookmark]
+  createCollection(data: CollectionCreateInput!): Collection
+  createCollections(data: [CollectionCreateInput!]!): [Collection]
+  updateCollection(
+    where: CollectionWhereUniqueInput!
+    data: CollectionUpdateInput!
+  ): Collection
+  updateCollections(data: [CollectionUpdateArgs!]!): [Collection]
+  deleteCollection(where: CollectionWhereUniqueInput!): Collection
+  deleteCollections(where: [CollectionWhereUniqueInput!]!): [Collection]
   endSession: Boolean!
 }
 
