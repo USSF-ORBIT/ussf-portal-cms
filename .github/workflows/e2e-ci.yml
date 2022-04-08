@@ -38,6 +38,10 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
 
+      - name: Install deps
+        run: yarn --frozen-lockfile
+        working-directory: ./ussf-portal-cms/e2e
+
       - name: Install Playwright
         run: npx playwright install --with-deps
         working-directory: ./ussf-portal-cms/e2e
