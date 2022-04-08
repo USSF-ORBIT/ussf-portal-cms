@@ -15,7 +15,7 @@ export default withSharedAuth(
       useMigrations: true,
     },
     ui: {
-      publicPages: ['/api/sysinfo'],
+      publicPages: ['/api/sysinfo', '/no-access'],
       pageMiddleware: async ({ context, isValidSession }) => {
         const { req, session } = context
         const pathname = url.parse(req!.url!).pathname!
@@ -33,7 +33,7 @@ export default withSharedAuth(
         }
 
         // If not other public paths & no session, redirect to login page
-        if (pathname !== '/api/sysinfo') {
+        if (pathname !== '/api/sysinfo' && pathname !== '/no-access') {
           // CYPRESS DEBUG ONLY
           return { kind: 'redirect', to: '/no-access' }
 
