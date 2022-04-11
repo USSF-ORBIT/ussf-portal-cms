@@ -25,7 +25,8 @@
     "cypress:install": "yarn --cwd e2e/ install",
     "cypress:dev": "yarn --cwd e2e/ cypress open",
     "e2e:install": "yarn --cwd e2e/ install",
-    "e2e:test": "yarn --cwd e2e/ playwright test"
+    "e2e:test": "yarn --cwd e2e/ playwright test",
+    "e2e:debug": "PWDEBUG=1 yarn --cwd e2e/ playwright test --headed"
   },
   "dependencies": {
     "@babel/core": "7.17.2",
