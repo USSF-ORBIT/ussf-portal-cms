@@ -26,8 +26,7 @@ describe('Authentication', () => {
         cy.contains('Signed in as JOHN.HENKE.562270783@testusers.cce.af.mil')
 
         cy.findByRole('main').within(() => {
-          cy.findByRole('heading', { level: 3 })
-            .contains('Users')
+          cy.findByRole('heading', { level: 3, name: `Users` })
             .next()
             .should('contain', '1 item')
         })
@@ -53,8 +52,7 @@ describe('Authentication', () => {
         cy.contains('Signed in as FLOYD.KING.376144527@testusers.cce.af.mil')
 
         cy.findByRole('main').within(() => {
-          cy.findByRole('heading', { level: 3 })
-            .contains('Users')
+          cy.findByRole('heading', { level: 3, name: `Users` })
             .next()
             .should('contain', '2 items')
         })
@@ -150,8 +148,7 @@ describe('Authentication', () => {
         cy.contains('Signed in as JOHN.HENKE.562270783@testusers.cce.af.mil')
 
         cy.findByRole('main').within(() => {
-          cy.findByRole('heading', { level: 3 })
-            .contains('Users')
+          cy.findByRole('heading', { level: 3, name: `Users` })
             .next()
             .should('contain', '1 item')
         })
@@ -226,8 +223,7 @@ describe('Authentication', () => {
         cy.contains('Signed in as JOHN.HENKE.562270783@testusers.cce.af.mil')
 
         cy.findByRole('main').within(() => {
-          cy.findByRole('heading', { level: 3 })
-            .contains('Users')
+          cy.findByRole('heading', { level: 3, name: `Users` })
             .next()
             .should('contain', '1 item')
         })
