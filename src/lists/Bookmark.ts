@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core'
-import { text, timestamp } from '@keystone-6/core/fields'
+import { relationship, text, timestamp } from '@keystone-6/core/fields'
 
 import { isAdmin, editReadAdminUI } from '../util/access'
 
@@ -45,6 +45,7 @@ const Bookmark: Lists.Bookmark = list({
       },
       isFilterable: true,
     }),
+    collections: relationship({ ref: 'Collection', many: true }),
 
     createdAt: timestamp({
       defaultValue: {

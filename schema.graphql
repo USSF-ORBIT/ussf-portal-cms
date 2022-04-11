@@ -176,6 +176,13 @@ type Bookmark {
   label: String
   description: String
   keywords: String
+  collections(
+    where: CollectionWhereInput! = {}
+    orderBy: [CollectionOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Collection!]
+  collectionsCount(where: CollectionWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -193,8 +200,15 @@ input BookmarkWhereInput {
   label: StringFilter
   description: StringFilter
   keywords: StringFilter
+  collections: CollectionManyRelationFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
+}
+
+input CollectionManyRelationFilter {
+  every: CollectionWhereInput
+  some: CollectionWhereInput
+  none: CollectionWhereInput
 }
 
 input BookmarkOrderByInput {
@@ -212,8 +226,16 @@ input BookmarkUpdateInput {
   label: String
   description: String
   keywords: String
+  collections: CollectionRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input CollectionRelateToManyForUpdateInput {
+  disconnect: [CollectionWhereUniqueInput!]
+  set: [CollectionWhereUniqueInput!]
+  create: [CollectionCreateInput!]
+  connect: [CollectionWhereUniqueInput!]
 }
 
 input BookmarkUpdateArgs {
@@ -226,8 +248,14 @@ input BookmarkCreateInput {
   label: String
   description: String
   keywords: String
+  collections: CollectionRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input CollectionRelateToManyForCreateInput {
+  create: [CollectionCreateInput!]
+  connect: [CollectionWhereUniqueInput!]
 }
 
 type Collection {
