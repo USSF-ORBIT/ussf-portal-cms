@@ -19,6 +19,21 @@ const dropAndCreateUsersTable = async (client) => {
 );`)
 }
 
+module.exports.resetDb = async () => {
+  const connectionString =
+    'postgres://keystone:keystonecms@0.0.0.0:5432/cypress'
+
+  const client = new Client({ connectionString })
+
+  try {
+    await client.connect()
+    await dropAndCreateUsersTable(client)
+  } catch (err) {
+    console.log(err.stack)
+    return err
+  }
+}
+
 module.exports.seedRevokeUsers = async () => {
   const connectionString =
     'postgres://keystone:keystonecms@0.0.0.0:5432/cypress'
