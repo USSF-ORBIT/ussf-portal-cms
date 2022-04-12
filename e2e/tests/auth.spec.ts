@@ -3,9 +3,19 @@ import {
   fixtures,
   TestingLibraryFixtures,
 } from '@playwright-testing-library/test/fixture'
-import { waitFor } from '@playwright-testing-library/test'
+import { LoginPage } from '../models/Login'
 
-const test = baseTest.extend<TestingLibraryFixtures>(fixtures)
+type CustomFixtures = {
+  loginPage: LoginPage
+}
+
+const test = baseTest.extend<TestingLibraryFixtures & CustomFixtures>({
+  ...fixtures,
+  loginPage: async ({ page, context }, use) => {
+    await use(new LoginPage(page, context))
+  },
+})
+
 const { describe, expect } = test
 
 describe('Authentication', () => {
@@ -25,37 +35,14 @@ describe('Authentication', () => {
     })
   })
 
-  describe.only('logging in and out', () => {
+  describe('logging in and out', () => {
     describe('as a CMS user', () => {
-      test('can log into and out of Keystone', async ({
-        page,
-        context,
-        queries: { getByLabelText, getByRole },
-      }) => {
-        // LOGIN START
-        await context.clearCookies()
+      test('can log into and out of Keystone', async ({ page, loginPage }) => {
+        await loginPage.login('cmsuser', 'cmsuserpass')
 
-        await page.goto('http://localhost:3000/login')
-        await page.locator('text=Log In').click()
-        await expect(page.url()).toContain('http://localhost:8080/simplesaml/')
+        await expect(page.locator('text=WELCOME, JOHN HENKE')).toBeVisible()
 
-        await expect(
-          page.locator('h2:has-text("Enter your username and password")')
-        ).toBeVisible()
-
-        const $username = await getByLabelText('Username')
-        await $username.fill('cmsuser')
-        const $password = await getByLabelText('Password')
-        await $password.fill('cmsuserpass')
-
-        await (await getByRole('button', { name: 'Login' })).click()
-
-        await waitFor(() => {
-          expect(page.url()).toBe('http://localhost:3000/')
-        })
-        // LOGIN END
-
-        await page.goto('/')
+        await page.goto('http://localhost:3001')
         await expect(
           page.locator(
             'text=Signed in as JOHN.HENKE.562270783@testusers.cce.af.mil'
@@ -66,12 +53,7 @@ describe('Authentication', () => {
           page.locator('main div:has(h3:has-text("Users"))')
         ).toHaveText('Users 1 item')
 
-        // Log out
-        await (await getByRole('button', { name: 'Links and signout' })).click()
-        await (await getByRole('button', { name: 'Sign out' })).click()
-        await waitFor(() => {
-          expect(page.locator('h1')).toHaveText('Space Force Portal Login')
-        })
+        await loginPage.logout()
       })
     })
   })
