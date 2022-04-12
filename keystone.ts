@@ -21,5 +21,10 @@ export default withSharedAuth(
       enableSessionItem: true,
       isAccessAllowed: ({ session }) => !!session,
     },
+    server: {
+      cors: {
+        origin: `${process.env.PORTAL_CORS_ORIGIN}`,
+      },
+    },
   })
 )
