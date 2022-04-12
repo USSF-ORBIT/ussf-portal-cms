@@ -5,11 +5,7 @@ import {
 } from '@playwright-testing-library/test/fixture'
 
 import { LoginPage } from '../models/Login'
-import {
-  resetDb,
-  seedRevokeUsers,
-  seedGrantUsers,
-} from '../cypress/database/seed'
+import { resetDb, seedRevokeUsers, seedGrantUsers } from '../database/seed'
 
 type CustomFixtures = {
   loginPage: LoginPage

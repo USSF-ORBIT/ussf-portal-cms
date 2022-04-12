@@ -39,16 +39,16 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
 
       - name: Install deps
-        run: yarn --frozen-lockfile
-        working-directory: ./ussf-portal-cms/e2e
+        run: yarn e2e:install
+        working-directory: ./ussf-portal-cms
 
       - name: Install Playwright
         run: npx playwright install --with-deps
         working-directory: ./ussf-portal-cms/e2e
 
       - name: Run e2e tests
-        run: yarn playwright test tests/example.spec.ts
-        working-directory: ./ussf-portal-cms/e2e
+        run: yarn e2e:test
+        working-directory: ./ussf-portal-cms
 
       - name: Upload test results
         if: always()

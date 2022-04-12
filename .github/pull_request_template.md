@@ -44,8 +44,8 @@
   - [ ] Checked that all Storybook accessibility checks are passing
 - [ ] Created/modified automated unit tests in Jest
   - [ ] Including jest-axe checks when UI changes
-- [ ] Created/modified automated E2E tests in Cypress
-  - [ ] Including cypress-axe checks when UI changes
+- [ ] Created/modified automated E2E tests in Playwright
+  - [ ] Including [axe-playwright](https://github.com/abhinaba-ghosh/axe-playwright) checks when UI changes
 - Performed [a11y testing](https://github.com/trussworks/accessibility/blob/master/sample_a11y_testing_process.md):
   - [ ] Checked responsiveness in mobile, tablet, and desktop
   - [ ] Checked keyboard navigability

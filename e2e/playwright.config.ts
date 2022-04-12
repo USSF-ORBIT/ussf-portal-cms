@@ -10,7 +10,6 @@ const config: PlaywrightTestConfig = {
     trace: 'retain-on-failure',
   },
   testDir: 'tests',
-  testIgnore: 'cypress/**',
 }
 
 export default config

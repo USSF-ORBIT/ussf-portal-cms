@@ -1,6 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Client } = require('pg')
 
+const E2E_TEST_DATABASE = 'playwright'
+const E2E_TEST_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${E2E_TEST_DATABASE}`
+
+// DB util functions
 const dropAndCreateUsersTable = async (client) => {
   // Drop
   await client.query(`DROP TABLE IF EXISTS "public"."User";`)
@@ -19,15 +23,15 @@ const dropAndCreateUsersTable = async (client) => {
 );`)
 }
 
+// DB exports
 module.exports.resetDb = async () => {
-  const connectionString =
-    'postgres://keystone:keystonecms@0.0.0.0:5432/cypress'
-
-  const client = new Client({ connectionString })
+  const client = new Client({ connectionString: E2E_TEST_CONNECTION })
 
   try {
     await client.connect()
     await dropAndCreateUsersTable(client)
+    console.log(`E2E database reset!`)
+    await client.end()
   } catch (err) {
     console.log(err.stack)
     return err
@@ -35,10 +39,7 @@ module.exports.resetDb = async () => {
 }
 
 module.exports.seedRevokeUsers = async () => {
-  const connectionString =
-    'postgres://keystone:keystonecms@0.0.0.0:5432/cypress'
-
-  const client = new Client({ connectionString })
+  const client = new Client({ connectionString: E2E_TEST_CONNECTION })
 
   try {
     await client.connect()
@@ -50,7 +51,7 @@ module.exports.seedRevokeUsers = async () => {
 ('cl0jyfow10002fs97yimqq04c', 'JOHN HENKE', 't', 't', 'JOHN.HENKE.562270783@testusers.cce.af.mil'),
 ('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 't', 't', 'FLOYD.KING.376144527@testusers.cce.af.mil');`)
 
-    console.log(`Cypress database seeded!`)
+    console.log(`E2E database seeded!`)
 
     await client.end()
   } catch (err) {
@@ -60,10 +61,7 @@ module.exports.seedRevokeUsers = async () => {
 }
 
 module.exports.seedGrantUsers = async () => {
-  const connectionString =
-    'postgres://keystone:keystonecms@0.0.0.0:5432/cypress'
-
-  const client = new Client({ connectionString })
+  const client = new Client({ connectionString: E2E_TEST_CONNECTION })
 
   try {
     await client.connect()
@@ -74,7 +72,7 @@ module.exports.seedGrantUsers = async () => {
 ('cl0jyfow10002fs97yimqq04c', 'JOHN HENKE', 'f', 'f', 'JOHN.HENKE.562270783@testusers.cce.af.mil'),
 ('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 'f', 'f', 'FLOYD.KING.376144527@testusers.cce.af.mil');`)
 
-    console.log(`Cypress database seeded!`)
+    console.log(`E2E database seeded!`)
 
     await client.end()
   } catch (err) {
