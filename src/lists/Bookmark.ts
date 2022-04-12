@@ -45,7 +45,7 @@ const Bookmark: Lists.Bookmark = list({
       },
       isFilterable: true,
     }),
-    collections: relationship({ ref: 'Collection', many: true }),
+    collections: relationship({ ref: 'Collection.bookmarks', many: true }),
 
     createdAt: timestamp({
       defaultValue: {

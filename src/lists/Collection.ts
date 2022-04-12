@@ -33,7 +33,7 @@ const Collection: Lists.Collection = list({
         isRequired: true,
       },
     }),
-    bookmarks: relationship({ ref: 'Bookmark', many: true }),
+    bookmarks: relationship({ ref: 'Bookmark.collections', many: true }),
     showInSitesApps: checkbox({
       defaultValue: false,
       label: 'Show in Sites & Apps',
