@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Client } = require('pg')
 
-const E2E_TEST_DATABASE = 'playwright'
+const E2E_TEST_DATABASE = 'test'
 const E2E_TEST_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${E2E_TEST_DATABASE}`
 
 // DB util functions

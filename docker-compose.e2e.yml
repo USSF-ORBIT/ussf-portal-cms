@@ -13,7 +13,7 @@ services:
       - '3001:3001'
     environment:
       PORT: 3001
-      DATABASE_URL: postgres://keystone:keystonecms@keystone-db:5432/playwright
+      DATABASE_URL: postgres://keystone:keystonecms@keystone-db:5432/test
       REDIS_URL: redis://portal_redis:6379
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
       SESSION_DOMAIN: localhost
@@ -39,7 +39,7 @@ services:
       SAML_IDP_METADATA_URL: http://idp:8080/simplesaml/saml2/idp/metadata.php
       REDIS_URL: redis://portal_redis:6379
       MONGO_URL: mongodb://mongo:27017
-      MONGODB_DB: playwright
+      MONGODB_DB: cypress-e2e
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
       SESSION_DOMAIN: localhost
     stdin_open: true
@@ -61,7 +61,7 @@ services:
     image: mongo:4.0.0
     restart: always
     environment:
-      MONGO_INITDB_DATABASE: playwright
+      MONGO_INITDB_DATABASE: cypress-e2e
     ports:
       - '27017:27017'
 
@@ -89,4 +89,4 @@ services:
     environment:
       - POSTGRES_PASSWORD=keystonecms
       - POSTGRES_USER=keystone
-      - POSTGRES_DB=playwright
+      - POSTGRES_DB=test
