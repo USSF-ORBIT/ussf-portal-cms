@@ -7,26 +7,21 @@
 - [direnv](https://direnv.net/docs/hook.html)
 - [Docker](https://www.docker.com/products/docker-desktop)
 
-To run Keystone locally, you will also need a [Postgres](https://www.postgresql.org/download/) instance running.
-
-You can run one on your machine, or run `yarn services:up` which includes all required services, including Postgres.
+To run Keystone outside, you will also need a [Postgres](https://www.postgresql.org/download/) instance running. You can run one on your machine, or run `yarn services:up` which starts all required services in Docker, including Postgres.
 
 ### Local environment variables
 
 Set these variables for Keystone in a `.envrc.local` file.
 
-- `SESSION_SECRET` (must be a string at least 32 chars)
+- `SESSION_SECRET` (must be a string at least 32 chars, must be the same value set in the Portal application)
 - `DATABASE_URL` (URL to a running Postgres instance)
-- `TEST_USERNAME` (string)
-- `TEST_EMAIL` (string - used to log in to Admin UI)
-- `TEST_PASSWORD` (must be a string at least 8 chars - used to log in to Admin UI)
 - `PORTAL_PATH` (for local dev only - path to the ussf-portal-client directory on your machine)
 
 Environment variables for Postgres are set in the `docker-compose.services.yml` file ran from `ussf-portal-client` directory.
 
-- POSTGRES_USER: keystone
-- POSTGRES_PASSWORD: keystonecms
-- POSTGRES_DB: keystone
+- `POSTGRES_USER: keystone`
+- `POSTGRES_PASSWORD: keystonecms`
+- `POSTGRES_DB: keystone`
 
 If running on standard port 5432, this makes the connection url one of the following:
 
@@ -45,7 +40,7 @@ _or_
 - Build Keystone Docker image:
   - `docker build -t keystone .`
 - Run Docker image:
-  - `docker run -p 3000:3000 --env SESSION_SECRET=$SESSION_SECRET --env DATABASE_URL=$DATABASE_URL --env TEST_USERNAME=$TEST_USERNAME --env TEST_EMAIL=$TEST_EMAIL --env TEST_PASSWORD=$TEST_PASSWORD keystone`
+  - `docker run -p 3000:3000 --env SESSION_SECRET=$SESSION_SECRET --env DATABASE_URL=$DATABASE_URL keystone`
 
 ### Yarn Scripts
 
@@ -54,3 +49,9 @@ _or_
 - `yarn portal:up`: Starts all required services _and_ NextJS App/Portal in Docker
   - Stop containers with `yarn portal:down`
 - `yarn dev`: Starts Keystone in development mode and watches for changed files
+- `yarn test`: Run Jest unit tests.
+  - Run in watch mode with `yarn test:watch`
+- `yarn e2e:test`: Run Playwright E2E tests
+  - You have to first run `yarn e2e:install` to install Playwright & E2E dependencies
+  - This runs the tests in a headless browser by default. You can also run `yarn e2e:test --headed` to run in a headed browser.
+  - To debug tests, run `yarn e2e:debug`. This will automatically pause the tests and you can step through them using the Playwright debugger.

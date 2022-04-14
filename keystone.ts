@@ -34,10 +34,6 @@ export default withSharedAuth(
 
         // If not other public paths & no session, redirect to login page
         if (pathname !== '/api/sysinfo' && pathname !== '/no-access') {
-          // CYPRESS DEBUG ONLY
-          return { kind: 'redirect', to: '/no-access' }
-
-          /*
           const requestUrl = getAbsoluteUrl(req).origin
           const redirectUrl = `${requestUrl}${req!.url}`
 
@@ -46,7 +42,6 @@ export default withSharedAuth(
           }/login?redirectTo=${encodeURIComponent(redirectUrl)}`
 
           return { kind: 'redirect', to }
-          */
         }
       },
       enableSessionItem: true,

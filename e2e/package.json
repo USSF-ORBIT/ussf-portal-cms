@@ -4,8 +4,10 @@
   "description": "E2E tests for the USSF portal CMS",
   "private": true,
   "devDependencies": {
-    "@testing-library/cypress": "8.0.2",
-    "cypress": "9.4.1",
+    "@playwright-testing-library/test": "4.2.0",
+    "@playwright/test": "1.20.2",
+    "axe-playwright": "1.1.11",
+    "eslint-plugin-playwright": "0.8.0",
     "pg": "8.7.3"
   }
 }
