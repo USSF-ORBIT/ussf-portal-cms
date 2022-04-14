@@ -22,7 +22,7 @@
     "test": "jest --runInBand --testTimeout=60000",
     "test:watch": "jest --watch --runInBand --testTimeout=60000",
     "release": "standard-version -t ''",
-    "e2e:install": "yarn --cwd e2e/ install",
+    "e2e:install": "yarn --cwd e2e/ install && cd e2e/ && npx playwright install",
     "e2e:test": "yarn --cwd e2e/ playwright test",
     "e2e:debug": "PWDEBUG=1 yarn --cwd e2e/ playwright test --headed"
   },
