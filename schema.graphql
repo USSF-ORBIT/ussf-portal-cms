@@ -14,6 +14,22 @@ type Query {
   ): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
+  bookmarks(
+    where: BookmarkWhereInput! = {}
+    orderBy: [BookmarkOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Bookmark!]
+  bookmark(where: BookmarkWhereUniqueInput!): Bookmark
+  bookmarksCount(where: BookmarkWhereInput! = {}): Int
+  collections(
+    where: CollectionWhereInput! = {}
+    orderBy: [CollectionOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Collection!]
+  collection(where: CollectionWhereUniqueInput!): Collection
+  collectionsCount(where: CollectionWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -154,6 +170,172 @@ input UserCreateInput {
   updatedAt: DateTime
 }
 
+type Bookmark {
+  id: ID!
+  url: String
+  label: String
+  description: String
+  keywords: String
+  collections(
+    where: CollectionWhereInput! = {}
+    orderBy: [CollectionOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Collection!]
+  collectionsCount(where: CollectionWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input BookmarkWhereUniqueInput {
+  id: ID
+}
+
+input BookmarkWhereInput {
+  AND: [BookmarkWhereInput!]
+  OR: [BookmarkWhereInput!]
+  NOT: [BookmarkWhereInput!]
+  id: IDFilter
+  url: StringFilter
+  label: StringFilter
+  description: StringFilter
+  keywords: StringFilter
+  collections: CollectionManyRelationFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+}
+
+input CollectionManyRelationFilter {
+  every: CollectionWhereInput
+  some: CollectionWhereInput
+  none: CollectionWhereInput
+}
+
+input BookmarkOrderByInput {
+  id: OrderDirection
+  url: OrderDirection
+  label: OrderDirection
+  description: OrderDirection
+  keywords: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input BookmarkUpdateInput {
+  url: String
+  label: String
+  description: String
+  keywords: String
+  collections: CollectionRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CollectionRelateToManyForUpdateInput {
+  disconnect: [CollectionWhereUniqueInput!]
+  set: [CollectionWhereUniqueInput!]
+  create: [CollectionCreateInput!]
+  connect: [CollectionWhereUniqueInput!]
+}
+
+input BookmarkUpdateArgs {
+  where: BookmarkWhereUniqueInput!
+  data: BookmarkUpdateInput!
+}
+
+input BookmarkCreateInput {
+  url: String
+  label: String
+  description: String
+  keywords: String
+  collections: CollectionRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CollectionRelateToManyForCreateInput {
+  create: [CollectionCreateInput!]
+  connect: [CollectionWhereUniqueInput!]
+}
+
+type Collection {
+  id: ID!
+  title: String
+  bookmarks(
+    where: BookmarkWhereInput! = {}
+    orderBy: [BookmarkOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Bookmark!]
+  bookmarksCount(where: BookmarkWhereInput! = {}): Int
+  showInSitesApps: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CollectionWhereUniqueInput {
+  id: ID
+}
+
+input CollectionWhereInput {
+  AND: [CollectionWhereInput!]
+  OR: [CollectionWhereInput!]
+  NOT: [CollectionWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  bookmarks: BookmarkManyRelationFilter
+  showInSitesApps: BooleanFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+}
+
+input BookmarkManyRelationFilter {
+  every: BookmarkWhereInput
+  some: BookmarkWhereInput
+  none: BookmarkWhereInput
+}
+
+input CollectionOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  showInSitesApps: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input CollectionUpdateInput {
+  title: String
+  bookmarks: BookmarkRelateToManyForUpdateInput
+  showInSitesApps: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input BookmarkRelateToManyForUpdateInput {
+  disconnect: [BookmarkWhereUniqueInput!]
+  set: [BookmarkWhereUniqueInput!]
+  create: [BookmarkCreateInput!]
+  connect: [BookmarkWhereUniqueInput!]
+}
+
+input CollectionUpdateArgs {
+  where: CollectionWhereUniqueInput!
+  data: CollectionUpdateInput!
+}
+
+input CollectionCreateInput {
+  title: String
+  bookmarks: BookmarkRelateToManyForCreateInput
+  showInSitesApps: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input BookmarkRelateToManyForCreateInput {
+  create: [BookmarkCreateInput!]
+  connect: [BookmarkWhereUniqueInput!]
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -169,6 +351,24 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createBookmark(data: BookmarkCreateInput!): Bookmark
+  createBookmarks(data: [BookmarkCreateInput!]!): [Bookmark]
+  updateBookmark(
+    where: BookmarkWhereUniqueInput!
+    data: BookmarkUpdateInput!
+  ): Bookmark
+  updateBookmarks(data: [BookmarkUpdateArgs!]!): [Bookmark]
+  deleteBookmark(where: BookmarkWhereUniqueInput!): Bookmark
+  deleteBookmarks(where: [BookmarkWhereUniqueInput!]!): [Bookmark]
+  createCollection(data: CollectionCreateInput!): Collection
+  createCollections(data: [CollectionCreateInput!]!): [Collection]
+  updateCollection(
+    where: CollectionWhereUniqueInput!
+    data: CollectionUpdateInput!
+  ): Collection
+  updateCollections(data: [CollectionUpdateArgs!]!): [Collection]
+  deleteCollection(where: CollectionWhereUniqueInput!): Collection
+  deleteCollections(where: [CollectionWhereUniqueInput!]!): [Collection]
   endSession: Boolean!
 }
 

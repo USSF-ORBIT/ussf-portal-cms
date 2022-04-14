@@ -21,3 +21,23 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
+
+model Bookmark {
+  id          String       @id @default(cuid())
+  url         String       @default("")
+  label       String       @default("")
+  description String       @default("")
+  keywords    String       @default("")
+  collections Collection[] @relation("Bookmark_collections")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+}
+
+model Collection {
+  id              String     @id @default(cuid())
+  title           String     @default("")
+  bookmarks       Bookmark[] @relation("Bookmark_collections")
+  showInSitesApps Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @default(now()) @updatedAt
+}
