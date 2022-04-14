@@ -18,6 +18,8 @@ export default withSharedAuth(
       publicPages: ['/api/sysinfo', '/no-access'],
       pageMiddleware: async ({ context, isValidSession }) => {
         const { req, session } = context
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const pathname = url.parse(req!.url!).pathname!
 
         if (isValidSession) {
@@ -35,6 +37,7 @@ export default withSharedAuth(
         // If not other public paths & no session, redirect to login page
         if (pathname !== '/api/sysinfo' && pathname !== '/no-access') {
           const requestUrl = getAbsoluteUrl(req).origin
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const redirectUrl = `${requestUrl}${req!.url}`
 
           const to = `${
