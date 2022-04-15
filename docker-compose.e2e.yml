@@ -13,10 +13,11 @@ services:
       - '3001:3001'
     environment:
       PORT: 3001
-      DATABASE_URL: postgres://keystone:keystonecms@keystone-db:5432/cypress
+      DATABASE_URL: postgres://keystone:keystonecms@keystone-db:5432/test
       REDIS_URL: redis://portal_redis:6379
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
       SESSION_DOMAIN: localhost
+      PORTAL_URL: http://localhost:3000
     stdin_open: true
     depends_on:
       - keystone-db
@@ -53,13 +54,14 @@ services:
     image: redis:6.2
     ports:
       - '6379:6379'
+
 # Portal-specific services
   mongo:
     container_name: mongo
     image: mongo:4.0.0
     restart: always
     environment:
-      MONGO_INITDB_DATABASE: dev
+      MONGO_INITDB_DATABASE: cypress-e2e
     ports:
       - '27017:27017'
 
@@ -87,4 +89,4 @@ services:
     environment:
       - POSTGRES_PASSWORD=keystonecms
       - POSTGRES_USER=keystone
-      - POSTGRES_DB=cypress
+      - POSTGRES_DB=test

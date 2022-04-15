@@ -1,7 +1,12 @@
 import type { KeystoneConfig, SessionStrategy } from '@keystone-6/core/types'
 import { graphQLSchemaExtension } from '@keystone-6/core'
 
-import type { SessionData, KeystoneUser, AuthenticatedUser } from '../../types'
+import type {
+  SessionData,
+  KeystoneUser,
+  AuthenticatedUser,
+  InvalidSession,
+} from '../../types'
 import { canAccessCMS, isCMSAdmin } from '../util/access'
 
 import { session, SharedSessionStrategy } from './session'
@@ -9,7 +14,7 @@ import type { Context } from '.keystone/types'
 
 const withAuthData = (
   _sessionStrategy: SharedSessionStrategy<SessionData>
-): SessionStrategy<AuthenticatedUser> => {
+): SessionStrategy<AuthenticatedUser | InvalidSession> => {
   const { get, ...sessionStrategy } = _sessionStrategy
 
   // This loads the Keystone user from Postgres & adds to session
@@ -40,6 +45,8 @@ const withAuthData = (
         passport: { user },
       } = sessionData
 
+      const invalidSession: InvalidSession = { accessAllowed: false }
+
       try {
         // Determine access based on SAML session data
         const userHasAccess = canAccessCMS(user)
@@ -53,7 +60,7 @@ const withAuthData = (
 
         if (!userHasAccess && !keystoneUser) {
           // NO ACCESS
-          return
+          return invalidSession
         }
 
         if (userHasAccess && !keystoneUser) {
@@ -72,7 +79,7 @@ const withAuthData = (
             query: `id userId name isAdmin isEnabled`,
           })) as KeystoneUser
 
-          return { ...user, ...keystoneUser }
+          return { ...user, ...keystoneUser, accessAllowed: true }
         } else {
           // keep isEnabled & isAdmin in sync with SAML session data
           keystoneUser = (await sudoContext.query.User.updateOne({
@@ -85,7 +92,9 @@ const withAuthData = (
             query: `id userId name isAdmin isEnabled`,
           })) as KeystoneUser
 
-          return userHasAccess ? { ...user, ...keystoneUser } : undefined
+          return userHasAccess
+            ? { ...user, ...keystoneUser, accessAllowed: true }
+            : invalidSession
         }
       } catch (e) {
         // Prisma error most likely

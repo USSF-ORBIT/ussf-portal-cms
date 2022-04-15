@@ -28,7 +28,5 @@ coverage
 # Public assets
 public/
 
-# Cypress artifacts
-cypress/screenshots
-cypress/videos
-cypress/reports
+# Playwright artifacts
+e2e/test-results

@@ -27,7 +27,5 @@ coverage
 
 tsconfig.tsbuildinfo
 
-# Cypress artifacts
-e2e/cypress/screenshots
-e2e/cypress/videos
-e2e/cypress/reports
+# Playwright artifacts
+e2e/test-results

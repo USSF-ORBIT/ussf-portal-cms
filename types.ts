@@ -32,6 +32,7 @@ export interface SAMLUser {
 
 export type SessionUser = SAMLUser & {
   userId: string
+  accessAllowed: true
 }
 
 export type KeystoneUser = {
@@ -41,3 +42,5 @@ export type KeystoneUser = {
 }
 
 export type AuthenticatedUser = SessionUser & KeystoneUser
+
+export type InvalidSession = { accessAllowed: false }

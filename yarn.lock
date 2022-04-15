@@ -4257,13 +4257,6 @@ eslint-module-utils@^2.7.1, eslint-module-utils@^2.7.2:
     debug "^3.2.7"
     find-up "^2.1.0"
 
-eslint-plugin-cypress@2.12.1:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-cypress/-/eslint-plugin-cypress-2.12.1.tgz#9aeee700708ca8c058e00cdafe215199918c2632"
-  integrity sha512-c2W/uPADl5kospNDihgiLc7n87t5XhUbFDoTl6CfVkmG+kDAb5Ux10V9PoLPu9N+r7znpc+iQlcmAqT1A/89HA==
-  dependencies:
-    globals "^11.12.0"
-
 eslint-plugin-import@2.25.3:
   version "2.25.3"
   resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.25.3.tgz#a554b5f66e08fb4f6dc99221866e57cfff824766"
@@ -4319,6 +4312,11 @@ eslint-plugin-jsx-a11y@6.5.1, eslint-plugin-jsx-a11y@^6.5.1:
     jsx-ast-utils "^3.2.1"
     language-tags "^1.0.5"
     minimatch "^3.0.4"
+
+eslint-plugin-playwright@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-playwright/-/eslint-plugin-playwright-0.8.0.tgz#7aa3729c7d841d82c5279772000c69b1262f8e43"
+  integrity sha512-9uJH25m6H3jwU5O7bHD5M8cLx46L72EnIUe3dZqTox6M+WzOFzeUWaDJHHCdLGXZ8XlAU4mbCZnP7uhjKepfRA==
 
 eslint-plugin-react-hooks@4.3.0, eslint-plugin-react-hooks@^4.3.0:
   version "4.3.0"
@@ -4956,7 +4954,7 @@ global-dirs@3.0.0:
   dependencies:
     ini "2.0.0"
 
-globals@^11.1.0, globals@^11.12.0:
+globals@^11.1.0:
   version "11.12.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==

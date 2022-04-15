@@ -37,7 +37,5 @@ public/
 # Generated files
 CHANGELOG.md
 
-# Cypress artifacts
-cypress/screenshots
-cypress/videos
-cypress/reports
+# Playwright artifacts
+e2e/test-results
