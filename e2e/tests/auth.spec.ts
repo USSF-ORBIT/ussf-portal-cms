@@ -1,4 +1,4 @@
-import { test as baseTest } from '@playwright/test'
+import { test as base } from '@playwright/test'
 import {
   fixtures,
   TestingLibraryFixtures,
@@ -11,7 +11,7 @@ type CustomFixtures = {
   loginPage: LoginPage
 }
 
-const test = baseTest.extend<TestingLibraryFixtures & CustomFixtures>({
+const test = base.extend<TestingLibraryFixtures & CustomFixtures>({
   ...fixtures,
   loginPage: async ({ page, context }, use) => {
     await use(new LoginPage(page, context))
