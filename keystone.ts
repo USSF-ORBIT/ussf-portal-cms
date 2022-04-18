@@ -52,7 +52,7 @@ export default withSharedAuth(
     },
     server: {
       cors: {
-        origin: `${process.env.PORTAL_CORS_ORIGIN}`,
+        origin: `${process.env.PORTAL_URL}`,
       },
     },
   })
