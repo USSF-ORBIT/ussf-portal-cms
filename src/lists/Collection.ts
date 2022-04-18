@@ -5,9 +5,10 @@ import {
   text,
   timestamp,
 } from '@keystone-6/core/fields'
-import { isAdmin, editReadAdminUI } from '../util/access'
 
 import type { Lists } from '.keystone/types'
+
+import { isAdmin, editReadAdminUI } from '../util/access'
 
 const Collection: Lists.Collection = list({
   access: {
