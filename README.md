@@ -26,9 +26,10 @@ These env variables are already set in `.envrc` and only need to be added to you
 #### Adding new environment variables
 
 > If you need to add a new environment variable used in the application, make sure to add it in the following places:
-> `.envrc` - Use this to document what the variable is, and set a default value for local development
-> `README.md` (this file) - Add to the list above & document what the variable is
-> `startup/index.js` - Add to the `requireVars` array in this file in order to require this variable is set on startup of the app.
+>
+> - `.envrc` - Use this to document what the variable is, and set a default value for local development
+> - `README.md` (this file) - Add to the list above & document what the variable is
+> - `startup/index.js` - Add to the `requireVars` array in this file in order to require this variable is set on startup of the app.
 
 Environment variables for Postgres are set in the `docker-compose.services.yml` file ran from `ussf-portal-client` directory.
 
