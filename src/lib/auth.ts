@@ -1,6 +1,8 @@
 import type { KeystoneConfig, SessionStrategy } from '@keystone-6/core/types'
 import { graphQLSchemaExtension } from '@keystone-6/core'
 
+import type { Context } from '.keystone/types'
+
 import type {
   SessionData,
   KeystoneUser,
@@ -10,7 +12,6 @@ import type {
 import { canAccessCMS, isCMSAdmin } from '../util/access'
 
 import { session, SharedSessionStrategy } from './session'
-import type { Context } from '.keystone/types'
 
 const withAuthData = (
   _sessionStrategy: SharedSessionStrategy<SessionData>

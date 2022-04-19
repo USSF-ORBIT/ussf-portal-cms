@@ -1,9 +1,9 @@
 import { list } from '@keystone-6/core'
 import { text, checkbox, timestamp } from '@keystone-6/core/fields'
 
-import { isAdminOrSelf } from '../util/access'
-
 import type { Lists } from '.keystone/types'
+
+import { isAdminOrSelf } from '../util/access'
 
 const User: Lists.User = list({
   // No one can create or delete users

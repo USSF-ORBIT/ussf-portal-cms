@@ -1,9 +1,9 @@
 import { list } from '@keystone-6/core'
 import { relationship, text, timestamp } from '@keystone-6/core/fields'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
-
 import type { Lists } from '.keystone/types'
+
+import { isAdmin, editReadAdminUI } from '../util/access'
 
 const Bookmark: Lists.Bookmark = list({
   // Admin can create and update bookmarks
