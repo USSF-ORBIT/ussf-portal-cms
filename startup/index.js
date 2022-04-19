@@ -10,7 +10,6 @@ const requireVars = [
   'REDIS_URL',
   'SESSION_SECRET',
   'SESSION_DOMAIN',
-  'TEST',
 ]
 
 function startup() {
