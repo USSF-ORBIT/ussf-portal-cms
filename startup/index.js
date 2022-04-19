@@ -10,9 +10,12 @@ const requireVars = [
   'REDIS_URL',
   'SESSION_SECRET',
   'SESSION_DOMAIN',
+  'TEST',
 ]
 
 function startup() {
+  initLogger()
+
   requireVars.forEach((v) => {
     if (process.env[`${v}`] === undefined) {
       throw new Error(
@@ -20,8 +23,6 @@ function startup() {
       )
     }
   })
-
-  initLogger()
 }
 
 startup()
