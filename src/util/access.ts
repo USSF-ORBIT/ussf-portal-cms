@@ -1,4 +1,4 @@
-import type { SessionUser, AuthenticatedUser } from '../../types'
+import type { SessionUser, ValidSession } from '../../types'
 
 /** Session access (used before defining session) */
 // The user group values defined by SLAM
@@ -34,11 +34,11 @@ export const isCMSAdmin = (user: SessionUser) => {
 }
 
 /** Access helpers */
-export const isAdmin = ({ session }: { session: AuthenticatedUser }) =>
+export const isAdmin = ({ session }: { session: ValidSession }) =>
   session?.isAdmin
 
 /** Filter helpers */
-export const isAdminOrSelf = ({ session }: { session: AuthenticatedUser }) => {
+export const isAdminOrSelf = ({ session }: { session: ValidSession }) => {
   // if the user is an Admin, they can access all the users
   if (session.isAdmin) return true
 
@@ -47,8 +47,8 @@ export const isAdminOrSelf = ({ session }: { session: AuthenticatedUser }) => {
 }
 
 /** UI helpers */
-export const showHideAdminUI = ({ session }: { session: AuthenticatedUser }) =>
+export const showHideAdminUI = ({ session }: { session: ValidSession }) =>
   session?.isAdmin ? 'edit' : 'hidden'
 
-export const editReadAdminUI = ({ session }: { session: AuthenticatedUser }) =>
+export const editReadAdminUI = ({ session }: { session: ValidSession }) =>
   session?.isAdmin ? 'edit' : 'read'

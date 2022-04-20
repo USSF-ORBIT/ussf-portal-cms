@@ -33,6 +33,9 @@ const testSession = {
   isAdmin: false,
   isEnabled: true,
   name: 'BERNADETTE CAMPBELL',
+  id: 'keystoneDbId123',
+  itemId: 'keystoneDbId123',
+  listKey: 'User' as const,
 }
 
 describe('canAccessCMS', () => {

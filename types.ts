@@ -32,15 +32,21 @@ export interface SAMLUser {
 
 export type SessionUser = SAMLUser & {
   userId: string
-  accessAllowed: true
 }
 
 export type KeystoneUser = {
+  id: string
   isAdmin: boolean
   isEnabled: boolean
   name: string
-}
+} & Pick<SessionUser, 'userId'>
 
 export type AuthenticatedUser = SessionUser & KeystoneUser
+
+export type ValidSession = AuthenticatedUser & {
+  accessAllowed: true
+  itemId: string
+  listKey: 'User'
+}
 
 export type InvalidSession = { accessAllowed: false }

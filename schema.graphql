@@ -42,8 +42,10 @@ type User {
   isAdmin: Boolean
   isEnabled: Boolean
   syncedAt: DateTime
-  createdAt: DateTime
   updatedAt: DateTime
+  createdAt: DateTime
+  updatedBy: User
+  createdBy: User
 }
 
 scalar DateTime
@@ -64,8 +66,10 @@ input UserWhereInput {
   isAdmin: BooleanFilter
   isEnabled: BooleanFilter
   syncedAt: DateTimeFilter
-  createdAt: DateTimeFilter
-  updatedAt: DateTimeFilter
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
 }
 
 input IDFilter {
@@ -129,6 +133,17 @@ input DateTimeFilter {
   not: DateTimeFilter
 }
 
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: DateTimeNullableFilter
+}
+
 input UserOrderByInput {
   id: OrderDirection
   userId: OrderDirection
@@ -136,8 +151,8 @@ input UserOrderByInput {
   isAdmin: OrderDirection
   isEnabled: OrderDirection
   syncedAt: OrderDirection
-  createdAt: OrderDirection
   updatedAt: OrderDirection
+  createdAt: OrderDirection
 }
 
 enum OrderDirection {
@@ -151,8 +166,6 @@ input UserUpdateInput {
   isAdmin: Boolean
   isEnabled: Boolean
   syncedAt: DateTime
-  createdAt: DateTime
-  updatedAt: DateTime
 }
 
 input UserUpdateArgs {
@@ -166,8 +179,6 @@ input UserCreateInput {
   isAdmin: Boolean
   isEnabled: Boolean
   syncedAt: DateTime
-  createdAt: DateTime
-  updatedAt: DateTime
 }
 
 type Bookmark {
@@ -183,8 +194,10 @@ type Bookmark {
     skip: Int! = 0
   ): [Collection!]
   collectionsCount(where: CollectionWhereInput! = {}): Int
-  createdAt: DateTime
   updatedAt: DateTime
+  createdAt: DateTime
+  updatedBy: User
+  createdBy: User
 }
 
 input BookmarkWhereUniqueInput {
@@ -201,8 +214,10 @@ input BookmarkWhereInput {
   description: StringFilter
   keywords: StringFilter
   collections: CollectionManyRelationFilter
-  createdAt: DateTimeFilter
-  updatedAt: DateTimeFilter
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
 }
 
 input CollectionManyRelationFilter {
@@ -217,8 +232,8 @@ input BookmarkOrderByInput {
   label: OrderDirection
   description: OrderDirection
   keywords: OrderDirection
-  createdAt: OrderDirection
   updatedAt: OrderDirection
+  createdAt: OrderDirection
 }
 
 input BookmarkUpdateInput {
@@ -227,8 +242,6 @@ input BookmarkUpdateInput {
   description: String
   keywords: String
   collections: CollectionRelateToManyForUpdateInput
-  createdAt: DateTime
-  updatedAt: DateTime
 }
 
 input CollectionRelateToManyForUpdateInput {
@@ -249,8 +262,6 @@ input BookmarkCreateInput {
   description: String
   keywords: String
   collections: CollectionRelateToManyForCreateInput
-  createdAt: DateTime
-  updatedAt: DateTime
 }
 
 input CollectionRelateToManyForCreateInput {
@@ -269,8 +280,10 @@ type Collection {
   ): [Bookmark!]
   bookmarksCount(where: BookmarkWhereInput! = {}): Int
   showInSitesApps: Boolean
-  createdAt: DateTime
   updatedAt: DateTime
+  createdAt: DateTime
+  updatedBy: User
+  createdBy: User
 }
 
 input CollectionWhereUniqueInput {
@@ -285,8 +298,10 @@ input CollectionWhereInput {
   title: StringFilter
   bookmarks: BookmarkManyRelationFilter
   showInSitesApps: BooleanFilter
-  createdAt: DateTimeFilter
-  updatedAt: DateTimeFilter
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
 }
 
 input BookmarkManyRelationFilter {
@@ -299,16 +314,14 @@ input CollectionOrderByInput {
   id: OrderDirection
   title: OrderDirection
   showInSitesApps: OrderDirection
-  createdAt: OrderDirection
   updatedAt: OrderDirection
+  createdAt: OrderDirection
 }
 
 input CollectionUpdateInput {
   title: String
   bookmarks: BookmarkRelateToManyForUpdateInput
   showInSitesApps: Boolean
-  createdAt: DateTime
-  updatedAt: DateTime
 }
 
 input BookmarkRelateToManyForUpdateInput {
@@ -327,8 +340,6 @@ input CollectionCreateInput {
   title: String
   bookmarks: BookmarkRelateToManyForCreateInput
   showInSitesApps: Boolean
-  createdAt: DateTime
-  updatedAt: DateTime
 }
 
 input BookmarkRelateToManyForCreateInput {

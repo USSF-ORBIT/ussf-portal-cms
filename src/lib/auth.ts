@@ -6,7 +6,7 @@ import type { Context } from '.keystone/types'
 import type {
   SessionData,
   KeystoneUser,
-  AuthenticatedUser,
+  ValidSession,
   InvalidSession,
 } from '../../types'
 import { canAccessCMS, isCMSAdmin } from '../util/access'
@@ -15,7 +15,7 @@ import { session, SharedSessionStrategy } from './session'
 
 const withAuthData = (
   _sessionStrategy: SharedSessionStrategy<SessionData>
-): SessionStrategy<AuthenticatedUser | InvalidSession> => {
+): SessionStrategy<ValidSession | InvalidSession> => {
   const { get, ...sessionStrategy } = _sessionStrategy
 
   // This loads the Keystone user from Postgres & adds to session
@@ -80,7 +80,13 @@ const withAuthData = (
             query: `id userId name isAdmin isEnabled`,
           })) as KeystoneUser
 
-          return { ...user, ...keystoneUser, accessAllowed: true }
+          return {
+            ...user,
+            ...keystoneUser,
+            accessAllowed: true,
+            itemId: keystoneUser.id,
+            listKey: 'User',
+          }
         } else {
           // keep isEnabled & isAdmin in sync with SAML session data
           keystoneUser = (await sudoContext.query.User.updateOne({
@@ -94,7 +100,13 @@ const withAuthData = (
           })) as KeystoneUser
 
           return userHasAccess
-            ? { ...user, ...keystoneUser, accessAllowed: true }
+            ? {
+                ...user,
+                ...keystoneUser,
+                accessAllowed: true,
+                itemId: keystoneUser.id,
+                listKey: 'User',
+              }
             : invalidSession
         }
       } catch (e) {
