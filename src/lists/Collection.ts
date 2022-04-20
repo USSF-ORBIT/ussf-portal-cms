@@ -5,40 +5,43 @@ import type { Lists } from '.keystone/types'
 
 import { isAdmin, editReadAdminUI } from '../util/access'
 import { withAtTracking, withByTracking } from '../util/tracking'
+import { withLogging } from '../util/logging'
 
 const Collection: Lists.Collection = list(
-  withByTracking(
-    withAtTracking({
-      access: {
-        operation: {
-          create: isAdmin,
-          query: () => true,
-          update: isAdmin,
-          delete: () => false,
-        },
-      },
-
-      ui: {
-        hideCreate: ({ session }) => !isAdmin({ session }),
-        hideDelete: true,
-        itemView: {
-          defaultFieldMode: editReadAdminUI,
-        },
-      },
-
-      fields: {
-        title: text({
-          validation: {
-            isRequired: true,
+  withLogging(
+    withByTracking(
+      withAtTracking({
+        access: {
+          operation: {
+            create: isAdmin,
+            query: () => true,
+            update: isAdmin,
+            delete: () => false,
           },
-        }),
-        bookmarks: relationship({ ref: 'Bookmark.collections', many: true }),
-        showInSitesApps: checkbox({
-          defaultValue: false,
-          label: 'Show in Sites & Apps',
-        }),
-      },
-    })
+        },
+
+        ui: {
+          hideCreate: ({ session }) => !isAdmin({ session }),
+          hideDelete: true,
+          itemView: {
+            defaultFieldMode: editReadAdminUI,
+          },
+        },
+
+        fields: {
+          title: text({
+            validation: {
+              isRequired: true,
+            },
+          }),
+          bookmarks: relationship({ ref: 'Bookmark.collections', many: true }),
+          showInSitesApps: checkbox({
+            defaultValue: false,
+            label: 'Show in Sites & Apps',
+          }),
+        },
+      })
+    )
   )
 )
 
