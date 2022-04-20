@@ -18,12 +18,12 @@ model User {
   isAdmin                   Boolean      @default(false)
   isEnabled                 Boolean      @default(false)
   syncedAt                  DateTime     @default(now())
-  updatedAt                 DateTime?    @updatedAt
-  createdAt                 DateTime?    @default(now())
   updatedBy                 User?        @relation("User_updatedBy", fields: [updatedById], references: [id])
   updatedById               String?      @map("updatedBy")
   createdBy                 User?        @relation("User_createdBy", fields: [createdById], references: [id])
   createdById               String?      @map("createdBy")
+  updatedAt                 DateTime?    @updatedAt
+  createdAt                 DateTime?    @default(now())
   from_User_updatedBy       User[]       @relation("User_updatedBy")
   from_User_createdBy       User[]       @relation("User_createdBy")
   from_Bookmark_updatedBy   Bookmark[]   @relation("Bookmark_updatedBy")
@@ -42,12 +42,12 @@ model Bookmark {
   description String       @default("")
   keywords    String       @default("")
   collections Collection[] @relation("Bookmark_collections")
-  updatedAt   DateTime?    @updatedAt
-  createdAt   DateTime?    @default(now())
   updatedBy   User?        @relation("Bookmark_updatedBy", fields: [updatedById], references: [id])
   updatedById String?      @map("updatedBy")
   createdBy   User?        @relation("Bookmark_createdBy", fields: [createdById], references: [id])
   createdById String?      @map("createdBy")
+  updatedAt   DateTime?    @updatedAt
+  createdAt   DateTime?    @default(now())
 
   @@index([updatedById])
   @@index([createdById])
@@ -58,12 +58,12 @@ model Collection {
   title           String     @default("")
   bookmarks       Bookmark[] @relation("Bookmark_collections")
   showInSitesApps Boolean    @default(false)
-  updatedAt       DateTime?  @updatedAt
-  createdAt       DateTime?  @default(now())
   updatedBy       User?      @relation("Collection_updatedBy", fields: [updatedById], references: [id])
   updatedById     String?    @map("updatedBy")
   createdBy       User?      @relation("Collection_createdBy", fields: [createdById], references: [id])
   createdById     String?    @map("createdBy")
+  updatedAt       DateTime?  @updatedAt
+  createdAt       DateTime?  @default(now())
 
   @@index([updatedById])
   @@index([createdById])

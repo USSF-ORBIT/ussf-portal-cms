@@ -42,10 +42,10 @@ type User {
   isAdmin: Boolean
   isEnabled: Boolean
   syncedAt: DateTime
-  updatedAt: DateTime
-  createdAt: DateTime
   updatedBy: User
   createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
 }
 
 scalar DateTime
@@ -66,10 +66,10 @@ input UserWhereInput {
   isAdmin: BooleanFilter
   isEnabled: BooleanFilter
   syncedAt: DateTimeFilter
-  updatedAt: DateTimeNullableFilter
-  createdAt: DateTimeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
 }
 
 input IDFilter {
@@ -194,10 +194,10 @@ type Bookmark {
     skip: Int! = 0
   ): [Collection!]
   collectionsCount(where: CollectionWhereInput! = {}): Int
-  updatedAt: DateTime
-  createdAt: DateTime
   updatedBy: User
   createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
 }
 
 input BookmarkWhereUniqueInput {
@@ -214,10 +214,10 @@ input BookmarkWhereInput {
   description: StringFilter
   keywords: StringFilter
   collections: CollectionManyRelationFilter
-  updatedAt: DateTimeNullableFilter
-  createdAt: DateTimeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
 }
 
 input CollectionManyRelationFilter {
@@ -280,10 +280,10 @@ type Collection {
   ): [Bookmark!]
   bookmarksCount(where: BookmarkWhereInput! = {}): Int
   showInSitesApps: Boolean
-  updatedAt: DateTime
-  createdAt: DateTime
   updatedBy: User
   createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
 }
 
 input CollectionWhereUniqueInput {
@@ -298,10 +298,10 @@ input CollectionWhereInput {
   title: StringFilter
   bookmarks: BookmarkManyRelationFilter
   showInSitesApps: BooleanFilter
-  updatedAt: DateTimeNullableFilter
-  createdAt: DateTimeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
 }
 
 input BookmarkManyRelationFilter {
