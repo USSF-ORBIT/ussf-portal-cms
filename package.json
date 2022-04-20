@@ -11,8 +11,8 @@
     "services:down": "docker compose -f ${PORTAL_PATH}/docker-compose.services.yml down",
     "portal:up": "docker compose -f ${PORTAL_PATH}/docker-compose.services.yml -f ${PORTAL_PATH}/docker-compose.client.yml up -d",
     "portal:down": "docker compose -f ${PORTAL_PATH}/docker-compose.services.yml -f ${PORTAL_PATH}/docker-compose.client.yml down",
-    "dev": "keystone dev",
-    "start": "keystone start",
+    "dev": "node -r ./startup/index.js node_modules/.bin/keystone dev",
+    "start": "node -r ./startup/index.js node_modules/.bin/keystone start",
     "build": "keystone build",
     "postinstall": "keystone postinstall",
     "format": "prettier --write .",
@@ -34,6 +34,7 @@
     "@keystone-6/core": "1.1.0",
     "@keystone-6/fields-document": "2.0.0",
     "cookie-signature": "1.2.0",
+    "dotenv": "16.0.0",
     "pino": "7.10.0",
     "redis": "4.0.6",
     "typescript": "4.6.3"

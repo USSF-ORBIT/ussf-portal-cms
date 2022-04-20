@@ -9,13 +9,27 @@
 
 To run Keystone outside, you will also need a [Postgres](https://www.postgresql.org/download/) instance running. You can run one on your machine, or run `yarn services:up` which starts all required services in Docker, including Postgres.
 
-### Local environment variables
+### Environment variables
 
-Set these variables for Keystone in a `.envrc.local` file.
+Set these variables for Keystone in a `.envrc.local` file (only needed for local development):
 
-- `SESSION_SECRET` (must be a string at least 32 chars, must be the same value set in the Portal application)
-- `DATABASE_URL` (URL to a running Postgres instance)
-- `PORTAL_PATH` (for local dev only - path to the ussf-portal-client directory on your machine)
+- `PORTAL_PATH` (path to the `ussf-portal-client` directory on your machine, used for running the portal app service in Docker)
+
+These env variables are already set in `.envrc` and only need to be added to your local file if you want to override the defaults:
+
+- `SESSION_SECRET` - must be a string at least 32 chars, must be the same value set in the Portal application
+- `SESSION_DOMAIN` - the domain used for both the Portal app & CMS apps, must be the same value set in the Portal application
+- `DATABASE_URL` - URL to the running Postgres instance used for the CMS database
+- `PORTAL_URL` - URL to the running Portal application
+- `REDIS_URL` - URL to the running Redis instance, used by both CMS & Portal applications for storing sessions
+
+#### Adding new environment variables
+
+> If you need to add a new environment variable used in the application, make sure to add it in the following places:
+>
+> - `.envrc` - Use this to document what the variable is, and set a default value for local development
+> - `README.md` (this file) - Add to the list above & document what the variable is
+> - `startup/index.js` - Add to the `requireVars` array in this file in order to require this variable is set on startup of the app.
 
 Environment variables for Postgres are set in the `docker-compose.services.yml` file ran from `ussf-portal-client` directory.
 
