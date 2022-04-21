@@ -11,6 +11,24 @@ generator client {
   output   = "node_modules/.prisma/client"
 }
 
+model Event {
+  id           String    @id @default(cuid())
+  operation    String    @default("")
+  itemListKey  String    @default("")
+  itemId       String    @default("")
+  inputData    Json?
+  resolvedData Json?
+  changedData  Json?
+  originalItem Json?
+  item         Json?
+  actor        User?     @relation("Event_actor", fields: [actorId], references: [id])
+  actorId      String?   @map("actor")
+  updatedAt    DateTime? @updatedAt
+  createdAt    DateTime? @default(now())
+
+  @@index([actorId])
+}
+
 model User {
   id                        String       @id @default(cuid())
   userId                    String       @unique @default("")
@@ -24,6 +42,7 @@ model User {
   createdById               String?      @map("createdBy")
   updatedAt                 DateTime?    @updatedAt
   createdAt                 DateTime?    @default(now())
+  from_Event_actor          Event[]      @relation("Event_actor")
   from_User_updatedBy       User[]       @relation("User_updatedBy")
   from_User_createdBy       User[]       @relation("User_createdBy")
   from_Bookmark_updatedBy   Bookmark[]   @relation("Bookmark_updatedBy")
