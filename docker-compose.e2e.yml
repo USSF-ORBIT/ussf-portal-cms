@@ -42,6 +42,7 @@ services:
       MONGODB_DB: cypress-e2e
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
       SESSION_DOMAIN: localhost
+      KEYSTONE_URL: http://localhost:3001
     stdin_open: true
     depends_on:
       - mongo
