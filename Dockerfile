@@ -2,7 +2,7 @@
 FROM node:14.19.1-slim AS builder
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libc6 yarn
+    && apt-get install -y --no-install-recommends openssl libc6 yarn
 
 WORKDIR /app
 
