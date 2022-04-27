@@ -4,10 +4,10 @@ import { text, checkbox, timestamp } from '@keystone-6/core/fields'
 import type { Lists } from '.keystone/types'
 
 import { isAdminOrSelf } from '../util/access'
-import { withAllTracking } from '../util/tracking'
+import { withTracking } from '../util/tracking'
 
 const User: Lists.User = list(
-  withAllTracking({
+  withTracking({
     // No one can create or delete users
     // Admin can view & edit all users
     // Users can view & edit themselves

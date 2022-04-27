@@ -11,7 +11,7 @@ const Event: Lists.Event = list(
     access: {
       operation: {
         create: () => false,
-        read: isAdmin,
+        query: isAdmin,
         update: () => false,
         delete: () => false,
       },
