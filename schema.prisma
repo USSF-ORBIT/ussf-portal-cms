@@ -11,6 +11,24 @@ generator client {
   output   = "node_modules/.prisma/client"
 }
 
+model Event {
+  id           String    @id @default(cuid())
+  operation    String    @default("")
+  itemListKey  String    @default("")
+  itemId       String    @default("")
+  inputData    Json?
+  resolvedData Json?
+  changedData  Json?
+  originalItem Json?
+  item         Json?
+  actor        User?     @relation("Event_actor", fields: [actorId], references: [id])
+  actorId      String?   @map("actor")
+  updatedAt    DateTime? @updatedAt
+  createdAt    DateTime? @default(now())
+
+  @@index([actorId])
+}
+
 model User {
   id                        String       @id @default(cuid())
   userId                    String       @unique @default("")
@@ -18,12 +36,13 @@ model User {
   isAdmin                   Boolean      @default(false)
   isEnabled                 Boolean      @default(false)
   syncedAt                  DateTime     @default(now())
-  updatedAt                 DateTime?    @updatedAt
-  createdAt                 DateTime?    @default(now())
   updatedBy                 User?        @relation("User_updatedBy", fields: [updatedById], references: [id])
   updatedById               String?      @map("updatedBy")
   createdBy                 User?        @relation("User_createdBy", fields: [createdById], references: [id])
   createdById               String?      @map("createdBy")
+  updatedAt                 DateTime?    @updatedAt
+  createdAt                 DateTime?    @default(now())
+  from_Event_actor          Event[]      @relation("Event_actor")
   from_User_updatedBy       User[]       @relation("User_updatedBy")
   from_User_createdBy       User[]       @relation("User_createdBy")
   from_Bookmark_updatedBy   Bookmark[]   @relation("Bookmark_updatedBy")
@@ -42,12 +61,12 @@ model Bookmark {
   description String       @default("")
   keywords    String       @default("")
   collections Collection[] @relation("Bookmark_collections")
-  updatedAt   DateTime?    @updatedAt
-  createdAt   DateTime?    @default(now())
   updatedBy   User?        @relation("Bookmark_updatedBy", fields: [updatedById], references: [id])
   updatedById String?      @map("updatedBy")
   createdBy   User?        @relation("Bookmark_createdBy", fields: [createdById], references: [id])
   createdById String?      @map("createdBy")
+  updatedAt   DateTime?    @updatedAt
+  createdAt   DateTime?    @default(now())
 
   @@index([updatedById])
   @@index([createdById])
@@ -58,12 +77,12 @@ model Collection {
   title           String     @default("")
   bookmarks       Bookmark[] @relation("Bookmark_collections")
   showInSitesApps Boolean    @default(false)
-  updatedAt       DateTime?  @updatedAt
-  createdAt       DateTime?  @default(now())
   updatedBy       User?      @relation("Collection_updatedBy", fields: [updatedById], references: [id])
   updatedById     String?    @map("updatedBy")
   createdBy       User?      @relation("Collection_createdBy", fields: [createdById], references: [id])
   createdById     String?    @map("createdBy")
+  updatedAt       DateTime?  @updatedAt
+  createdAt       DateTime?  @default(now())
 
   @@index([updatedById])
   @@index([createdById])
