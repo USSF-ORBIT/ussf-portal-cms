@@ -40,8 +40,12 @@ services:
       REDIS_URL: redis://portal_redis:6379
       MONGO_URL: mongodb://mongo:27017
       MONGODB_DB: cypress-e2e
+      MONGO_HOST: ''
+      MONGO_USER: ''
+      MONGO_PASSWORD: ''
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
       SESSION_DOMAIN: localhost
+      KEYSTONE_URL: http://localhost:3001
     stdin_open: true
     depends_on:
       - mongo
