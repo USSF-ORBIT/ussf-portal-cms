@@ -120,7 +120,7 @@ export const logging =
 
 export const withLogging = logging()
 
-export const withAllTracking: <Fields extends BaseFields<BaseListTypeInfo>>(
+export const withTracking: <Fields extends BaseFields<BaseListTypeInfo>>(
   listConfig: ListConfig<BaseListTypeInfo, Fields>
 ) => ListConfig<BaseListTypeInfo, Fields> = (list) =>
   withLogging(withAtTracking(withByTracking(list)))

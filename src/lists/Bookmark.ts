@@ -4,10 +4,10 @@ import { relationship, text } from '@keystone-6/core/fields'
 import type { Lists } from '.keystone/types'
 
 import { isAdmin, editReadAdminUI } from '../util/access'
-import { withAllTracking } from '../util/tracking'
+import { withTracking } from '../util/tracking'
 
 const Bookmark: Lists.Bookmark = list(
-  withAllTracking({
+  withTracking({
     // Admin can create and update bookmarks
     // Users can view all bookmarks
     access: {
