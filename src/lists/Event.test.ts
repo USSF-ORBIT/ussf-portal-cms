@@ -1,57 +1,34 @@
-import { TestEnv } from '@keystone-6/core/testing'
 import { KeystoneContext } from '@keystone-6/core/types'
 import type { Lists } from '.keystone/types'
 
-import { configTestEnv, testUsers } from '../testHelpers'
+import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
 
 describe('Event schema', () => {
-  let testEnv: TestEnv
+  let testEnv: TestEnvWithSessions
   let context: KeystoneContext
 
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
+
   let testEvent: Lists.Event.Item
   let testEventId: string
 
   beforeAll(async () => {
     testEnv = await configTestEnv()
     context = testEnv.testArgs.context
-    await testEnv.connect()
 
-    // Seed users
-    await context.sudo().query.User.createMany({
-      data: testUsers,
-    })
+    const sudoContext = testEnv.sudoContext
+    adminContext = testEnv.adminContext
+    userContext = testEnv.userContext
 
-    const adminUser = await context.sudo().query.User.findOne({
+    // Seed events
+    const adminUser = await sudoContext.query.User.findOne({
       where: {
         userId: 'admin@example.com',
       },
-      query: 'id userId name isAdmin isEnabled',
+      query: 'id',
     })
 
-    const cmsUser = await context.sudo().query.User.findOne({
-      where: {
-        userId: 'user1@example.com',
-      },
-      query: 'id userId name isAdmin isEnabled',
-    })
-
-    adminContext = context.withSession({
-      ...adminUser,
-      accessAllowed: true,
-      itemId: adminUser.id,
-      listKey: 'User',
-    })
-
-    userContext = context.withSession({
-      ...cmsUser,
-      accessAllowed: true,
-      itemId: cmsUser.id,
-      listKey: 'User',
-    })
-
-    // Seed events
     testEvent = {
       operation: 'update',
       itemListKey: 'User',
