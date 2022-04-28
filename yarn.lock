@@ -1725,7 +1725,7 @@
   resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-4.3.1.tgz#1df9f197d060f1eb087a895a5e33adb7f12b58fc"
   integrity sha512-oeaetlodcqVsiZDxnEcqsbs+sXBkASxua0mXs5OXuPQXz3/wdPTMlxwfQ4z2HKcOik3S9voW3QJkp/KLWDhvRQ==
 
-"@k6-contrib/list-plugins@^1.1.0":
+"@k6-contrib/list-plugins@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@k6-contrib/list-plugins/-/list-plugins-1.1.0.tgz#e21a54513554ce2a3eae1c08271e195bb46bce2d"
   integrity sha512-xOd+NNxWwIXaOWtjo1q+TxeFspHx/cIwJm++tJ2XGmqJnNjJ8flry9s5YWcGwgEO46UD31x7KBgrqsgLEJMiiA==
