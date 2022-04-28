@@ -1,5 +1,5 @@
 import { KeystoneContext } from '@keystone-6/core/types'
-import type { Lists } from '.keystone/types'
+import type { EventCreateInput } from '.keystone/types'
 
 import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
 
@@ -10,7 +10,7 @@ describe('Event schema', () => {
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
 
-  let testEvent: Lists.Event.Item
+  let testEvent: EventCreateInput
   let testEventId: string
 
   beforeAll(async () => {
