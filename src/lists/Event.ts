@@ -24,7 +24,7 @@ const Event: Lists.Event = list(
       hideCreate: true,
       hideDelete: true,
       listView: {
-        initialColumns: ['name', 'itemId', 'actor', 'createdAt'],
+        initialColumns: ['name', 'itemId', 'actor'],
       },
       itemView: {
         defaultFieldMode: 'read',

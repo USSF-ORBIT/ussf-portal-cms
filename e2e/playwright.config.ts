@@ -10,6 +10,7 @@ const config: PlaywrightTestConfig = {
     trace: 'retain-on-failure',
   },
   testDir: 'tests',
+  workers: 1,
 }
 
 export default config

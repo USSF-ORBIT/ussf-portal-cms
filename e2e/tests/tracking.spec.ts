@@ -66,11 +66,11 @@ describe('Event logging', () => {
 
     await Promise.all([
       page.waitForNavigation(),
-      page.locator('a:left-of(:text("update User"))').click(),
+      page.locator('a:left-of(:text("update User"), 20)').click(),
     ])
 
     await expect(page.locator('label:has-text("Input Data")')).toHaveText(`{
-  "name": "Jonathan Henke"
+  "name": "Johnathan Henke"
 }`)
 
     await expect(page.locator('legend:has-text("Actor") + a')).toHaveText(
