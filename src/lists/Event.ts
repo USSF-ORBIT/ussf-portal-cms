@@ -1,5 +1,5 @@
-import { list } from '@keystone-6/core'
-import { json, relationship, text } from '@keystone-6/core/fields'
+import { list, graphql } from '@keystone-6/core'
+import { json, relationship, text, virtual } from '@keystone-6/core/fields'
 
 import type { Lists } from '.keystone/types'
 
@@ -18,10 +18,14 @@ const Event: Lists.Event = list(
     },
 
     ui: {
+      labelField: 'name',
       description: 'A generated log of all CMS mutations',
       isHidden: !isAdmin,
       hideCreate: true,
       hideDelete: true,
+      listView: {
+        initialColumns: ['name', 'itemId', 'actor', 'createdAt'],
+      },
       itemView: {
         defaultFieldMode: 'read',
       },
@@ -37,6 +41,17 @@ const Event: Lists.Event = list(
       originalItem: json(), // the item before changes
       item: json(), // the item after changes
       actor: relationship({ ref: 'User' }), // the user who performed the operation
+
+      // Virtual fields (for display only)
+      name: virtual({
+        field: graphql.field({
+          type: graphql.String,
+          resolve(item) {
+            const { operation, itemListKey } = item
+            return `${operation} ${itemListKey}`
+          },
+        }),
+      }),
     },
   })
 )

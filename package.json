@@ -24,7 +24,8 @@
     "release": "standard-version -t ''",
     "e2e:install": "yarn --cwd e2e/ install && cd e2e/ && npx playwright install",
     "e2e:test": "yarn --cwd e2e/ playwright test",
-    "e2e:debug": "PWDEBUG=1 yarn --cwd e2e/ playwright test --headed"
+    "e2e:debug": "PWDEBUG=1 yarn --cwd e2e/ playwright test --headed",
+    "e2e:codegen": "yarn --cwd e2e/ playwright codegen localhost:3001"
   },
   "dependencies": {
     "@babel/core": "7.17.9",

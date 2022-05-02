@@ -54,6 +54,7 @@ type Event {
   originalItem: JSON
   item: JSON
   actor: User
+  name: String
   updatedAt: DateTime
   createdAt: DateTime
 }
