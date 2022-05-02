@@ -69,7 +69,8 @@ describe('Event logging', () => {
       page.locator('a:left-of(:text("update User"), 20)').click(),
     ])
 
-    await expect(page.locator('label:has-text("Input Data")')).toHaveText(`{
+    await expect(page.locator('label:has-text("Input Data")'))
+      .toHaveText(`Input Data{
   "name": "Johnathan Henke"
 }`)
 
