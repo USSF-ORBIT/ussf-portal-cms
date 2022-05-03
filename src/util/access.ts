@@ -7,6 +7,14 @@ const USER_GROUPS = {
   USER: 'PORTAL_CMS_Users',
 }
 
+export const USER_ROLES = {
+  USER: 'User',
+  AUTHOR: 'Author',
+  MANAGER: 'Manager',
+} as const
+
+export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES]
+
 const USER_GROUPS_LIST = Object.values(USER_GROUPS)
 
 export const canAccessCMS = (user: SessionUser) => {

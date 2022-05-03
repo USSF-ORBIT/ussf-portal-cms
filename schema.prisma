@@ -35,6 +35,7 @@ model User {
   name                      String       @default("")
   isAdmin                   Boolean      @default(false)
   isEnabled                 Boolean      @default(false)
+  role                      UserRoleType @default(User)
   syncedAt                  DateTime     @default(now())
   updatedBy                 User?        @relation("User_updatedBy", fields: [updatedById], references: [id])
   updatedById               String?      @map("updatedBy")
@@ -86,4 +87,10 @@ model Collection {
 
   @@index([updatedById])
   @@index([createdById])
+}
+
+enum UserRoleType {
+  User
+  Author
+  Manager
 }

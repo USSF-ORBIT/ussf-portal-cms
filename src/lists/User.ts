@@ -1,9 +1,14 @@
 import { list } from '@keystone-6/core'
-import { text, checkbox, timestamp } from '@keystone-6/core/fields'
+import { text, checkbox, timestamp, select } from '@keystone-6/core/fields'
 
 import type { Lists } from '.keystone/types'
 
-import { isAdminOrSelf } from '../util/access'
+import {
+  USER_ROLES,
+  isAdmin,
+  isAdminOrSelf,
+  editReadAdminUI,
+} from '../util/access'
 import { withTracking } from '../util/tracking'
 
 const User: Lists.User = list(
@@ -30,7 +35,14 @@ const User: Lists.User = list(
       hideCreate: true,
       hideDelete: true,
       listView: {
-        initialColumns: ['userId', 'name', 'isAdmin', 'isEnabled', 'syncedAt'],
+        initialColumns: [
+          'userId',
+          'name',
+          'role',
+          'isAdmin',
+          'isEnabled',
+          'syncedAt',
+        ],
       },
     },
 
@@ -83,6 +95,26 @@ const User: Lists.User = list(
         ui: {
           itemView: {
             fieldMode: () => 'read',
+          },
+        },
+      }),
+
+      role: select({
+        type: 'enum',
+        options: (
+          Object.keys(USER_ROLES) as Array<keyof typeof USER_ROLES>
+        ).map((r) => ({ label: USER_ROLES[r], value: USER_ROLES[r] })),
+        defaultValue: USER_ROLES.USER,
+        validation: {
+          isRequired: true,
+        },
+        access: {
+          read: () => true,
+          update: isAdmin,
+        },
+        ui: {
+          itemView: {
+            fieldMode: editReadAdminUI,
           },
         },
       }),

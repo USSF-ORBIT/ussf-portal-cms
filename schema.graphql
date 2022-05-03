@@ -195,11 +195,18 @@ type User {
   name: String
   isAdmin: Boolean
   isEnabled: Boolean
+  role: UserRoleType
   syncedAt: DateTime
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
+}
+
+enum UserRoleType {
+  User
+  Author
+  Manager
 }
 
 input UserWhereUniqueInput {
@@ -216,6 +223,7 @@ input UserWhereInput {
   name: StringFilter
   isAdmin: BooleanFilter
   isEnabled: BooleanFilter
+  role: UserRoleTypeNullableFilter
   syncedAt: DateTimeFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
@@ -226,6 +234,13 @@ input UserWhereInput {
 input BooleanFilter {
   equals: Boolean
   not: BooleanFilter
+}
+
+input UserRoleTypeNullableFilter {
+  equals: UserRoleType
+  in: [UserRoleType!]
+  notIn: [UserRoleType!]
+  not: UserRoleTypeNullableFilter
 }
 
 input DateTimeFilter {
@@ -245,6 +260,7 @@ input UserOrderByInput {
   name: OrderDirection
   isAdmin: OrderDirection
   isEnabled: OrderDirection
+  role: OrderDirection
   syncedAt: OrderDirection
   updatedAt: OrderDirection
   createdAt: OrderDirection
@@ -255,6 +271,7 @@ input UserUpdateInput {
   name: String
   isAdmin: Boolean
   isEnabled: Boolean
+  role: UserRoleType
   syncedAt: DateTime
 }
 
@@ -268,6 +285,7 @@ input UserCreateInput {
   name: String
   isAdmin: Boolean
   isEnabled: Boolean
+  role: UserRoleType
   syncedAt: DateTime
 }
 
