@@ -21,7 +21,7 @@ describe('User schema', () => {
   describe('as an admin user', () => {
     it('can view all users', async () => {
       const data = await adminContext.query.User.findMany({
-        query: 'id name userId isAdmin isEnabled',
+        query: 'id name role userId isAdmin isEnabled',
       })
 
       expect(data).toHaveLength(2)
@@ -39,7 +39,7 @@ describe('User schema', () => {
         data: {
           name: 'Admin New Name',
         },
-        query: 'id name userId isAdmin isEnabled',
+        query: 'id name role userId isAdmin isEnabled',
       })
 
       expect(data).toMatchObject({
@@ -54,22 +54,25 @@ describe('User schema', () => {
         where: { userId: 'user1@example.com' },
         data: {
           name: 'Test User 1 New Name',
+          role: 'Author',
         },
-        query: 'id name userId isAdmin isEnabled',
+        query: 'id name role userId isAdmin isEnabled',
       })
 
       expect(data).toMatchObject({
         id: expect.any(String),
         ...testUsers[1],
         name: 'Test User 1 New Name',
+        role: 'Author',
       })
 
       data = await adminContext.query.User.updateOne({
         where: { userId: 'user1@example.com' },
         data: {
           name: 'User 1',
+          role: 'User',
         },
-        query: 'id name userId isAdmin isEnabled',
+        query: 'id name role userId isAdmin isEnabled',
       })
 
       expect(data).toMatchObject({
@@ -86,7 +89,7 @@ describe('User schema', () => {
           data: {
             userId: 'testUser1',
           },
-          query: 'id name userId isAdmin isEnabled',
+          query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
         `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["userId"].`
@@ -100,7 +103,7 @@ describe('User schema', () => {
           data: {
             isAdmin: true,
           },
-          query: 'id name userId isAdmin isEnabled',
+          query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
         `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isAdmin"].`
@@ -114,7 +117,7 @@ describe('User schema', () => {
           data: {
             isEnabled: false,
           },
-          query: 'id name userId isAdmin isEnabled',
+          query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
         `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isEnabled"].`
@@ -152,7 +155,7 @@ describe('User schema', () => {
   describe('as a non admin user', () => {
     it('can only view themselves', async () => {
       const data = await userContext.query.User.findMany({
-        query: 'id name userId isAdmin isEnabled',
+        query: 'id name role userId isAdmin isEnabled',
       })
 
       expect(data).toHaveLength(1)
@@ -165,7 +168,7 @@ describe('User schema', () => {
     it('cannot query other users', async () => {
       const data = await userContext.query.User.findOne({
         where: { userId: 'admin@example.com' },
-        query: 'id name userId isAdmin',
+        query: 'id name role userId isAdmin',
       })
 
       expect(data).toBe(null)
@@ -177,7 +180,7 @@ describe('User schema', () => {
         data: {
           name: 'User 1 New Name',
         },
-        query: 'id name userId isAdmin isEnabled',
+        query: 'id name role userId isAdmin isEnabled',
       })
 
       expect(data).toMatchObject({
@@ -191,7 +194,7 @@ describe('User schema', () => {
         data: {
           name: 'User 1',
         },
-        query: 'id name userId isAdmin isEnabled',
+        query: 'id name role userId isAdmin isEnabled',
       })
 
       expect(data).toMatchObject({
@@ -208,10 +211,24 @@ describe('User schema', () => {
           data: {
             name: 'Admin User New Name',
           },
-          query: 'id name userId isAdmin isEnabled',
+          query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
         `Access denied: You cannot perform the 'update' operation on the item '{"userId":"admin@example.com"}'. It may not exist.`
+      )
+    })
+
+    it('cannot update the role field', async () => {
+      expect(
+        userContext.query.User.updateOne({
+          where: { userId: 'user1@example.com' },
+          data: {
+            role: 'Manager',
+          },
+          query: 'id name role userId isAdmin isEnabled',
+        })
+      ).rejects.toThrow(
+        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["role"].`
       )
     })
 

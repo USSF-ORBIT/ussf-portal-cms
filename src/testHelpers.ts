@@ -26,12 +26,14 @@ export const testUsers = [
     userId: 'admin@example.com',
     isAdmin: true,
     isEnabled: true,
+    role: 'User',
   },
   {
     name: 'User 1',
     userId: 'user1@example.com',
     isAdmin: false,
     isEnabled: true,
+    role: 'User',
   },
 ]
 
