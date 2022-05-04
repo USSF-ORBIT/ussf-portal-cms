@@ -48,6 +48,12 @@ const dropAndCreateSchema = async (client) => {
 ALTER TABLE "public"."User" ADD FOREIGN KEY ("createdBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 `)
+
+  await client.query(`CREATE TYPE "UserRoleType" AS ENUM ('User', 'Author', 'Manager');
+`)
+
+  await client.query(`ALTER TABLE "User" ADD COLUMN     "role" "UserRoleType" NOT NULL DEFAULT E'User';
+`)
 }
 
 // DB exports
