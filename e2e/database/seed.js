@@ -49,9 +49,6 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("createdBy") REFERENCES "public"."U
 ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 `)
 
-  await client.query(`CREATE TYPE "UserRoleType" AS ENUM ('User', 'Author', 'Manager');
-`)
-
   await client.query(`ALTER TABLE "User" ADD COLUMN     "role" "UserRoleType" NOT NULL DEFAULT E'User';
 `)
 }
@@ -79,10 +76,10 @@ module.exports.seedRevokeUsers = async () => {
     await dropAndCreateSchema(client)
 
     // These users are intentionally out-of-sync with their access in the test users SAML file for testing purposes
-    await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "userId") VALUES
-('cl0jylky70105fs97hvb6sc7x', 'RONALD BOYD', 'f', 't', 'RONALD.BOYD.312969168@testusers.cce.af.mil'),
-('cl0jyfow10002fs97yimqq04c', 'JOHN HENKE', 't', 't', 'JOHN.HENKE.562270783@testusers.cce.af.mil'),
-('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 't', 't', 'FLOYD.KING.376144527@testusers.cce.af.mil');`)
+    await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "role", "userId") VALUES
+('cl0jylky70105fs97hvb6sc7x', 'RONALD BOYD', 'f', 't', 'User', 'RONALD.BOYD.312969168@testusers.cce.af.mil'),
+('cl0jyfow10002fs97yimqq04c', 'JOHN HENKE', 't', 't', 'User', 'JOHN.HENKE.562270783@testusers.cce.af.mil'),
+('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 't', 't', 'User', 'FLOYD.KING.376144527@testusers.cce.af.mil');`)
 
     console.log(`E2E database seeded!`)
 
@@ -101,9 +98,9 @@ module.exports.seedGrantUsers = async () => {
     await dropAndCreateSchema(client)
 
     // These users are intentionally out-of-sync with their access in the test users SAML file for testing purposes
-    await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "userId") VALUES
-('cl0jyfow10002fs97yimqq04c', 'JOHN HENKE', 'f', 'f', 'JOHN.HENKE.562270783@testusers.cce.af.mil'),
-('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 'f', 'f', 'FLOYD.KING.376144527@testusers.cce.af.mil');`)
+    await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "role", "userId") VALUES
+('cl0jyfow10002fs97yimqq04c', 'JOHN HENKE', 'f', 'f', 'User', 'JOHN.HENKE.562270783@testusers.cce.af.mil'),
+('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 'f', 'f', 'User', 'FLOYD.KING.376144527@testusers.cce.af.mil');`)
 
     console.log(`E2E database seeded!`)
 

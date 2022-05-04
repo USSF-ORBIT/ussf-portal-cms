@@ -114,10 +114,10 @@ describe('Authentication', () => {
 
     // RONALD BOYD is enabled but should not be
     await expect(
-      page.locator('tr:has-text("RONALD BOYD") td:nth-child(4)')
+      page.locator('tr:has-text("RONALD BOYD") td:nth-child(5)')
     ).toHaveText('False')
     await expect(
-      page.locator('tr:has-text("RONALD BOYD") td:nth-child(5)')
+      page.locator('tr:has-text("RONALD BOYD") td:nth-child(6)')
     ).toHaveText('True')
 
     await loginPage.logout()
@@ -142,10 +142,10 @@ describe('Authentication', () => {
 
     // RONALD BOYD is now disabled
     await expect(
-      page.locator('tr:has-text("RONALD BOYD") td:nth-child(4)')
+      page.locator('tr:has-text("RONALD BOYD") td:nth-child(5)')
     ).toHaveText('False')
     await expect(
-      page.locator('tr:has-text("RONALD BOYD") td:nth-child(5)')
+      page.locator('tr:has-text("RONALD BOYD") td:nth-child(6)')
     ).toHaveText('False')
   })
 
@@ -166,10 +166,10 @@ describe('Authentication', () => {
 
     // JOHN HENKE is admin but should not be
     await expect(
-      page.locator('tr:has-text("JOHN HENKE") > td:nth-child(4)')
+      page.locator('tr:has-text("JOHN HENKE") > td:nth-child(5)')
     ).toHaveText('True')
     await expect(
-      page.locator('tr:has-text("JOHN HENKE") td:nth-child(5)')
+      page.locator('tr:has-text("JOHN HENKE") td:nth-child(6)')
     ).toHaveText('True')
 
     await loginPage.logout()
@@ -199,10 +199,10 @@ describe('Authentication', () => {
 
     // JOHN HENKE is no longer an admin
     await expect(
-      page.locator('tr:has-text("JOHN HENKE") > td:nth-child(4)')
+      page.locator('tr:has-text("JOHN HENKE") > td:nth-child(5)')
     ).toHaveText('False')
     await expect(
-      page.locator('tr:has-text("JOHN HENKE") td:nth-child(5)')
+      page.locator('tr:has-text("JOHN HENKE") td:nth-child(6)')
     ).toHaveText('True')
   })
 
