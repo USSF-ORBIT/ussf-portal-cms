@@ -14,4 +14,5 @@ module.exports = {
       lines: 50,
     },
   },
+  reporters: ['default', 'github-actions'],
 }
