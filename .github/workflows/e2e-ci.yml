@@ -38,6 +38,11 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
 
+      - name: Docker logs
+        uses: jwalton/gh-docker-logs@v2.2.0
+        with:
+          dest: './ussf-portal-cms/logs'
+
       - name: Install deps
         run: yarn e2e:install
         working-directory: ./ussf-portal-cms
@@ -49,6 +54,13 @@ jobs:
       - name: Run e2e tests
         run: yarn e2e:test
         working-directory: ./ussf-portal-cms
+
+      - name: Upload logs
+        uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # tag=v3
+        if: always()
+        with:
+          name: container-logs
+          path: ussf-portal-cms/logs
 
       - name: Upload test results
         if: always()
