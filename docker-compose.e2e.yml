@@ -45,7 +45,7 @@ services:
       MONGO_PASSWORD: ''
       SESSION_SECRET: thisvaluecanbeanythingitisonlyforlocaldevelopment
       SESSION_DOMAIN: localhost
-      KEYSTONE_URL: http://localhost:3001
+      KEYSTONE_URL: http://cms:3001
     stdin_open: true
     depends_on:
       - mongo
