@@ -56,7 +56,7 @@ const withAuthData = (
         // Look up Keystone user
         let keystoneUser = (await sudoContext.query.User.findOne({
           where: { userId: user.userId },
-          query: `id userId name isAdmin isEnabled`,
+          query: `id userId name role isAdmin isEnabled`,
         })) as KeystoneUser
 
         if (!userHasAccess && !keystoneUser) {
@@ -77,7 +77,7 @@ const withAuthData = (
               isAdmin: userIsAdmin,
               isEnabled: userHasAccess,
             },
-            query: `id userId name isAdmin isEnabled`,
+            query: `id userId name role isAdmin isEnabled`,
           })) as KeystoneUser
 
           return {
@@ -96,7 +96,7 @@ const withAuthData = (
               isAdmin: userIsAdmin,
               syncedAt: new Date(),
             },
-            query: `id userId name isAdmin isEnabled`,
+            query: `id userId name role isAdmin isEnabled`,
           })) as KeystoneUser
 
           return userHasAccess

@@ -1,3 +1,5 @@
+import type { UserRole } from 'util/access'
+
 /**
  * ***********************
  * Types for User / Auth
@@ -39,6 +41,7 @@ export type KeystoneUser = {
   isAdmin: boolean
   isEnabled: boolean
   name: string
+  role: UserRole
 } & Pick<SessionUser, 'userId'>
 
 export type AuthenticatedUser = SessionUser & KeystoneUser
