@@ -60,3 +60,25 @@ export const showHideAdminUI = ({ session }: { session: ValidSession }) =>
 
 export const editReadAdminUI = ({ session }: { session: ValidSession }) =>
   session?.isAdmin ? 'edit' : 'read'
+
+/** Article helpers */
+
+export const canCreateArticle = ({ session }: { session: ValidSession }) => {
+  return (
+    session?.isAdmin ||
+    session?.role === USER_ROLES.AUTHOR ||
+    session?.role === USER_ROLES.MANAGER
+  )
+}
+
+export const canUpdateDeleteArticle = ({
+  session,
+}: {
+  session: ValidSession
+}) => {
+  if (session.isAdmin || session.role === USER_ROLES.MANAGER) return true
+
+  return {
+    createdBy: { equals: session.id },
+  }
+}
