@@ -38,6 +38,14 @@ type Query {
   ): [Collection!]
   collection(where: CollectionWhereUniqueInput!): Collection
   collectionsCount(where: CollectionWhereInput! = {}): Int
+  bylines(
+    where: BylineWhereInput! = {}
+    orderBy: [BylineOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Byline!]
+  byline(where: BylineWhereUniqueInput!): Byline
+  bylinesCount(where: BylineWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -455,6 +463,51 @@ input BookmarkRelateToManyForCreateInput {
   connect: [BookmarkWhereUniqueInput!]
 }
 
+type Byline {
+  id: ID!
+  name: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input BylineWhereUniqueInput {
+  id: ID
+}
+
+input BylineWhereInput {
+  AND: [BylineWhereInput!]
+  OR: [BylineWhereInput!]
+  NOT: [BylineWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input BylineOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input BylineUpdateInput {
+  name: String
+}
+
+input BylineUpdateArgs {
+  where: BylineWhereUniqueInput!
+  data: BylineUpdateInput!
+}
+
+input BylineCreateInput {
+  name: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -494,6 +547,12 @@ type Mutation {
   updateCollections(data: [CollectionUpdateArgs!]!): [Collection]
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteCollections(where: [CollectionWhereUniqueInput!]!): [Collection]
+  createByline(data: BylineCreateInput!): Byline
+  createBylines(data: [BylineCreateInput!]!): [Byline]
+  updateByline(where: BylineWhereUniqueInput!, data: BylineUpdateInput!): Byline
+  updateBylines(data: [BylineUpdateArgs!]!): [Byline]
+  deleteByline(where: BylineWhereUniqueInput!): Byline
+  deleteBylines(where: [BylineWhereUniqueInput!]!): [Byline]
   endSession: Boolean!
 }
 
