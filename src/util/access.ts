@@ -1,4 +1,4 @@
-import type { Article } from '.prisma/client'
+import { BaseItem } from '@keystone-6/core/types'
 
 import type { SessionUser, ValidSession } from '../../types'
 
@@ -104,7 +104,7 @@ export const articleItemView = ({
   item,
 }: {
   session: ValidSession
-  item: Article
+  item: BaseItem
 }) => {
   if (session.isAdmin || session.role === USER_ROLES.MANAGER) return 'edit'
 
