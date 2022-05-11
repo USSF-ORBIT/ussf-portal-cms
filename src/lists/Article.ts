@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core'
-import { select, text } from '@keystone-6/core/fields'
+import { select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
@@ -98,7 +98,55 @@ const Article: Lists.Article = list(
         },
         isFilterable: true,
       }),
-      // TODO - publishedDate & archivedDate
+      publishedDate: timestamp({
+        access: {
+          create: () => false,
+          update: () => false,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+        },
+      }),
+      archivedDate: timestamp({
+        access: {
+          create: () => false,
+          update: () => false,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+        },
+      }),
+    },
+
+    hooks: {
+      resolveInput: async ({ inputData, item, resolvedData }) => {
+        // Workflow side effects
+        if (
+          inputData.status === ARTICLE_STATUSES.ARCHIVED &&
+          item?.status !== ARTICLE_STATUSES.ARCHIVED
+        ) {
+          // Set archivedDate if status is being changed to "Archived"
+          resolvedData.archivedDate = new Date()
+        } else if (
+          inputData.status === ARTICLE_STATUSES.PUBLISHED &&
+          item?.status !== ARTICLE_STATUSES.PUBLISHED
+        ) {
+          // Set publishedDate if status is being changed to "Published"
+          resolvedData.publishedDate = new Date()
+        }
+
+        return resolvedData
+      },
     },
   })
 )

@@ -471,6 +471,8 @@ type Article {
   preview: String
   body: Article_body_Document
   keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
@@ -502,6 +504,8 @@ input ArticleWhereInput {
   title: StringFilter
   preview: StringFilter
   keywords: StringFilter
+  publishedDate: DateTimeNullableFilter
+  archivedDate: DateTimeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
@@ -522,6 +526,8 @@ input ArticleOrderByInput {
   title: OrderDirection
   preview: OrderDirection
   keywords: OrderDirection
+  publishedDate: OrderDirection
+  archivedDate: OrderDirection
   updatedAt: OrderDirection
   createdAt: OrderDirection
 }
@@ -533,6 +539,8 @@ input ArticleUpdateInput {
   preview: String
   body: JSON
   keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
 }
 
 input ArticleUpdateArgs {
@@ -547,6 +555,8 @@ input ArticleCreateInput {
   preview: String
   body: JSON
   keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
 }
 
 """

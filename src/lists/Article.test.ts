@@ -231,18 +231,47 @@ describe('Article schema', () => {
     })
 
     it('can update an article’s status', async () => {
-      const data = await managerContext.query.Article.updateOne({
+      const statusQuery = `${articleQuery} publishedDate archivedDate`
+
+      const originalArticle = await managerContext.query.Article.findOne({
+        where: { id: managerArticle.id },
+        query: statusQuery,
+      })
+
+      expect(originalArticle.status).toEqual('Draft')
+      expect(originalArticle.publishedDate).toBe(null)
+      expect(originalArticle.archivedDate).toBe(null)
+
+      const publishedArticle = await managerContext.query.Article.updateOne({
         where: { id: managerArticle.id },
         data: {
           status: 'Published',
         },
-        query: articleQuery,
+        query: statusQuery,
       })
 
-      expect(data).toMatchObject({
+      expect(publishedArticle).toMatchObject({
         ...managerArticle,
         title: 'Updated Manager Article',
         status: 'Published',
+        publishedDate: expect.any(String),
+        archivedDate: null,
+      })
+
+      const archivedArticle = await managerContext.query.Article.updateOne({
+        where: { id: managerArticle.id },
+        data: {
+          status: 'Archived',
+        },
+        query: statusQuery,
+      })
+
+      expect(archivedArticle).toMatchObject({
+        ...managerArticle,
+        title: 'Updated Manager Article',
+        status: 'Archived',
+        publishedDate: expect.any(String),
+        archivedDate: expect.any(String),
       })
     })
 

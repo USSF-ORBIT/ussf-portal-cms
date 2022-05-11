@@ -92,19 +92,21 @@ model Collection {
 }
 
 model Article {
-  id          String            @id @default(cuid())
-  status      ArticleStatusType @default(Draft)
-  slug        String            @unique @default("")
-  title       String            @default("")
-  preview     String            @default("")
-  body        Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  keywords    String            @default("")
-  updatedBy   User?             @relation("Article_updatedBy", fields: [updatedById], references: [id])
-  updatedById String?           @map("updatedBy")
-  createdBy   User?             @relation("Article_createdBy", fields: [createdById], references: [id])
-  createdById String?           @map("createdBy")
-  updatedAt   DateTime?         @updatedAt
-  createdAt   DateTime?         @default(now())
+  id            String            @id @default(cuid())
+  status        ArticleStatusType @default(Draft)
+  slug          String            @unique @default("")
+  title         String            @default("")
+  preview       String            @default("")
+  body          Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  keywords      String            @default("")
+  publishedDate DateTime?
+  archivedDate  DateTime?
+  updatedBy     User?             @relation("Article_updatedBy", fields: [updatedById], references: [id])
+  updatedById   String?           @map("updatedBy")
+  createdBy     User?             @relation("Article_createdBy", fields: [createdById], references: [id])
+  createdById   String?           @map("createdBy")
+  updatedAt     DateTime?         @updatedAt
+  createdAt     DateTime?         @default(now())
 
   @@index([updatedById])
   @@index([createdById])
