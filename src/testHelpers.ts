@@ -6,6 +6,7 @@ import {
 import { config } from '@keystone-6/core'
 import { KeystoneContext } from '@keystone-6/core/types'
 
+import type { User } from '.prisma/client'
 import { lists } from './schema'
 
 const TEST_DATABASE = 'unit-test'
@@ -73,35 +74,22 @@ export const configTestEnv = async (): Promise<TestEnvWithSessions> => {
 
   const sudoContext = context.sudo()
 
-  // Seed data
-  await sudoContext.query.User.createMany({
-    data: testUsers,
-  })
-
   const userQuery = 'id userId name role isAdmin isEnabled'
 
-  const adminUser = await sudoContext.query.User.findOne({
-    where: {
-      userId: adminUserData.userId,
-    },
+  // Seed data
+  const users = await sudoContext.query.User.createMany({
+    data: testUsers,
     query: userQuery,
   })
 
-  const cmsUser = await sudoContext.query.User.findOne({
-    where: {
-      userId: userUserData.userId,
-    },
-    query: userQuery,
-  })
-
-  const authorUser = await sudoContext.query.User.findOne({
-    where: { userId: authorUserData.userId },
-    query: userQuery,
-  })
-  const managerUser = await sudoContext.query.User.findOne({
-    where: { userId: managerUserData.userId },
-    query: userQuery,
-  })
+  const adminUser = users.find((u) => u.userId === adminUserData.userId) as User
+  const cmsUser = users.find((u) => u.userId === userUserData.userId) as User
+  const authorUser = users.find(
+    (u) => u.userId === authorUserData.userId
+  ) as User
+  const managerUser = users.find(
+    (u) => u.userId === managerUserData.userId
+  ) as User
 
   const adminContext = context.withSession({
     ...adminUser,

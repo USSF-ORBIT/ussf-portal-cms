@@ -93,11 +93,11 @@ model Collection {
 
 model Article {
   id          String            @id @default(cuid())
+  status      ArticleStatusType @default(Draft)
   slug        String            @unique @default("")
   title       String            @default("")
   preview     String            @default("")
   body        Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  status      ArticleStatusType @default(Draft)
   keywords    String            @default("")
   updatedBy   User?             @relation("Article_updatedBy", fields: [updatedById], references: [id])
   updatedById String?           @map("updatedBy")

@@ -5,7 +5,13 @@ import { document } from '@keystone-6/fields-document'
 import type { Lists } from '.keystone/types'
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
-import { canCreateArticle, canUpdateDeleteArticle } from '../util/access'
+import {
+  canCreateArticle,
+  canUpdateDeleteArticle,
+  canPublishArchiveArticle,
+  articleItemView,
+  articleStatusView,
+} from '../util/access'
 
 const Article: Lists.Article = list(
   withTracking({
@@ -22,33 +28,21 @@ const Article: Lists.Article = list(
 
     ui: {
       labelField: 'title',
+      hideCreate: ({ session }) => !canCreateArticle({ session }),
+      hideDelete: ({ session }) => !canCreateArticle({ session }),
+      createView: {
+        defaultFieldMode: ({ session }) =>
+          canCreateArticle({ session }) ? 'edit' : 'hidden',
+      },
+      itemView: {
+        defaultFieldMode: articleItemView,
+      },
       listView: {
         initialColumns: ['title', 'status'],
       },
     },
 
     fields: {
-      slug: text({
-        isIndexed: 'unique',
-        validation: {
-          isRequired: true,
-        },
-      }),
-      title: text({
-        validation: {
-          isRequired: true,
-        },
-      }),
-      preview: text({
-        ui: {
-          displayMode: 'textarea',
-        },
-      }),
-      body: document({
-        formatting: true,
-        dividers: true,
-        links: true,
-      }),
       status: select({
         type: 'enum',
         options: (
@@ -61,7 +55,42 @@ const Article: Lists.Article = list(
         validation: {
           isRequired: true,
         },
-        // TODO access
+        access: {
+          create: () => false,
+          update: canPublishArchiveArticle,
+        },
+        ui: {
+          displayMode: 'segmented-control',
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: articleStatusView,
+          },
+        },
+      }),
+      slug: text({
+        // TODO - hook & regex validation
+        isIndexed: 'unique',
+        validation: {
+          isRequired: true,
+        },
+      }),
+      title: text({
+        validation: {
+          isRequired: true,
+        },
+      }),
+      preview: text({
+        // TODO - hook
+        ui: {
+          displayMode: 'textarea',
+        },
+      }),
+      body: document({
+        formatting: true,
+        dividers: true,
+        links: true,
       }),
       keywords: text({
         ui: {
@@ -69,6 +98,7 @@ const Article: Lists.Article = list(
         },
         isFilterable: true,
       }),
+      // TODO - publishedDate & archivedDate
     },
   })
 )

@@ -1,3 +1,5 @@
+import type { Article } from '.prisma/client'
+
 import type { SessionUser, ValidSession } from '../../types'
 
 /** Session access (used before defining session) */
@@ -78,7 +80,42 @@ export const canUpdateDeleteArticle = ({
 }) => {
   if (session.isAdmin || session.role === USER_ROLES.MANAGER) return true
 
-  return {
-    createdBy: { equals: session.id },
+  if (session.role === USER_ROLES.AUTHOR) {
+    return {
+      createdBy: { id: { equals: session.itemId } },
+    }
   }
+
+  return false
+}
+
+export const canPublishArchiveArticle = ({
+  session,
+}: {
+  session: ValidSession
+}) => {
+  if (session.isAdmin || session.role === USER_ROLES.MANAGER) return true
+
+  return false
+}
+
+export const articleItemView = ({
+  session,
+  item,
+}: {
+  session: ValidSession
+  item: Article
+}) => {
+  if (session.isAdmin || session.role === USER_ROLES.MANAGER) return 'edit'
+
+  if (session.role === USER_ROLES.AUTHOR && item.createdById === session.itemId)
+    return 'edit'
+
+  return 'read'
+}
+
+export const articleStatusView = ({ session }: { session: ValidSession }) => {
+  if (session.isAdmin || session.role === USER_ROLES.MANAGER) return 'edit'
+
+  return 'read'
 }
