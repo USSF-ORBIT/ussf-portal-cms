@@ -6,7 +6,7 @@ import type { Lists } from '.keystone/types'
 import { isAdmin, editReadAdminUI } from '../util/access'
 import { withTracking } from '../util/tracking'
 
-const Label = list(
+const Label: Lists.Label = list(
   withTracking({
     access: {
       operation: {

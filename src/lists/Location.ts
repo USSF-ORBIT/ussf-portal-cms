@@ -6,7 +6,7 @@ import type { Lists } from '.keystone/types'
 import { isAdmin, editReadAdminUI } from '../util/access'
 import { withTracking } from '../util/tracking'
 
-const Location = list(
+const Location: Lists.Location = list(
   withTracking({
     access: {
       operation: {
