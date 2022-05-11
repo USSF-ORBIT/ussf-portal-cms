@@ -52,6 +52,8 @@ model User {
   from_Collection_createdBy Collection[] @relation("Collection_createdBy")
   from_Byline_updatedBy     Byline[]     @relation("Byline_updatedBy")
   from_Byline_createdBy     Byline[]     @relation("Byline_createdBy")
+  from_Location_updatedBy   Location[]   @relation("Location_updatedBy")
+  from_Location_createdBy   Location[]   @relation("Location_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -97,6 +99,20 @@ model Byline {
   updatedBy   User?     @relation("Byline_updatedBy", fields: [updatedById], references: [id])
   updatedById String?   @map("updatedBy")
   createdBy   User?     @relation("Byline_createdBy", fields: [createdById], references: [id])
+  createdById String?   @map("createdBy")
+  updatedAt   DateTime? @updatedAt
+  createdAt   DateTime? @default(now())
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model Location {
+  id          String    @id @default(cuid())
+  name        String    @default("")
+  updatedBy   User?     @relation("Location_updatedBy", fields: [updatedById], references: [id])
+  updatedById String?   @map("updatedBy")
+  createdBy   User?     @relation("Location_createdBy", fields: [createdById], references: [id])
   createdById String?   @map("createdBy")
   updatedAt   DateTime? @updatedAt
   createdAt   DateTime? @default(now())
