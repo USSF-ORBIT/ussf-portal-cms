@@ -81,5 +81,25 @@ $config = [
             'userprincipalname' => 'HOLLY.OKANE.402668108@testusers.cce.af.mil',
             'userGroups' => ['PORTAL_Analytics_Users', 'AF_USERS']
         ],
+        'cmsauthor:cmsauthorpass' => [
+            'subject' => '/C=US/O=U.S. Government/OU=DoD/OU=PKI/OU=CONTRACTOR/CN=NEAL.ETHEL.643097412',
+            'edipi' => '643097412',
+            'common_name' => 'NEAL.ETHEL.643097412',
+            'fascn' => '643097412197002',
+            'givenname' => 'ETHEL',
+            'surname' => 'NEAL',
+            'userprincipalname' => 'ETHEL.NEAL.643097412@testusers.cce.af.mil',
+            'userGroups' => ['PORTAL_CMS_Users', 'AF_USERS']
+        ],
+        'cmsmanager:cmsmanagerpass' => [
+            'subject' => '/C=US/O=U.S. Government/OU=DoD/OU=PKI/OU=CONTRACTOR/CN=HAVEN.CHRISTINA.561698119',
+            'edipi' => '561698119',
+            'common_name' => 'HAVEN.CHRISTINA.561698119',
+            'fascn' => '561698119197002',
+            'givenname' => 'CHRISTINA',
+            'surname' => 'HAVEN',
+            'userprincipalname' => 'CHRISTINA.HAVEN.561698119@testusers.cce.af.mil',
+            'userGroups' => ['PORTAL_CMS_Users', 'AF_USERS']
+        ],
     ],
 ];
