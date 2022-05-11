@@ -54,6 +54,14 @@ type Query {
   ): [Location!]
   location(where: LocationWhereUniqueInput!): Location
   locationsCount(where: LocationWhereInput! = {}): Int
+  labels(
+    where: LabelWhereInput! = {}
+    orderBy: [LabelOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Label!]
+  label(where: LabelWhereUniqueInput!): Label
+  labelsCount(where: LabelWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -561,6 +569,51 @@ input LocationCreateInput {
   name: String
 }
 
+type Label {
+  id: ID!
+  name: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input LabelWhereUniqueInput {
+  id: ID
+}
+
+input LabelWhereInput {
+  AND: [LabelWhereInput!]
+  OR: [LabelWhereInput!]
+  NOT: [LabelWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input LabelOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input LabelUpdateInput {
+  name: String
+}
+
+input LabelUpdateArgs {
+  where: LabelWhereUniqueInput!
+  data: LabelUpdateInput!
+}
+
+input LabelCreateInput {
+  name: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -615,6 +668,12 @@ type Mutation {
   updateLocations(data: [LocationUpdateArgs!]!): [Location]
   deleteLocation(where: LocationWhereUniqueInput!): Location
   deleteLocations(where: [LocationWhereUniqueInput!]!): [Location]
+  createLabel(data: LabelCreateInput!): Label
+  createLabels(data: [LabelCreateInput!]!): [Label]
+  updateLabel(where: LabelWhereUniqueInput!, data: LabelUpdateInput!): Label
+  updateLabels(data: [LabelUpdateArgs!]!): [Label]
+  deleteLabel(where: LabelWhereUniqueInput!): Label
+  deleteLabels(where: [LabelWhereUniqueInput!]!): [Label]
   endSession: Boolean!
 }
 
