@@ -12,6 +12,11 @@ import {
   articleItemView,
   articleStatusView,
 } from '../util/access'
+import { slugify } from '../util/formatting'
+
+const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const SLUG_MAX = 1000
+// const SlugRegexp = new RegExp()
 
 const Article: Lists.Article = list(
   withTracking({
@@ -70,10 +75,43 @@ const Article: Lists.Article = list(
         },
       }),
       slug: text({
-        // TODO - hook & regex validation
         isIndexed: 'unique',
         validation: {
-          isRequired: true,
+          length: {
+            max: SLUG_MAX,
+          },
+          match: {
+            regex: SLUG_REGEX,
+            explanation:
+              'Slug must be a valid slug (only alphanumeric characters and dashes allowed)',
+          },
+        },
+        hooks: {
+          resolveInput: async ({ fieldKey, resolvedData, operation }) => {
+            if (operation === 'create' && !resolvedData.slug) {
+              // Default slug to the slugified title
+              // This can still cause validation errors bc titles don't have to be unique
+              return slugify(resolvedData.title)
+            }
+
+            return resolvedData[fieldKey]
+          },
+          validateInput: async ({
+            operation,
+            inputData,
+            fieldKey,
+            resolvedData,
+            addValidationError,
+          }) => {
+            // eslint-disable-next-line no-prototype-builtins
+            if (operation === 'create' || inputData.hasOwnProperty(fieldKey)) {
+              // Validate slug
+              const slug = resolvedData[fieldKey]
+              if (!slug) {
+                addValidationError('Slug is a required value')
+              }
+            }
+          },
         },
       }),
       title: text({

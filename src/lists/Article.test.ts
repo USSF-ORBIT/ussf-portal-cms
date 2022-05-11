@@ -320,4 +320,68 @@ describe('Article schema', () => {
       expect(data).toEqual(null)
     })
   })
+
+  describe('field validations', () => {
+    it('must enter a valid slug', async () => {
+      const testAuthorArticle = {
+        slug: 'Invalid slug',
+        title: 'Author Article',
+        preview: 'This article is written by an author',
+      }
+
+      expect(
+        authorContext.query.Article.createOne({
+          data: testAuthorArticle,
+          query: articleQuery,
+        })
+      ).rejects.toThrow(/You provided invalid data for this operation./)
+    })
+
+    it('slugs must be unique', async () => {
+      await authorContext.query.Article.createOne({
+        data: {
+          slug: 'article-1',
+          title: 'First article',
+        },
+      })
+
+      expect(
+        authorContext.query.Article.createOne({
+          data: {
+            slug: 'article-1',
+            title: 'Second article',
+          },
+        })
+      ).rejects.toThrow(/Unique constraint failed/)
+    })
+
+    it('generates a slug from the title if no value is passed', async () => {
+      const data = await authorContext.query.Article.createOne({
+        data: {
+          title: 'My Article With No Slug',
+        },
+        query: articleQuery,
+      })
+
+      expect(data.slug).toEqual('my-article-with-no-slug')
+    })
+
+    it('cannot set the slug to an empty value', async () => {
+      const article = await authorContext.query.Article.createOne({
+        data: {
+          title: 'An article needs a slug',
+        },
+        query: articleQuery,
+      })
+
+      expect(
+        authorContext.query.Article.updateOne({
+          where: { id: article.id },
+          data: {
+            slug: '',
+          },
+        })
+      ).rejects.toThrow(/Slug is a required value/)
+    })
+  })
 })
