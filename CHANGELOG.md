@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.0.0...1.1.0) (2022-05-09)
+
+
+### Features
+
+* Add CMS roles ([#41](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/41)) ([2ad6454](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/2ad6454fe8b99ac0e25f09452e21635d3fdba840)), closes [#39](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/39)
+* Add tracking & logging to existing lists ([#38](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/38)) ([d7011b3](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/d7011b3eded00594d8f0d8ac2dc112d0541036b5)), closes [#39](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/39)
+
 ## 1.0.0 (2022-04-21)
 
 
