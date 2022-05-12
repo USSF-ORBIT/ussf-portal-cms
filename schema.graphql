@@ -506,6 +506,7 @@ type Byline {
 
 input BylineWhereUniqueInput {
   id: ID
+  name: String
 }
 
 input BylineWhereInput {
@@ -551,6 +552,7 @@ type Location {
 
 input LocationWhereUniqueInput {
   id: ID
+  name: String
 }
 
 input LocationWhereInput {
@@ -596,6 +598,7 @@ type Label {
 
 input LabelWhereUniqueInput {
   id: ID
+  name: String
 }
 
 input LabelWhereInput {
@@ -641,6 +644,7 @@ type Tag {
 
 input TagWhereUniqueInput {
   id: ID
+  name: String
 }
 
 input TagWhereInput {
@@ -685,6 +689,22 @@ type Article {
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
+  byline: Byline
+  label(
+    where: LabelWhereInput! = {}
+    orderBy: [LabelOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Label!]
+  labelCount(where: LabelWhereInput! = {}): Int
+  location: Location
+  tag(
+    where: TagWhereInput! = {}
+    orderBy: [TagOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Tag!]
+  tagCount(where: TagWhereInput! = {}): Int
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
@@ -718,6 +738,10 @@ input ArticleWhereInput {
   keywords: StringFilter
   publishedDate: DateTimeNullableFilter
   archivedDate: DateTimeNullableFilter
+  byline: BylineWhereInput
+  label: LabelManyRelationFilter
+  location: LocationWhereInput
+  tag: TagManyRelationFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
@@ -729,6 +753,18 @@ input ArticleStatusTypeNullableFilter {
   in: [ArticleStatusType!]
   notIn: [ArticleStatusType!]
   not: ArticleStatusTypeNullableFilter
+}
+
+input LabelManyRelationFilter {
+  every: LabelWhereInput
+  some: LabelWhereInput
+  none: LabelWhereInput
+}
+
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
 }
 
 input ArticleOrderByInput {
@@ -753,6 +789,36 @@ input ArticleUpdateInput {
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
+  byline: BylineRelateToOneForUpdateInput
+  label: LabelRelateToManyForUpdateInput
+  location: LocationRelateToOneForUpdateInput
+  tag: TagRelateToManyForUpdateInput
+}
+
+input BylineRelateToOneForUpdateInput {
+  create: BylineCreateInput
+  connect: BylineWhereUniqueInput
+  disconnect: Boolean
+}
+
+input LabelRelateToManyForUpdateInput {
+  disconnect: [LabelWhereUniqueInput!]
+  set: [LabelWhereUniqueInput!]
+  create: [LabelCreateInput!]
+  connect: [LabelWhereUniqueInput!]
+}
+
+input LocationRelateToOneForUpdateInput {
+  create: LocationCreateInput
+  connect: LocationWhereUniqueInput
+  disconnect: Boolean
+}
+
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 input ArticleUpdateArgs {
@@ -769,6 +835,30 @@ input ArticleCreateInput {
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
+  byline: BylineRelateToOneForCreateInput
+  label: LabelRelateToManyForCreateInput
+  location: LocationRelateToOneForCreateInput
+  tag: TagRelateToManyForCreateInput
+}
+
+input BylineRelateToOneForCreateInput {
+  create: BylineCreateInput
+  connect: BylineWhereUniqueInput
+}
+
+input LabelRelateToManyForCreateInput {
+  create: [LabelCreateInput!]
+  connect: [LabelWhereUniqueInput!]
+}
+
+input LocationRelateToOneForCreateInput {
+  create: LocationCreateInput
+  connect: LocationWhereUniqueInput
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 """
