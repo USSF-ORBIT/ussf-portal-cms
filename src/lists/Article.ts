@@ -16,7 +16,6 @@ import { slugify } from '../util/formatting'
 
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
-// const SlugRegexp = new RegExp()
 
 const Article: Lists.Article = list(
   withTracking({
@@ -120,7 +119,6 @@ const Article: Lists.Article = list(
         },
       }),
       preview: text({
-        // TODO - hook
         ui: {
           displayMode: 'textarea',
         },
