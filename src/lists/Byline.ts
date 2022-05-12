@@ -30,6 +30,7 @@ const Byline: Lists.Byline = list(
         validation: {
           isRequired: true,
         },
+        isIndexed: 'unique',
       }),
     },
   })

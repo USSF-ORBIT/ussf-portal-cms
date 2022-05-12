@@ -30,6 +30,7 @@ const Location: Lists.Location = list(
         validation: {
           isRequired: true,
         },
+        isIndexed: 'unique',
       }),
     },
   })

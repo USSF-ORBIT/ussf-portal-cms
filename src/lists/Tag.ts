@@ -40,6 +40,7 @@ const Tag: Lists.Tag = list(
         validation: {
           isRequired: true,
         },
+        isIndexed: 'unique',
       }),
     },
   })

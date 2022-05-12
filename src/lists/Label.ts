@@ -30,6 +30,7 @@ const Label: Lists.Label = list(
         validation: {
           isRequired: true,
         },
+        isIndexed: 'unique',
       }),
     },
   })
