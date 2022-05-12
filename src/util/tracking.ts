@@ -17,7 +17,11 @@ export const withByTracking = byTracking({ ref: 'User' })
 
 export const logging =
   (
-    loggingFn = (s: Record<string, unknown>) => console.log(JSON.stringify(s))
+    loggingFn = process.env.NODE_ENV === 'test'
+      ? () => {
+          /* */
+        }
+      : (s: Record<string, unknown>) => console.log(JSON.stringify(s))
   ) =>
   <Field extends BaseFields<BaseListTypeInfo>>({
     hooks = {},
@@ -67,7 +71,8 @@ export const logging =
         if (authedItem) {
           // Create a sudo context for adding an Event
           const sudoContext = context.sudo()
-          sudoContext.query.Event.createOne({
+
+          await sudoContext.query.Event.createOne({
             data: {
               operation,
               itemListKey: listKey,

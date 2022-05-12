@@ -5,6 +5,7 @@ import {
   isAdminOrSelf,
   showHideAdminUI,
   editReadAdminUI,
+  USER_ROLES,
 } from './access'
 
 const testUser = {
@@ -34,6 +35,7 @@ const testSession = {
   isEnabled: true,
   name: 'BERNADETTE CAMPBELL',
   id: 'keystoneDbId123',
+  role: USER_ROLES.USER,
   itemId: 'keystoneDbId123',
   listKey: 'User' as const,
 }

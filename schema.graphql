@@ -70,6 +70,14 @@ type Query {
   ): [Tag!]
   tag(where: TagWhereUniqueInput!): Tag
   tagsCount(where: TagWhereInput! = {}): Int
+  articles(
+    where: ArticleWhereInput! = {}
+    orderBy: [ArticleOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Article!]
+  article(where: ArticleWhereUniqueInput!): Article
+  articlesCount(where: ArticleWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -490,6 +498,16 @@ input BookmarkRelateToManyForCreateInput {
 type Byline {
   id: ID!
   name: String
+type Article {
+  id: ID!
+  status: ArticleStatusType
+  slug: String
+  title: String
+  preview: String
+  body: Article_body_Document
+  keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
@@ -596,6 +614,33 @@ input LabelWhereInput {
   NOT: [LabelWhereInput!]
   id: IDFilter
   name: StringFilter
+enum ArticleStatusType {
+  Draft
+  Published
+  Archived
+}
+
+type Article_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input ArticleWhereUniqueInput {
+  id: ID
+  slug: String
+}
+
+input ArticleWhereInput {
+  AND: [ArticleWhereInput!]
+  OR: [ArticleWhereInput!]
+  NOT: [ArticleWhereInput!]
+  id: IDFilter
+  status: ArticleStatusTypeNullableFilter
+  slug: StringFilter
+  title: StringFilter
+  preview: StringFilter
+  keywords: StringFilter
+  publishedDate: DateTimeNullableFilter
+  archivedDate: DateTimeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
@@ -650,6 +695,22 @@ input TagWhereInput {
 input TagOrderByInput {
   id: OrderDirection
   name: OrderDirection
+input ArticleStatusTypeNullableFilter {
+  equals: ArticleStatusType
+  in: [ArticleStatusType!]
+  notIn: [ArticleStatusType!]
+  not: ArticleStatusTypeNullableFilter
+}
+
+input ArticleOrderByInput {
+  id: OrderDirection
+  status: OrderDirection
+  slug: OrderDirection
+  title: OrderDirection
+  preview: OrderDirection
+  keywords: OrderDirection
+  publishedDate: OrderDirection
+  archivedDate: OrderDirection
   updatedAt: OrderDirection
   createdAt: OrderDirection
 }
@@ -665,6 +726,31 @@ input TagUpdateArgs {
 
 input TagCreateInput {
   name: String
+input ArticleUpdateInput {
+  status: ArticleStatusType
+  slug: String
+  title: String
+  preview: String
+  body: JSON
+  keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
+}
+
+input ArticleUpdateArgs {
+  where: ArticleWhereUniqueInput!
+  data: ArticleUpdateInput!
+}
+
+input ArticleCreateInput {
+  status: ArticleStatusType
+  slug: String
+  title: String
+  preview: String
+  body: JSON
+  keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
 }
 
 """
@@ -733,6 +819,15 @@ type Mutation {
   updateTags(data: [TagUpdateArgs!]!): [Tag]
   deleteTag(where: TagWhereUniqueInput!): Tag
   deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
+  createArticle(data: ArticleCreateInput!): Article
+  createArticles(data: [ArticleCreateInput!]!): [Article]
+  updateArticle(
+    where: ArticleWhereUniqueInput!
+    data: ArticleUpdateInput!
+  ): Article
+  updateArticles(data: [ArticleUpdateArgs!]!): [Article]
+  deleteArticle(where: ArticleWhereUniqueInput!): Article
+  deleteArticles(where: [ArticleWhereUniqueInput!]!): [Article]
   endSession: Boolean!
 }
 

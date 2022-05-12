@@ -9,6 +9,7 @@ import Byline from './lists/Byline'
 import Location from './lists/Location'
 import Label from './lists/Label'
 import Tag from './lists/Tag'
+import Article from './lists/Article'
 
 export const lists: Lists = {
   Event,
@@ -19,4 +20,5 @@ export const lists: Lists = {
   Location,
   Label,
   Tag,
+  Article,
 }
