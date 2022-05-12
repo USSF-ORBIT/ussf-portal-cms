@@ -56,6 +56,8 @@ model User {
   from_Location_createdBy   Location[]   @relation("Location_createdBy")
   from_Label_updatedBy      Label[]      @relation("Label_updatedBy")
   from_Label_createdBy      Label[]      @relation("Label_createdBy")
+  from_Tag_updatedBy        Tag[]        @relation("Tag_updatedBy")
+  from_Tag_createdBy        Tag[]        @relation("Tag_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -129,6 +131,20 @@ model Label {
   updatedBy   User?     @relation("Label_updatedBy", fields: [updatedById], references: [id])
   updatedById String?   @map("updatedBy")
   createdBy   User?     @relation("Label_createdBy", fields: [createdById], references: [id])
+  createdById String?   @map("createdBy")
+  updatedAt   DateTime? @updatedAt
+  createdAt   DateTime? @default(now())
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model Tag {
+  id          String    @id @default(cuid())
+  name        String    @default("")
+  updatedBy   User?     @relation("Tag_updatedBy", fields: [updatedById], references: [id])
+  updatedById String?   @map("updatedBy")
+  createdBy   User?     @relation("Tag_createdBy", fields: [createdById], references: [id])
   createdById String?   @map("createdBy")
   updatedAt   DateTime? @updatedAt
   createdAt   DateTime? @default(now())
