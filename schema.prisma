@@ -150,6 +150,11 @@ model Tag {
   createdById String?   @map("createdBy")
   updatedAt   DateTime? @updatedAt
   createdAt   DateTime? @default(now())
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
 model Article {
   id            String            @id @default(cuid())
   status        ArticleStatusType @default(Draft)

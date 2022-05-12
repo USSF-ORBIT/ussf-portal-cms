@@ -498,16 +498,6 @@ input BookmarkRelateToManyForCreateInput {
 type Byline {
   id: ID!
   name: String
-type Article {
-  id: ID!
-  status: ArticleStatusType
-  slug: String
-  title: String
-  preview: String
-  body: Article_body_Document
-  keywords: String
-  publishedDate: DateTime
-  archivedDate: DateTime
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
@@ -614,33 +604,6 @@ input LabelWhereInput {
   NOT: [LabelWhereInput!]
   id: IDFilter
   name: StringFilter
-enum ArticleStatusType {
-  Draft
-  Published
-  Archived
-}
-
-type Article_body_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input ArticleWhereUniqueInput {
-  id: ID
-  slug: String
-}
-
-input ArticleWhereInput {
-  AND: [ArticleWhereInput!]
-  OR: [ArticleWhereInput!]
-  NOT: [ArticleWhereInput!]
-  id: IDFilter
-  status: ArticleStatusTypeNullableFilter
-  slug: StringFilter
-  title: StringFilter
-  preview: StringFilter
-  keywords: StringFilter
-  publishedDate: DateTimeNullableFilter
-  archivedDate: DateTimeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
@@ -695,6 +658,72 @@ input TagWhereInput {
 input TagOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input TagUpdateInput {
+  name: String
+}
+
+input TagUpdateArgs {
+  where: TagWhereUniqueInput!
+  data: TagUpdateInput!
+}
+
+input TagCreateInput {
+  name: String
+}
+
+type Article {
+  id: ID!
+  status: ArticleStatusType
+  slug: String
+  title: String
+  preview: String
+  body: Article_body_Document
+  keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+enum ArticleStatusType {
+  Draft
+  Published
+  Archived
+}
+
+type Article_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input ArticleWhereUniqueInput {
+  id: ID
+  slug: String
+}
+
+input ArticleWhereInput {
+  AND: [ArticleWhereInput!]
+  OR: [ArticleWhereInput!]
+  NOT: [ArticleWhereInput!]
+  id: IDFilter
+  status: ArticleStatusTypeNullableFilter
+  slug: StringFilter
+  title: StringFilter
+  preview: StringFilter
+  keywords: StringFilter
+  publishedDate: DateTimeNullableFilter
+  archivedDate: DateTimeNullableFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
 input ArticleStatusTypeNullableFilter {
   equals: ArticleStatusType
   in: [ArticleStatusType!]
@@ -715,17 +744,6 @@ input ArticleOrderByInput {
   createdAt: OrderDirection
 }
 
-input TagUpdateInput {
-  name: String
-}
-
-input TagUpdateArgs {
-  where: TagWhereUniqueInput!
-  data: TagUpdateInput!
-}
-
-input TagCreateInput {
-  name: String
 input ArticleUpdateInput {
   status: ArticleStatusType
   slug: String

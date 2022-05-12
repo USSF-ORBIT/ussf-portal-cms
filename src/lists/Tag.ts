@@ -3,25 +3,35 @@ import { text } from '@keystone-6/core/fields'
 
 import type { Lists } from '.keystone/types'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
+import {
+  canCreateArticle,
+  articleItemView,
+  canUpdateDeleteArticle,
+} from '../util/access'
 import { withTracking } from '../util/tracking'
 
-const Tag = list(
+const Tag: Lists.Tag = list(
   withTracking({
     access: {
       operation: {
-        create: isAdmin,
+        create: canCreateArticle,
         query: () => true,
-        update: isAdmin,
-        delete: isAdmin,
+      },
+      filter: {
+        update: canUpdateDeleteArticle,
+        delete: canUpdateDeleteArticle,
       },
     },
 
     ui: {
-      hideCreate: ({ session }) => !isAdmin({ session }),
-      hideDelete: false,
+      hideCreate: ({ session }) => !canCreateArticle({ session }),
+      hideDelete: ({ session }) => !canCreateArticle({ session }),
+      createView: {
+        defaultFieldMode: ({ session }) =>
+          canCreateArticle({ session }) ? 'edit' : 'hidden',
+      },
       itemView: {
-        defaultFieldMode: editReadAdminUI,
+        defaultFieldMode: articleItemView,
       },
     },
 
