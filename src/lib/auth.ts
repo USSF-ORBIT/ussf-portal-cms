@@ -9,7 +9,7 @@ import type {
   ValidSession,
   InvalidSession,
 } from '../../types'
-import { canAccessCMS, isCMSAdmin } from '../util/access'
+import { canAccessCMS, isCMSAdmin } from '../util/auth'
 
 import { session, SharedSessionStrategy } from './session'
 

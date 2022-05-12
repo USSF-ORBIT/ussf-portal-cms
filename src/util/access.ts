@@ -1,13 +1,6 @@
 import { BaseItem } from '@keystone-6/core/types'
 
-import type { SessionUser, ValidSession } from '../../types'
-
-/** Session access (used before defining session) */
-// The user group values defined by SLAM
-const USER_GROUPS = {
-  ADMIN: 'PORTAL_CMS_Admins',
-  USER: 'PORTAL_CMS_Users',
-}
+import type { ValidSession } from '../../types'
 
 export const USER_ROLES = {
   USER: 'User',
@@ -16,32 +9,6 @@ export const USER_ROLES = {
 } as const
 
 export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES]
-
-const USER_GROUPS_LIST = Object.values(USER_GROUPS)
-
-export const canAccessCMS = (user: SessionUser) => {
-  const {
-    attributes: { userGroups },
-  } = user
-
-  const groupsList: string[] = Array.isArray(userGroups)
-    ? userGroups
-    : userGroups.split(',')
-
-  return !!groupsList.find((i) => USER_GROUPS_LIST.includes(i))
-}
-
-export const isCMSAdmin = (user: SessionUser) => {
-  const {
-    attributes: { userGroups },
-  } = user
-
-  const groupsList: string[] = Array.isArray(userGroups)
-    ? userGroups
-    : userGroups.split(',')
-
-  return groupsList.includes(USER_GROUPS.ADMIN)
-}
 
 /** Access helpers */
 export const isAdmin = ({ session }: { session: ValidSession }) =>
