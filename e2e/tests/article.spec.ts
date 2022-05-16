@@ -68,4 +68,48 @@ describe('Articles', () => {
 
     await loginPage.logout()
   })
+
+  test('can be published by a manager', async ({ page, loginPage }) => {
+    await loginPage.login('cmsmanager', 'cmsmanagerpass')
+
+    await expect(page.locator('text=WELCOME, CHRISTINA HAVEN')).toBeVisible()
+
+    await page.goto('http://localhost:3001')
+    await expect(
+      page.locator(
+        'text=Signed in as CHRISTINA.HAVEN.561698119@testusers.cce.af.mil'
+      )
+    ).toBeVisible()
+
+    await Promise.all([
+      page.waitForNavigation(),
+      page.locator('h3:has-text("Articles")').click(),
+    ])
+
+    await expect(page).toHaveURL('http://localhost:3001/articles')
+    await expect(
+      page.locator('tr:has-text("My Test Article") td:nth-child(3)')
+    ).toHaveText('Draft')
+
+    await Promise.all([
+      page.waitForNavigation(),
+      page.locator('a:has-text("My Test Article")').click(),
+    ])
+
+    await page.locator('label:has-text("Published")').click()
+
+    await page.locator('button:has-text("Save changes")').click()
+    await expect(
+      page.locator('label:has-text("Published") input')
+    ).toBeChecked()
+
+    await page
+      .locator('[aria-label="Side Navigation"] >> text=Articles')
+      .click()
+    await expect(page).toHaveURL('http://localhost:3001/articles')
+    await expect(
+      page.locator('tr:has-text("My Test Article") td:nth-child(3)')
+    ).toHaveText('Published')
+    await loginPage.logout()
+  })
 })
