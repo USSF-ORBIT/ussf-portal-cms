@@ -19,7 +19,7 @@ const Byline: Lists.Byline = list(
 
     ui: {
       hideCreate: ({ session }) => !isAdmin({ session }),
-      hideDelete: false,
+      hideDelete: ({ session }) => !isAdmin({ session }),
       itemView: {
         defaultFieldMode: editReadAdminUI,
       },
