@@ -21,18 +21,18 @@ type OperationFilterFn = ({
   listKey,
   operation,
 }: {
-  session: ValidSession
-  context: KeystoneContext
-  listKey: string
-  operation: string
+  session?: ValidSession
+  context?: KeystoneContext
+  listKey?: string
+  operation?: string
 }) => Record<string, any> | boolean
 
 type CreateViewFn = ({
   session,
   context,
 }: {
-  session: ValidSession
-  context: KeystoneContext
+  session?: ValidSession
+  context?: KeystoneContext
 }) => 'edit' | 'hidden'
 
 type ItemViewFn = ({
@@ -40,17 +40,17 @@ type ItemViewFn = ({
   context,
   item,
 }: {
-  session: ValidSession
-  context: KeystoneContext
-  item: BaseItem
+  session?: ValidSession
+  context?: KeystoneContext
+  item?: BaseItem
 }) => 'edit' | 'read' | 'hidden'
 
 type ListViewFn = ({
   session,
   context,
 }: {
-  session: ValidSession
-  context: KeystoneContext
+  session?: ValidSession
+  context?: KeystoneContext
 }) => 'read' | 'hidden'
 
 /** User Roles */
@@ -63,15 +63,17 @@ export const USER_ROLES = {
 export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES]
 
 /** Access helpers */
-export const isAdmin: OperationAccessFn = ({ session }) => session?.isAdmin
+export const isAdmin: OperationAccessFn = ({ session }) => !!session?.isAdmin
 
 /** Filter helpers */
 export const isAdminOrSelf: OperationFilterFn = ({ session }) => {
   // if the user is an Admin, they can access all the users
-  if (session.isAdmin) return true
+  if (session?.isAdmin) return true
+
+  if (!session) return false
 
   // otherwise, only allow access to themself
-  return { userId: { equals: session.userId } }
+  return { userId: { equals: session?.userId } }
 }
 
 /** View helpers */
@@ -91,9 +93,9 @@ export const canCreateArticle: OperationAccessFn = ({ session }) => {
 }
 
 export const canUpdateDeleteArticle: OperationFilterFn = ({ session }) => {
-  if (session.isAdmin || session.role === USER_ROLES.MANAGER) return true
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
 
-  if (session.role === USER_ROLES.AUTHOR) {
+  if (session?.role === USER_ROLES.AUTHOR) {
     return {
       createdBy: { id: { equals: session.itemId } },
     }
@@ -112,16 +114,19 @@ export const articleCreateView: CreateViewFn = ({ session }) =>
   canCreateArticle({ session }) ? 'edit' : 'hidden'
 
 export const articleItemView: ItemViewFn = ({ session, item }) => {
-  if (session.isAdmin || session.role === USER_ROLES.MANAGER) return 'edit'
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
 
-  if (session.role === USER_ROLES.AUTHOR && item.createdById === session.itemId)
+  if (
+    session?.role === USER_ROLES.AUTHOR &&
+    item?.createdById === session.itemId
+  )
     return 'edit'
 
   return 'read'
 }
 
 export const articleStatusView: ItemViewFn = ({ session }) => {
-  if (session.isAdmin || session.role === USER_ROLES.MANAGER) return 'edit'
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
 
   return 'read'
 }

@@ -140,7 +140,7 @@ export const testAuthorKeystone: KeystoneUser = {
   isAdmin: false,
   isEnabled: true,
   name: `${testAuthor.attributes.givenname} ${testAuthor.attributes.surname}`,
-  role: 'User' as const,
+  role: 'Author' as const,
 }
 
 export const testManagerKeystone: KeystoneUser = {
