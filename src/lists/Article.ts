@@ -3,12 +3,14 @@ import { select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
+
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
 import {
   canCreateArticle,
   canUpdateDeleteArticle,
   canPublishArchiveArticle,
+  articleCreateView,
   articleItemView,
   articleStatusView,
 } from '../util/access'
@@ -35,8 +37,7 @@ const Article: Lists.Article = list(
       hideCreate: ({ session }) => !canCreateArticle({ session }),
       hideDelete: ({ session }) => !canCreateArticle({ session }),
       createView: {
-        defaultFieldMode: ({ session }) =>
-          canCreateArticle({ session }) ? 'edit' : 'hidden',
+        defaultFieldMode: articleCreateView,
       },
       itemView: {
         defaultFieldMode: articleItemView,
