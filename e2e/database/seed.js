@@ -5,10 +5,52 @@ const E2E_TEST_DATABASE = 'test'
 const E2E_TEST_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${E2E_TEST_DATABASE}`
 
 // DB util functions
-const resetData = async (client) => {
-  await client.query(`TRUNCATE TABLE "public"."Article" CASCADE;`)
-  await client.query(`TRUNCATE TABLE "public"."Event" CASCADE;`)
-  await client.query(`TRUNCATE TABLE "public"."User" CASCADE;`)
+const dropAndCreateSchema = async (client) => {
+  // Drop
+  await client.query(`DROP TABLE IF EXISTS "public"."Event" CASCADE;`)
+
+  // Create schema
+  await client.query(`CREATE TABLE "public"."Event" (
+    "id" text NOT NULL,
+    "operation" text NOT NULL DEFAULT ''::text,
+    "itemListKey" text NOT NULL DEFAULT ''::text,
+    "itemId" text NOT NULL DEFAULT ''::text,
+    "inputData" jsonb,
+    "resolvedData" jsonb,
+    "changedData" jsonb,
+    "originalItem" jsonb,
+    "item" jsonb,
+    "actor" text,
+    "updatedAt" timestamp(3),
+    "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+);`)
+
+  // Drop
+  await client.query(`DROP TABLE IF EXISTS "public"."User" CASCADE;`)
+
+  // Create schema
+  await client.query(`CREATE TABLE "public"."User" (
+    "id" text NOT NULL,
+    "userId" text NOT NULL DEFAULT ''::text,
+    "name" text NOT NULL DEFAULT ''::text,
+    "isAdmin" bool NOT NULL DEFAULT false,
+    "isEnabled" bool NOT NULL DEFAULT false,
+    "syncedAt" timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedBy" text,
+    "createdBy" text,
+    "updatedAt" timestamp(3),
+    "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+);`)
+
+  await client.query(`ALTER TABLE "public"."Event" ADD FOREIGN KEY ("actor") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."User" ADD FOREIGN KEY ("createdBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+`)
+
+  await client.query(`ALTER TABLE "User" ADD COLUMN     "role" "UserRoleType" NOT NULL DEFAULT E'User';
+`)
 }
 
 // DB exports
@@ -17,7 +59,7 @@ module.exports.resetDb = async () => {
 
   try {
     await client.connect()
-    await resetData(client)
+    await dropAndCreateSchema(client)
     console.log(`E2E database reset!`)
     await client.end()
   } catch (err) {
@@ -31,7 +73,7 @@ module.exports.seedRevokeUsers = async () => {
 
   try {
     await client.connect()
-    await resetData(client)
+    await dropAndCreateSchema(client)
 
     // These users are intentionally out-of-sync with their access in the test users SAML file for testing purposes
     await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "role", "userId") VALUES
@@ -53,7 +95,7 @@ module.exports.seedGrantUsers = async () => {
 
   try {
     await client.connect()
-    await resetData(client)
+    await dropAndCreateSchema(client)
 
     // These users are intentionally out-of-sync with their access in the test users SAML file for testing purposes
     await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "role", "userId") VALUES
@@ -68,7 +110,7 @@ module.exports.seedGrantUsers = async () => {
     return err
   }
 }
-
+/*
 module.exports.seedCMSUsers = async () => {
   const client = new Client({ connectionString: E2E_TEST_CONNECTION })
 
@@ -90,3 +132,5 @@ module.exports.seedCMSUsers = async () => {
     return err
   }
 }
+
+*/
