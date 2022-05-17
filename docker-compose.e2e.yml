@@ -21,7 +21,6 @@ services:
     stdin_open: true
     depends_on:
       - keystone-db
-      - app
       - redis
 
 # Portal client
@@ -51,6 +50,7 @@ services:
       - mongo
       - redis
       - idp
+      - cms
 
 # Shared between CMS and Portal
   redis:

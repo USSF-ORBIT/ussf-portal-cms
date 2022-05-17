@@ -8,7 +8,7 @@ const E2E_TEST_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${E2E_
 const resetData = async (client) => {
   await client.query(`TRUNCATE TABLE "public"."Article" CASCADE;`)
   await client.query(`TRUNCATE TABLE "public"."Event" CASCADE;`)
-  await client.query(`TRUNCATE TABLE "public"."User" CASCADE;`)
+  await client.query(`TRUNCATE TABLE "public"."User";`)
 }
 
 // DB exports

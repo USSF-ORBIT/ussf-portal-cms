@@ -29,7 +29,7 @@ test.afterAll(async () => {
   await resetDb()
 })
 
-describe('Articles', () => {
+describe.skip('Articles', () => {
   test('can be created by an author', async ({ page, loginPage }) => {
     await loginPage.login('cmsauthor', 'cmsauthorpass')
 
