@@ -1,8 +1,7 @@
-name: Automated Docker Build Main Push C1 Artifactory
+name: Manual Docker Build Main Push C1 Dev Artifactory
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-push-C1:

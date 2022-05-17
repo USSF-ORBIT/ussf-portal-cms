@@ -1,10 +1,10 @@
-name: Manual Docker Build Main Push AWS Dev
+name: Manual Docker Build Push Deploy AWS Dev
 
 on:
   workflow_dispatch:
 
 jobs:
-  build-and-push-aws:
+  build-and-push-dev-aws:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2
@@ -38,7 +38,7 @@ jobs:
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           docker logout $ECR_REGISTRY
 
-      - name: Download task definition | Update Task Definition | Update ECS Service
+      - name: Download task definition | Update Task Definition | Update ECS Service | Deploy new image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: keystone

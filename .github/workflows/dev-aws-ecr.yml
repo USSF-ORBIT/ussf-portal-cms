@@ -1,11 +1,11 @@
-name: Automated Docker Keystone Build Main Push AWS Dev
+name: Automated Docker Build Main Push AWS Dev
 
 on:
   push:
     branches: [main]
 
 jobs:
-  build-and-push-aws:
+  build-and-push-dev-aws:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2
@@ -32,7 +32,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: keystone
           IMAGE_TAG: ${{ github.sha }}
-
 
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
