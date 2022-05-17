@@ -25,7 +25,6 @@ jobs:
         with:
           repository: USSF-ORBIT/ussf-portal-client
           path: ./ussf-portal-client
-          ref: sr-debug-e2e
 
       - name: Build image for testing
         env:

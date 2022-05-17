@@ -1,4 +1,3 @@
-/*
 import { test as base } from '@playwright/test'
 import {
   fixtures,
@@ -114,4 +113,3 @@ describe('Articles', () => {
     await loginPage.logout()
   })
 })
-*/
