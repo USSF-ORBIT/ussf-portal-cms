@@ -13,8 +13,6 @@ RUN apt-get update \
 COPY package.json .
 COPY yarn.lock .
 
-
-
 ##--------- Stage: builder ---------##
 FROM base as builder
 
@@ -23,10 +21,7 @@ WORKDIR /app
 COPY . .
 
 # Install only production deps this time
-RUN yarn install --frozen-lockfile
-RUN yarn build
-RUN yarn install --production --ignore-scripts --prefer-offline && cp -R node_modules prod_node_modules
-#&& yarn install --frozen-lockfile && yarn build
+RUN yarn install --frozen-lockfile && yarn build && yarn install --production --ignore-scripts --prefer-offline && rm -rf node_modules/typescript
 
 # ##--------- Stage: e2e ---------##
 # # E2E image for running tests (same as prod but without certs)
@@ -47,7 +42,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline && cp -R node_mo
 # Runtime container
 FROM base AS runner
 
-COPY --from=builder /app/prod_node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
 
 COPY . .
 
