@@ -1,3 +1,4 @@
+/*
 import { test as base } from '@playwright/test'
 import {
   fixtures,
@@ -29,7 +30,7 @@ test.afterAll(async () => {
   await resetDb()
 })
 
-describe.skip('Articles', () => {
+describe('Articles', () => {
   test('can be created by an author', async ({ page, loginPage }) => {
     await loginPage.login('cmsauthor', 'cmsauthorpass')
 
@@ -113,3 +114,4 @@ describe.skip('Articles', () => {
     await loginPage.logout()
   })
 })
+*/
