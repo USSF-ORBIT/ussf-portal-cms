@@ -9,15 +9,22 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends openssl libc6 yarn ca-certificates wget unzip dumb-init \
     && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
     && rm -rf /var/lib/apt/lists/*
-ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
+#ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
 COPY package.json .
 COPY yarn.lock .
+
 
 
 ##--------- Stage: builder ---------##
 FROM base as builder
 
+WORKDIR /app
+
+COPY . .
+
 # Install only production deps this time
+RUN yarn install --frozen-lockfile
+RUN yarn build
 RUN yarn install --production --ignore-scripts --prefer-offline && cp -R node_modules prod_node_modules
 #&& yarn install --frozen-lockfile && yarn build
 
