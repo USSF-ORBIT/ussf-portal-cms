@@ -51,12 +51,14 @@ FROM base AS runner
 COPY ./startup ./startup
 COPY ./migrations ./migrations
 
-COPY --from=builder /app ./
-
+COPY --from=builder /app/.keystone ./.keystone
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/schema.prisma ./schema.prisma
 
 ENV NODE_ENV production
 
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["bash", "-c", "/app/node_modules/.bin/keystone prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
