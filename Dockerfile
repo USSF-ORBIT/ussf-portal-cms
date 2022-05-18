@@ -7,7 +7,7 @@ COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl jq libc6 yarn ca-certificates wget unzip dumb-init \
+    && apt-get install -y --no-install-recommends openssl libc6 yarn ca-certificates wget unzip dumb-init \
     && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
     && apt-get remove -y wget unzip \
     && apt-get autoremove -y \
@@ -47,11 +47,12 @@ RUN yarn install --frozen-lockfile && yarn build && yarn install --production --
 # Runtime container
 FROM base AS runner
 
-WORKDIR /app
+# Copy files needed for startup
+COPY ./startup ./startup
+COPY ./migrations ./migrations
 
-COPY --from=builder /app/.keystone ./.keystone
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app ./
+
 
 ENV NODE_ENV production
 
