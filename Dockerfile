@@ -47,9 +47,11 @@ RUN yarn install --frozen-lockfile && yarn build && yarn install --production --
 # Runtime container
 FROM base AS runner
 
-COPY --from=builder /app/node_modules ./node_modules
+WORKDIR /app
 
-COPY . .
+COPY --from=builder /app/.keystone ./.keystone
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
 ENV NODE_ENV production
 
