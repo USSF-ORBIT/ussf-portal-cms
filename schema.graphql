@@ -38,6 +38,14 @@ type Query {
   ): [Collection!]
   collection(where: CollectionWhereUniqueInput!): Collection
   collectionsCount(where: CollectionWhereInput! = {}): Int
+  articles(
+    where: ArticleWhereInput! = {}
+    orderBy: [ArticleOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Article!]
+  article(where: ArticleWhereUniqueInput!): Article
+  articlesCount(where: ArticleWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -455,6 +463,102 @@ input BookmarkRelateToManyForCreateInput {
   connect: [BookmarkWhereUniqueInput!]
 }
 
+type Article {
+  id: ID!
+  status: ArticleStatusType
+  slug: String
+  title: String
+  preview: String
+  body: Article_body_Document
+  keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+enum ArticleStatusType {
+  Draft
+  Published
+  Archived
+}
+
+type Article_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
+}
+
+input ArticleWhereUniqueInput {
+  id: ID
+  slug: String
+}
+
+input ArticleWhereInput {
+  AND: [ArticleWhereInput!]
+  OR: [ArticleWhereInput!]
+  NOT: [ArticleWhereInput!]
+  id: IDFilter
+  status: ArticleStatusTypeNullableFilter
+  slug: StringFilter
+  title: StringFilter
+  preview: StringFilter
+  keywords: StringFilter
+  publishedDate: DateTimeNullableFilter
+  archivedDate: DateTimeNullableFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input ArticleStatusTypeNullableFilter {
+  equals: ArticleStatusType
+  in: [ArticleStatusType!]
+  notIn: [ArticleStatusType!]
+  not: ArticleStatusTypeNullableFilter
+}
+
+input ArticleOrderByInput {
+  id: OrderDirection
+  status: OrderDirection
+  slug: OrderDirection
+  title: OrderDirection
+  preview: OrderDirection
+  keywords: OrderDirection
+  publishedDate: OrderDirection
+  archivedDate: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input ArticleUpdateInput {
+  status: ArticleStatusType
+  slug: String
+  title: String
+  preview: String
+  body: JSON
+  keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
+}
+
+input ArticleUpdateArgs {
+  where: ArticleWhereUniqueInput!
+  data: ArticleUpdateInput!
+}
+
+input ArticleCreateInput {
+  status: ArticleStatusType
+  slug: String
+  title: String
+  preview: String
+  body: JSON
+  keywords: String
+  publishedDate: DateTime
+  archivedDate: DateTime
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -494,6 +598,15 @@ type Mutation {
   updateCollections(data: [CollectionUpdateArgs!]!): [Collection]
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteCollections(where: [CollectionWhereUniqueInput!]!): [Collection]
+  createArticle(data: ArticleCreateInput!): Article
+  createArticles(data: [ArticleCreateInput!]!): [Article]
+  updateArticle(
+    where: ArticleWhereUniqueInput!
+    data: ArticleUpdateInput!
+  ): Article
+  updateArticles(data: [ArticleUpdateArgs!]!): [Article]
+  deleteArticle(where: ArticleWhereUniqueInput!): Article
+  deleteArticles(where: [ArticleWhereUniqueInput!]!): [Article]
   endSession: Boolean!
 }
 

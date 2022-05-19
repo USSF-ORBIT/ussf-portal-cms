@@ -6,6 +6,7 @@ import {
 import { config } from '@keystone-6/core'
 import { KeystoneContext } from '@keystone-6/core/types'
 
+import type { User } from '.prisma/client'
 import { lists } from './schema'
 
 const TEST_DATABASE = 'unit-test'
@@ -20,27 +21,48 @@ export const testConfig = config({
   lists,
 })
 
+const adminUserData = {
+  name: 'Admin User',
+  userId: 'admin@example.com',
+  isAdmin: true,
+  isEnabled: true,
+  role: 'User',
+}
+const userUserData = {
+  name: 'User 1',
+  userId: 'user1@example.com',
+  isAdmin: false,
+  isEnabled: true,
+  role: 'User',
+}
+const authorUserData = {
+  name: 'Ethel Neal',
+  userId: 'NEAL.ETHEL.643097412',
+  isAdmin: false,
+  isEnabled: true,
+  role: 'Author',
+}
+const managerUserData = {
+  name: 'Christina Haven',
+  userId: 'HAVEN.CHRISTINA.561698119',
+  isAdmin: false,
+  isEnabled: true,
+  role: 'Manager',
+}
+
 export const testUsers = [
-  {
-    name: 'Admin User',
-    userId: 'admin@example.com',
-    isAdmin: true,
-    isEnabled: true,
-    role: 'User',
-  },
-  {
-    name: 'User 1',
-    userId: 'user1@example.com',
-    isAdmin: false,
-    isEnabled: true,
-    role: 'User',
-  },
+  adminUserData,
+  userUserData,
+  authorUserData,
+  managerUserData,
 ]
 
 export type TestEnvWithSessions = TestEnv & {
   sudoContext: KeystoneContext
   adminContext: KeystoneContext
   userContext: KeystoneContext
+  authorContext: KeystoneContext
+  managerContext: KeystoneContext
 }
 
 export const configTestEnv = async (): Promise<TestEnvWithSessions> => {
@@ -50,26 +72,24 @@ export const configTestEnv = async (): Promise<TestEnvWithSessions> => {
 
   await testEnv.connect()
 
-  // Seed data
-  await context.sudo().query.User.createMany({
-    data: testUsers,
-  })
-
-  const adminUser = await context.sudo().query.User.findOne({
-    where: {
-      userId: 'admin@example.com',
-    },
-    query: 'id userId name isAdmin isEnabled',
-  })
-
-  const cmsUser = await context.sudo().query.User.findOne({
-    where: {
-      userId: 'user1@example.com',
-    },
-    query: 'id userId name isAdmin isEnabled',
-  })
-
   const sudoContext = context.sudo()
+
+  const userQuery = 'id userId name role isAdmin isEnabled'
+
+  // Seed data
+  const users = await sudoContext.query.User.createMany({
+    data: testUsers,
+    query: userQuery,
+  })
+
+  const adminUser = users.find((u) => u.userId === adminUserData.userId) as User
+  const cmsUser = users.find((u) => u.userId === userUserData.userId) as User
+  const authorUser = users.find(
+    (u) => u.userId === authorUserData.userId
+  ) as User
+  const managerUser = users.find(
+    (u) => u.userId === managerUserData.userId
+  ) as User
 
   const adminContext = context.withSession({
     ...adminUser,
@@ -85,7 +105,28 @@ export const configTestEnv = async (): Promise<TestEnvWithSessions> => {
     listKey: 'User',
   })
 
-  return { ...testEnv, sudoContext, adminContext, userContext }
+  const authorContext = context.withSession({
+    ...authorUser,
+    accessAllowed: true,
+    itemId: authorUser.id,
+    listKey: 'User',
+  })
+
+  const managerContext = context.withSession({
+    ...managerUser,
+    accessAllowed: true,
+    itemId: managerUser.id,
+    listKey: 'User',
+  })
+
+  return {
+    ...testEnv,
+    sudoContext,
+    adminContext,
+    userContext,
+    authorContext,
+    managerContext,
+  }
 }
 
 export const configTestRunner = async () =>

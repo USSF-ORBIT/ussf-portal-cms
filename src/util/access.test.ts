@@ -1,272 +1,36 @@
 import {
-  canAccessCMS,
-  isCMSAdmin,
+  testUserSession,
+  testAdminSession,
+  testAuthorSession,
+  testManagerSession,
+} from '../__fixtures__/testUsers'
+
+import {
   isAdmin,
   isAdminOrSelf,
   showHideAdminUI,
   editReadAdminUI,
+  canCreateArticle,
+  canUpdateDeleteArticle,
+  canPublishArchiveArticle,
+  articleCreateView,
+  articleItemView,
+  articleStatusView,
 } from './access'
-
-const testUser = {
-  userId: 'BERNADETTE.CAMPBELL.5244446289@testusers.cce.af.mil',
-  issuer: 'http://localhost:8080/simplesaml/saml2/idp/metadata.php',
-  nameID: '_9c9d48b40112e0d39413d937f9d3a940420d719fbb',
-  nameIDFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
-  inResponseTo: '_82bc4c3df3d7396a9f22',
-  sessionIndex: '_b0674f313b122aad2ce1faccac204e732e57b2740b',
-  attributes: {
-    edipi: '5244446289',
-    common_name: 'CAMPBELL.BERNADETTE.5244446289',
-    fascn: '5244446289197004',
-    givenname: 'BERNADETTE',
-    surname: 'CAMPBELL',
-    userprincipalname: 'BERNADETTE.CAMPBELL.5244446289@testusers.cce.af.mil',
-    userGroups: ['AF_USERS'],
-    subject:
-      '/C=US/O=U.S. Government/OU=DoD/OU=PKI/OU=CONTRACTOR/CN=CAMPBELL.BERNADETTE.5244446289',
-  },
-  accessAllowed: true as const,
-}
-
-const testSession = {
-  ...testUser,
-  isAdmin: false,
-  isEnabled: true,
-  name: 'BERNADETTE CAMPBELL',
-  id: 'keystoneDbId123',
-  itemId: 'keystoneDbId123',
-  listKey: 'User' as const,
-}
-
-describe('canAccessCMS', () => {
-  describe('if the user groups is an array', () => {
-    it('returns true if user groups includes at least one group with access', () => {
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['AFUSERS', 'PORTAL_CMS_Users'],
-          },
-        })
-      ).toEqual(true)
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['AFUSERS', 'PORTAL_CMS_Admins'],
-          },
-        })
-      ).toEqual(true)
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['PORTAL_CMS_Users', 'PORTAL_CMS_Admins'],
-          },
-        })
-      ).toEqual(true)
-    })
-
-    it('returns false if user groups does not include any group with access', () => {
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['AFUSERS'],
-          },
-        })
-      ).toEqual(false)
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: [],
-          },
-        })
-      ).toEqual(false)
-    })
-  })
-
-  describe('if the user groups is a string', () => {
-    it('returns true if user groups includes at least one group with access', () => {
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'AF_USERS,PORTAL_CMS_Users',
-          },
-        })
-      ).toEqual(true)
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'AF_USERS,PORTAL_CMS_Admins',
-          },
-        })
-      ).toEqual(true)
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'PORTAL_CMS_Users,PORTAL_CMS_Admins',
-          },
-        })
-      ).toEqual(true)
-    })
-
-    it('returns false if user groups does not include any group with access', () => {
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'AFUSERS',
-          },
-        })
-      ).toEqual(false)
-      expect(
-        canAccessCMS({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: '',
-          },
-        })
-      ).toEqual(false)
-    })
-  })
-})
-
-describe('isCMSAdmin', () => {
-  describe('if the user groups is an array', () => {
-    it('returns true if user groups includes the admin group', () => {
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['AFUSERS', 'PORTAL_CMS_Admins'],
-          },
-        })
-      ).toEqual(true)
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['PORTAL_CMS_Users', 'PORTAL_CMS_Admins'],
-          },
-        })
-      ).toEqual(true)
-    })
-
-    it('returns false if user groups does not include the admin group', () => {
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['AFUSERS', 'PORTAL_CMS_Users'],
-          },
-        })
-      ).toEqual(false)
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: ['AFUSERS'],
-          },
-        })
-      ).toEqual(false)
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: [],
-          },
-        })
-      ).toEqual(false)
-    })
-  })
-
-  describe('if the user groups is a string', () => {
-    it('returns true if user groups includes the admin group', () => {
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'AFUSERS,PORTAL_CMS_Admins',
-          },
-        })
-      ).toEqual(true)
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'PORTAL_CMS_Users,PORTAL_CMS_Admins',
-          },
-        })
-      ).toEqual(true)
-    })
-
-    it('returns false if user groups does not include the admin group', () => {
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'AFUSERS,PORTAL_CMS_Users',
-          },
-        })
-      ).toEqual(false)
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: 'AFUSERS',
-          },
-        })
-      ).toEqual(false)
-      expect(
-        isCMSAdmin({
-          ...testUser,
-          attributes: {
-            ...testUser.attributes,
-            userGroups: '',
-          },
-        })
-      ).toEqual(false)
-    })
-  })
-})
 
 describe('isAdmin', () => {
   it('returns true if the logged in user is an admin', () => {
     expect(
       isAdmin({
-        session: {
-          ...testSession,
-          isAdmin: true,
-        },
+        session: testAdminSession,
       })
     ).toBe(true)
   })
   it('returns false if the logged in user is not an admin', () => {
-    expect(isAdmin({ session: testSession })).toBe(false)
+    expect(isAdmin({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(isAdmin({})).toBe(false)
   })
 })
 
@@ -274,10 +38,7 @@ describe('isAdminOrSelf', () => {
   it('returns true if the logged in user is an admin', () => {
     expect(
       isAdminOrSelf({
-        session: {
-          ...testSession,
-          isAdmin: true,
-        },
+        session: testAdminSession,
       })
     ).toBe(true)
   })
@@ -285,13 +46,17 @@ describe('isAdminOrSelf', () => {
   it('returns a filter on the logged in userId if not an admin', () => {
     expect(
       isAdminOrSelf({
-        session: testSession,
+        session: testUserSession,
       })
     ).toEqual({
       userId: {
-        equals: testSession.userId,
+        equals: testUserSession.userId,
       },
     })
+  })
+
+  it('returns false if there is no logged in user', () => {
+    expect(isAdminOrSelf({})).toBe(false)
   })
 })
 
@@ -299,15 +64,15 @@ describe('showHideAdminUI', () => {
   it('returns edit if the logged in user is an admin', () => {
     expect(
       showHideAdminUI({
-        session: {
-          ...testSession,
-          isAdmin: true,
-        },
+        session: testAdminSession,
       })
     ).toBe('edit')
   })
   it('returns hidden if the logged in user is not an admin', () => {
-    expect(showHideAdminUI({ session: testSession })).toBe('hidden')
+    expect(showHideAdminUI({ session: testUserSession })).toBe('hidden')
+  })
+  it('returns hidden if there is no logged in user', () => {
+    expect(showHideAdminUI({})).toBe('hidden')
   })
 })
 
@@ -315,14 +80,141 @@ describe('editReadAdminUI', () => {
   it('returns edit if the logged in user is an admin', () => {
     expect(
       editReadAdminUI({
-        session: {
-          ...testSession,
-          isAdmin: true,
-        },
+        session: testAdminSession,
       })
     ).toBe('edit')
   })
   it('returns read if the logged in user is not an admin', () => {
-    expect(editReadAdminUI({ session: testSession })).toBe('read')
+    expect(editReadAdminUI({ session: testUserSession })).toBe('read')
+  })
+
+  it('returns read if there is no logged in user', () => {
+    expect(editReadAdminUI({})).toBe('read')
+  })
+})
+
+describe('canCreateArticle', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canCreateArticle({ session: testAdminSession })).toBe(true)
+  })
+  it('returns true if the logged in user is an author', () => {
+    expect(canCreateArticle({ session: testAuthorSession })).toBe(true)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canCreateArticle({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canCreateArticle({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canCreateArticle({})).toBe(false)
+  })
+})
+
+describe('canUpdateDeleteArticle', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canUpdateDeleteArticle({ session: testAdminSession })).toBe(true)
+  })
+  it('returns a filter on the item id if the logged in user is an author', () => {
+    expect(
+      canUpdateDeleteArticle({ session: testAuthorSession })
+    ).toMatchObject({
+      createdBy: { id: { equals: testAuthorSession.itemId } },
+    })
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canUpdateDeleteArticle({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canUpdateDeleteArticle({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canUpdateDeleteArticle({})).toBe(false)
+  })
+})
+
+describe('canPublishArchiveArticle', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canPublishArchiveArticle({ session: testAdminSession })).toBe(true)
+  })
+  it('returns false if the logged in user is an author', () => {
+    expect(canPublishArchiveArticle({ session: testAuthorSession })).toBe(false)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canPublishArchiveArticle({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canPublishArchiveArticle({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canPublishArchiveArticle({})).toBe(false)
+  })
+})
+
+describe('articleCreateView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(articleCreateView({ session: testAdminSession })).toBe('edit')
+  })
+  it('returns edit if the logged in user is an author', () => {
+    expect(articleCreateView({ session: testAuthorSession })).toBe('edit')
+  })
+  it('returns edit if the logged in user is a manager', () => {
+    expect(articleCreateView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns hidden if the logged in user is a user', () => {
+    expect(articleCreateView({ session: testUserSession })).toBe('hidden')
+  })
+  it('returns hidden if there is no logged in user', () => {
+    expect(articleCreateView({})).toBe('hidden')
+  })
+})
+
+describe('articleItemView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(articleItemView({ session: testAdminSession })).toBe('edit')
+  })
+  it('returns edit if the logged in user is an author and the creator of the article', () => {
+    expect(
+      articleItemView({
+        session: testAuthorSession,
+        item: { id: 'testArticleId', createdById: testAuthorSession.itemId },
+      })
+    ).toBe('edit')
+  })
+  it('returns read if the logged in user is an author and NOT the creator of the article', () => {
+    expect(
+      articleItemView({
+        session: testAuthorSession,
+        item: { id: 'testArticleId', createdById: 'someOtherAuthorId' },
+      })
+    ).toBe('read')
+  })
+
+  it('returns edit if the logged in user is a manager', () => {
+    expect(articleItemView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns read if the logged in user is a user', () => {
+    expect(articleItemView({ session: testUserSession })).toBe('read')
+  })
+  it('returns read if there is no logged in user', () => {
+    expect(articleItemView({})).toBe('read')
+  })
+})
+
+describe('articleStatusView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(articleStatusView({ session: testAdminSession })).toBe('edit')
+  })
+  it('returns read if the logged in user is an author', () => {
+    expect(articleStatusView({ session: testAuthorSession })).toBe('read')
+  })
+  it('returns edit if the logged in user is a manager', () => {
+    expect(articleStatusView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns read if the logged in user is a user', () => {
+    expect(articleStatusView({ session: testUserSession })).toBe('read')
+  })
+  it('returns read if there is no logged in user', () => {
+    expect(articleStatusView({})).toBe('read')
   })
 })

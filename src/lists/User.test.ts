@@ -24,7 +24,7 @@ describe('User schema', () => {
         query: 'id name role userId isAdmin isEnabled',
       })
 
-      expect(data).toHaveLength(2)
+      expect(data).toHaveLength(4)
       testUsers.forEach((user) => {
         expect(data).toContainEqual({
           id: expect.any(String),

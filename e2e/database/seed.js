@@ -51,6 +51,35 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."U
 
   await client.query(`ALTER TABLE "User" ADD COLUMN     "role" "UserRoleType" NOT NULL DEFAULT E'User';
 `)
+
+  await client.query(`DROP TABLE IF EXISTS "public"."Article";
+`)
+
+  await client.query(`DROP TYPE IF EXISTS "public"."ArticleStatusType";
+`)
+
+  await client.query(`CREATE TYPE "public"."ArticleStatusType" AS ENUM ('Archived', 'Published', 'Draft');
+`)
+
+  await client.query(`CREATE TABLE "public"."Article" (
+    "id" text NOT NULL,
+    "slug" text NOT NULL DEFAULT ''::text,
+    "title" text NOT NULL DEFAULT ''::text,
+    "preview" text NOT NULL DEFAULT ''::text,
+    "body" jsonb NOT NULL DEFAULT '[{"type": "paragraph", "children": [{"text": ""}]}]'::jsonb,
+    "status" "public"."ArticleStatusType" NOT NULL DEFAULT 'Draft'::"ArticleStatusType",
+    "keywords" text NOT NULL DEFAULT ''::text,
+    "updatedBy" text,
+    "createdBy" text,
+    "updatedAt" timestamp(3),
+    "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP,
+    "archivedDate" timestamp(3),
+    "publishedDate" timestamp(3),
+    CONSTRAINT "Article_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT "Article_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE,
+    PRIMARY KEY ("id")
+);
+`)
 }
 
 // DB exports
@@ -103,6 +132,28 @@ module.exports.seedGrantUsers = async () => {
 ('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 'f', 'f', 'User', 'FLOYD.KING.376144527@testusers.cce.af.mil');`)
 
     console.log(`E2E database seeded!`)
+
+    await client.end()
+  } catch (err) {
+    console.log(err.stack)
+    return err
+  }
+}
+
+module.exports.seedCMSUsers = async () => {
+  const client = new Client({ connectionString: E2E_TEST_CONNECTION })
+
+  try {
+    await client.connect()
+    await dropAndCreateSchema(client)
+
+    // Seed CMS test users for each role
+    await client.query(`INSERT INTO "public"."User" ("id", "name", "isAdmin", "isEnabled", "role", "userId") VALUES
+('cl0jylky79105fs97hvb6sc7x', 'FLOYD KING', 't', 't', 'User', 'FLOYD.KING.376144527@testusers.cce.af.mil'),
+('cl31ovlaw0013mpa8sc8t88pp', 'ETHEL NEAL', 'f', 't', 'Author', 'ETHEL.NEAL.643097412@testusers.cce.af.mil'),
+('cl396pfxe0013moyty5r5r3z9', 'CHRISTINA HAVEN', 'f', 't', 'Manager', 'CHRISTINA.HAVEN.561698119@testusers.cce.af.mil');`)
+
+    console.log(`CMS users seeded!`)
 
     await client.end()
   } catch (err) {
