@@ -30,18 +30,18 @@ RUN yarn install --frozen-lockfile && yarn build && yarn install --production --
 
 # ##--------- Stage: e2e ---------##
 # # E2E image for running tests (same as prod but without certs)
-# FROM builder AS e2e
+FROM builder AS e2e
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY . .
+COPY . .
 
-# ENV NODE_ENV production
+ENV NODE_ENV production
 
-# EXPOSE 3001
-# ENV NEXT_TELEMETRY_DISABLED 1
+EXPOSE 3001
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# CMD node_modules/.bin/keystone prisma migrate deploy ; dumb-init node -r ./startup/index.js node_modules/.bin/keystone start
+CMD node_modules/.bin/keystone prisma migrate deploy ; dumb-init node -r ./startup/index.js node_modules/.bin/keystone start
 
 ##--------- Stage: runner ---------##
 # Runtime container
