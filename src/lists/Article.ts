@@ -3,6 +3,7 @@ import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
+
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
 import {
@@ -79,11 +80,6 @@ const Article: Lists.Article = list(
           length: {
             max: SLUG_MAX,
           },
-          match: {
-            regex: SLUG_REGEX,
-            explanation:
-              'Slug must be a valid slug (only alphanumeric characters and dashes allowed)',
-          },
         },
         hooks: {
           resolveInput: async ({ fieldKey, resolvedData, operation }) => {
@@ -104,10 +100,18 @@ const Article: Lists.Article = list(
           }) => {
             // eslint-disable-next-line no-prototype-builtins
             if (operation === 'create' || inputData.hasOwnProperty(fieldKey)) {
-              // Validate slug
+              // Validate slug - this has to be done in a hook to allow creating an article with no slug
               const slug = resolvedData[fieldKey]
               if (!slug) {
                 addValidationError('Slug is a required value')
+              } else if (!SLUG_REGEX.test(slug)) {
+                addValidationError(
+                  'Slug must be a valid slug (only alphanumeric characters and dashes allowed)'
+                )
+              } else if (slug.length > SLUG_MAX) {
+                addValidationError(
+                  `Slug is too long (maximum of ${SLUG_MAX} characters)`
+                )
               }
             }
           },
@@ -162,10 +166,12 @@ const Article: Lists.Article = list(
           },
         },
       }),
+
       byline: relationship({ ref: 'Byline' }),
       label: relationship({ ref: 'Label', many: true }),
       location: relationship({ ref: 'Location' }),
       tag: relationship({ ref: 'Tag', many: true }),
+
     },
 
     hooks: {
