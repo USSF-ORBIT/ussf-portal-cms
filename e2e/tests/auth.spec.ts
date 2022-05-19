@@ -75,7 +75,7 @@ describe('Authentication', () => {
     ).toBeVisible()
 
     await expect(page.locator('main div:has(h3:has-text("Users"))')).toHaveText(
-      'Users 2 items'
+      'Users 4 items'
     )
 
     await loginPage.logout()
