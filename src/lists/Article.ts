@@ -171,7 +171,6 @@ const Article: Lists.Article = list(
       label: relationship({ ref: 'Label', many: true }),
       location: relationship({ ref: 'Location' }),
       tag: relationship({ ref: 'Tag', many: true }),
-
     },
 
     hooks: {
