@@ -6,6 +6,7 @@ import Bookmark from './lists/Bookmark'
 import Collection from './lists/Collection'
 import Event from './lists/Event'
 import Article from './lists/Article'
+import Announcement from './lists/Announcement'
 
 export const lists: Lists = {
   Event,
@@ -13,4 +14,5 @@ export const lists: Lists = {
   Bookmark,
   Collection,
   Article,
+  Announcement,
 }

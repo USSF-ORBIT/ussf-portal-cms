@@ -30,28 +30,30 @@ model Event {
 }
 
 model User {
-  id                        String       @id @default(cuid())
-  userId                    String       @unique @default("")
-  name                      String       @default("")
-  isAdmin                   Boolean      @default(false)
-  isEnabled                 Boolean      @default(false)
-  role                      UserRoleType @default(User)
-  syncedAt                  DateTime     @default(now())
-  updatedBy                 User?        @relation("User_updatedBy", fields: [updatedById], references: [id])
-  updatedById               String?      @map("updatedBy")
-  createdBy                 User?        @relation("User_createdBy", fields: [createdById], references: [id])
-  createdById               String?      @map("createdBy")
-  updatedAt                 DateTime?    @updatedAt
-  createdAt                 DateTime?    @default(now())
-  from_Event_actor          Event[]      @relation("Event_actor")
-  from_User_updatedBy       User[]       @relation("User_updatedBy")
-  from_User_createdBy       User[]       @relation("User_createdBy")
-  from_Bookmark_updatedBy   Bookmark[]   @relation("Bookmark_updatedBy")
-  from_Bookmark_createdBy   Bookmark[]   @relation("Bookmark_createdBy")
-  from_Collection_updatedBy Collection[] @relation("Collection_updatedBy")
-  from_Collection_createdBy Collection[] @relation("Collection_createdBy")
-  from_Article_updatedBy    Article[]    @relation("Article_updatedBy")
-  from_Article_createdBy    Article[]    @relation("Article_createdBy")
+  id                          String         @id @default(cuid())
+  userId                      String         @unique @default("")
+  name                        String         @default("")
+  isAdmin                     Boolean        @default(false)
+  isEnabled                   Boolean        @default(false)
+  role                        UserRoleType   @default(User)
+  syncedAt                    DateTime       @default(now())
+  updatedBy                   User?          @relation("User_updatedBy", fields: [updatedById], references: [id])
+  updatedById                 String?        @map("updatedBy")
+  createdBy                   User?          @relation("User_createdBy", fields: [createdById], references: [id])
+  createdById                 String?        @map("createdBy")
+  updatedAt                   DateTime?      @updatedAt
+  createdAt                   DateTime?      @default(now())
+  from_Event_actor            Event[]        @relation("Event_actor")
+  from_User_updatedBy         User[]         @relation("User_updatedBy")
+  from_User_createdBy         User[]         @relation("User_createdBy")
+  from_Bookmark_updatedBy     Bookmark[]     @relation("Bookmark_updatedBy")
+  from_Bookmark_createdBy     Bookmark[]     @relation("Bookmark_createdBy")
+  from_Collection_updatedBy   Collection[]   @relation("Collection_updatedBy")
+  from_Collection_createdBy   Collection[]   @relation("Collection_createdBy")
+  from_Article_updatedBy      Article[]      @relation("Article_updatedBy")
+  from_Article_createdBy      Article[]      @relation("Article_createdBy")
+  from_Announcement_updatedBy Announcement[] @relation("Announcement_updatedBy")
+  from_Announcement_createdBy Announcement[] @relation("Announcement_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -92,22 +94,42 @@ model Collection {
 }
 
 model Article {
-  id            String            @id @default(cuid())
-  status        ArticleStatusType @default(Draft)
-  slug          String            @unique @default("")
-  title         String            @default("")
-  preview       String            @default("")
-  body          Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  keywords      String            @default("")
-  publishedDate DateTime?
-  archivedDate  DateTime?
-  updatedBy     User?             @relation("Article_updatedBy", fields: [updatedById], references: [id])
-  updatedById   String?           @map("updatedBy")
-  createdBy     User?             @relation("Article_createdBy", fields: [createdById], references: [id])
-  createdById   String?           @map("createdBy")
-  updatedAt     DateTime?         @updatedAt
-  createdAt     DateTime?         @default(now())
+  id                        String            @id @default(cuid())
+  status                    ArticleStatusType @default(Draft)
+  slug                      String            @unique @default("")
+  title                     String            @default("")
+  preview                   String            @default("")
+  body                      Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  keywords                  String            @default("")
+  publishedDate             DateTime?
+  archivedDate              DateTime?
+  updatedBy                 User?             @relation("Article_updatedBy", fields: [updatedById], references: [id])
+  updatedById               String?           @map("updatedBy")
+  createdBy                 User?             @relation("Article_createdBy", fields: [createdById], references: [id])
+  createdById               String?           @map("createdBy")
+  updatedAt                 DateTime?         @updatedAt
+  createdAt                 DateTime?         @default(now())
+  from_Announcement_article Announcement[]    @relation("Announcement_article")
 
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model Announcement {
+  id          String                 @id @default(cuid())
+  title       String                 @unique @default("")
+  description String                 @default("")
+  status      AnnouncementStatusType @default(Draft)
+  article     Article?               @relation("Announcement_article", fields: [articleId], references: [id])
+  articleId   String?                @map("article")
+  updatedBy   User?                  @relation("Announcement_updatedBy", fields: [updatedById], references: [id])
+  updatedById String?                @map("updatedBy")
+  createdBy   User?                  @relation("Announcement_createdBy", fields: [createdById], references: [id])
+  createdById String?                @map("createdBy")
+  updatedAt   DateTime?              @updatedAt
+  createdAt   DateTime?              @default(now())
+
+  @@index([articleId])
   @@index([updatedById])
   @@index([createdById])
 }
@@ -119,6 +141,12 @@ enum UserRoleType {
 }
 
 enum ArticleStatusType {
+  Draft
+  Published
+  Archived
+}
+
+enum AnnouncementStatusType {
   Draft
   Published
   Archived

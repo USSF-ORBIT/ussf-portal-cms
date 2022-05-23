@@ -46,6 +46,14 @@ type Query {
   ): [Article!]
   article(where: ArticleWhereUniqueInput!): Article
   articlesCount(where: ArticleWhereInput! = {}): Int
+  announcements(
+    where: AnnouncementWhereInput! = {}
+    orderBy: [AnnouncementOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Announcement!]
+  announcement(where: AnnouncementWhereUniqueInput!): Announcement
+  announcementsCount(where: AnnouncementWhereInput! = {}): Int
   keystone: KeystoneMeta!
 }
 
@@ -559,6 +567,90 @@ input ArticleCreateInput {
   archivedDate: DateTime
 }
 
+type Announcement {
+  id: ID!
+  title: String
+  description: String
+  status: AnnouncementStatusType
+  article: Article
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+enum AnnouncementStatusType {
+  Draft
+  Published
+  Archived
+}
+
+input AnnouncementWhereUniqueInput {
+  id: ID
+  title: String
+}
+
+input AnnouncementWhereInput {
+  AND: [AnnouncementWhereInput!]
+  OR: [AnnouncementWhereInput!]
+  NOT: [AnnouncementWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  description: StringFilter
+  status: AnnouncementStatusTypeNullableFilter
+  article: ArticleWhereInput
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input AnnouncementStatusTypeNullableFilter {
+  equals: AnnouncementStatusType
+  in: [AnnouncementStatusType!]
+  notIn: [AnnouncementStatusType!]
+  not: AnnouncementStatusTypeNullableFilter
+}
+
+input AnnouncementOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  status: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input AnnouncementUpdateInput {
+  title: String
+  description: String
+  status: AnnouncementStatusType
+  article: ArticleRelateToOneForUpdateInput
+}
+
+input ArticleRelateToOneForUpdateInput {
+  create: ArticleCreateInput
+  connect: ArticleWhereUniqueInput
+  disconnect: Boolean
+}
+
+input AnnouncementUpdateArgs {
+  where: AnnouncementWhereUniqueInput!
+  data: AnnouncementUpdateInput!
+}
+
+input AnnouncementCreateInput {
+  title: String
+  description: String
+  status: AnnouncementStatusType
+  article: ArticleRelateToOneForCreateInput
+}
+
+input ArticleRelateToOneForCreateInput {
+  create: ArticleCreateInput
+  connect: ArticleWhereUniqueInput
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -607,6 +699,15 @@ type Mutation {
   updateArticles(data: [ArticleUpdateArgs!]!): [Article]
   deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteArticles(where: [ArticleWhereUniqueInput!]!): [Article]
+  createAnnouncement(data: AnnouncementCreateInput!): Announcement
+  createAnnouncements(data: [AnnouncementCreateInput!]!): [Announcement]
+  updateAnnouncement(
+    where: AnnouncementWhereUniqueInput!
+    data: AnnouncementUpdateInput!
+  ): Announcement
+  updateAnnouncements(data: [AnnouncementUpdateArgs!]!): [Announcement]
+  deleteAnnouncement(where: AnnouncementWhereUniqueInput!): Announcement
+  deleteAnnouncements(where: [AnnouncementWhereUniqueInput!]!): [Announcement]
   endSession: Boolean!
 }
 
