@@ -49,17 +49,66 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("createdBy") REFERENCES "public"."U
 ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 `)
 
-  await client.query(`ALTER TABLE "User" ADD COLUMN     "role" "UserRoleType" NOT NULL DEFAULT E'User';
-`)
+  await client.query(
+    `ALTER TABLE "User" ADD COLUMN     "role" "UserRoleType" NOT NULL DEFAULT E'User';`
+  )
 
-  await client.query(`DROP TABLE IF EXISTS "public"."Article";
-`)
+  // Byline
+  await client.query(`DROP TABLE IF EXISTS "public"."Byline" CASCADE;`)
 
-  await client.query(`DROP TYPE IF EXISTS "public"."ArticleStatusType";
-`)
+  await client.query(`CREATE TABLE "public"."Byline" (
+    "id" text NOT NULL,
+    "name" text NOT NULL DEFAULT ''::text,
+    "updatedBy" text,
+    "createdBy" text,
+    "updatedAt" timestamp(3),
+    "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Byline_pkey" PRIMARY KEY ("id"));`)
 
-  await client.query(`CREATE TYPE "public"."ArticleStatusType" AS ENUM ('Archived', 'Published', 'Draft');
-`)
+  // Location
+  await client.query(`DROP TABLE IF EXISTS "public"."Location" CASCADE;`)
+
+  await client.query(`CREATE TABLE "public"."Location" (
+    "id" text NOT NULL,
+    "name" text NOT NULL DEFAULT ''::text,
+    "updatedBy" text,
+    "createdBy" text,
+    "updatedAt" timestamp(3),
+    "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Location_pkey" PRIMARY KEY ("id"));`)
+
+  // Label
+  await client.query(`DROP TABLE IF EXISTS "public"."Label" CASCADE;`)
+
+  await client.query(`CREATE TABLE "public"."Label" (
+    "id" text NOT NULL,
+    "name" text NOT NULL DEFAULT ''::text,
+    "updatedBy" text,
+    "createdBy" text,
+    "updatedAt" timestamp(3),
+    "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Label_pkey" PRIMARY KEY ("id"));`)
+
+  // Tag
+  await client.query(`DROP TABLE IF EXISTS "public"."Tag" CASCADE;`)
+
+  await client.query(`CREATE TABLE "public"."Tag" (
+    "id" text NOT NULL,
+    "name" text NOT NULL DEFAULT ''::text,
+    "updatedBy" text,
+    "createdBy" text,
+    "updatedAt" timestamp(3),
+    "createdAt" timestamp(3) DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Tag_pkey" PRIMARY KEY ("id"));`)
+
+  // Article
+  await client.query(`DROP TABLE IF EXISTS "public"."Article" CASCADE;`)
+
+  await client.query(`DROP TYPE IF EXISTS "public"."ArticleStatusType";`)
+
+  await client.query(
+    `CREATE TYPE "public"."ArticleStatusType" AS ENUM ('Archived', 'Published', 'Draft');`
+  )
 
   await client.query(`CREATE TABLE "public"."Article" (
     "id" text NOT NULL,
@@ -69,6 +118,10 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."U
     "body" jsonb NOT NULL DEFAULT '[{"type": "paragraph", "children": [{"text": ""}]}]'::jsonb,
     "status" "public"."ArticleStatusType" NOT NULL DEFAULT 'Draft'::"ArticleStatusType",
     "keywords" text NOT NULL DEFAULT ''::text,
+    "byline" jsonb NOT NULL DEFAULT '[{"name": ""}]'::jsonb,
+    "location" jsonb NOT NULL DEFAULT '[{"name": ""}]'::jsonb,
+    "label" jsonb NOT NULL DEFAULT '[{"name": ""}]'::jsonb,
+    "tag" jsonb NOT NULL DEFAULT '[{"name": ""}]'::jsonb,
     "updatedBy" text,
     "createdBy" text,
     "updatedAt" timestamp(3),
