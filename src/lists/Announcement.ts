@@ -11,7 +11,7 @@ import {
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
-const Announcement = list(
+const Announcement: Lists.Announcement = list(
   withTracking({
     access: {
       operation: {
