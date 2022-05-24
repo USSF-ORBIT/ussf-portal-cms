@@ -8,6 +8,7 @@ import {
   isAdmin,
   editReadAdminUI,
   announcementStatusView,
+  canCreateArticle,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -16,7 +17,7 @@ const Announcement: Lists.Announcement = list(
     access: {
       operation: {
         create: isAdmin,
-        query: () => true,
+        query: canCreateArticle,
         update: isAdmin,
         delete: isAdmin,
       },

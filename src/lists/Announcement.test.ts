@@ -68,15 +68,12 @@ describe('Announcement schema', () => {
       )
     })
 
-    // it('cannot query announcements', async () => {
-    //   expect(
-    //     userContext.query.Announcement.findMany({
-    //       query: announcementQuery,
-    //     })
-    //   ).rejects.toThrow(
-    //     /Access denied: You cannot perform the 'read' operation on the list 'Announcement'./
-    //   )
-    // })
+    it('cannot query announcements', async () => {
+      const data = await userContext.query.Announcement.findMany({
+        query: announcementQuery,
+      })
+      expect(data).toHaveLength(0)
+    })
 
     it('cannot update an announcement', async () => {
       expect(
