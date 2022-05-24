@@ -41,7 +41,7 @@ ENV NODE_ENV production
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD node_modules/.bin/keystone prisma migrate deploy ; dumb-init node -r ./startup/index.js node_modules/.bin/keystone start
+CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: runner ---------##
 # Runtime container
