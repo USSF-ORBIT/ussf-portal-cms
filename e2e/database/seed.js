@@ -52,8 +52,7 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."U
   await client.query(`ALTER TABLE "User" ADD COLUMN     "role" "UserRoleType" NOT NULL DEFAULT E'User';
 `)
 
-  await client.query(`DROP TABLE IF EXISTS "public"."Article";
-`)
+  await client.query(`DROP TABLE IF EXISTS "public"."Article" CASCADE;`)
 
   await client.query(`DROP TYPE IF EXISTS "public"."ArticleStatusType";
 `)
