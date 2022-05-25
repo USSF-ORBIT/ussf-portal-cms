@@ -167,10 +167,29 @@ const Article: Lists.Article = list(
         },
       }),
 
-      byline: relationship({ ref: 'Byline' }),
-      label: relationship({ ref: 'Label', many: true }),
-      location: relationship({ ref: 'Location' }),
-      tag: relationship({ ref: 'Tag', many: true }),
+      byline: relationship({
+        ref: 'Byline',
+        ui: {
+          hideCreate: true,
+        },
+      }),
+      location: relationship({
+        ref: 'Location',
+        ui: {
+          hideCreate: true,
+        },
+      }),
+      labels: relationship({
+        ref: 'Label',
+        many: true,
+        ui: {
+          hideCreate: true,
+        },
+      }),
+      tags: relationship({
+        ref: 'Tag',
+        many: true,
+      }),
     },
 
     hooks: {

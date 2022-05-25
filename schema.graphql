@@ -690,21 +690,21 @@ type Article {
   publishedDate: DateTime
   archivedDate: DateTime
   byline: Byline
-  label(
+  location: Location
+  labels(
     where: LabelWhereInput! = {}
     orderBy: [LabelOrderByInput!]! = []
     take: Int
     skip: Int! = 0
   ): [Label!]
-  labelCount(where: LabelWhereInput! = {}): Int
-  location: Location
-  tag(
+  labelsCount(where: LabelWhereInput! = {}): Int
+  tags(
     where: TagWhereInput! = {}
     orderBy: [TagOrderByInput!]! = []
     take: Int
     skip: Int! = 0
   ): [Tag!]
-  tagCount(where: TagWhereInput! = {}): Int
+  tagsCount(where: TagWhereInput! = {}): Int
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
@@ -739,9 +739,9 @@ input ArticleWhereInput {
   publishedDate: DateTimeNullableFilter
   archivedDate: DateTimeNullableFilter
   byline: BylineWhereInput
-  label: LabelManyRelationFilter
   location: LocationWhereInput
-  tag: TagManyRelationFilter
+  labels: LabelManyRelationFilter
+  tags: TagManyRelationFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
@@ -790,9 +790,9 @@ input ArticleUpdateInput {
   publishedDate: DateTime
   archivedDate: DateTime
   byline: BylineRelateToOneForUpdateInput
-  label: LabelRelateToManyForUpdateInput
   location: LocationRelateToOneForUpdateInput
-  tag: TagRelateToManyForUpdateInput
+  labels: LabelRelateToManyForUpdateInput
+  tags: TagRelateToManyForUpdateInput
 }
 
 input BylineRelateToOneForUpdateInput {
@@ -801,17 +801,17 @@ input BylineRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
+input LocationRelateToOneForUpdateInput {
+  create: LocationCreateInput
+  connect: LocationWhereUniqueInput
+  disconnect: Boolean
+}
+
 input LabelRelateToManyForUpdateInput {
   disconnect: [LabelWhereUniqueInput!]
   set: [LabelWhereUniqueInput!]
   create: [LabelCreateInput!]
   connect: [LabelWhereUniqueInput!]
-}
-
-input LocationRelateToOneForUpdateInput {
-  create: LocationCreateInput
-  connect: LocationWhereUniqueInput
-  disconnect: Boolean
 }
 
 input TagRelateToManyForUpdateInput {
@@ -836,9 +836,9 @@ input ArticleCreateInput {
   publishedDate: DateTime
   archivedDate: DateTime
   byline: BylineRelateToOneForCreateInput
-  label: LabelRelateToManyForCreateInput
   location: LocationRelateToOneForCreateInput
-  tag: TagRelateToManyForCreateInput
+  labels: LabelRelateToManyForCreateInput
+  tags: TagRelateToManyForCreateInput
 }
 
 input BylineRelateToOneForCreateInput {
@@ -846,14 +846,14 @@ input BylineRelateToOneForCreateInput {
   connect: BylineWhereUniqueInput
 }
 
-input LabelRelateToManyForCreateInput {
-  create: [LabelCreateInput!]
-  connect: [LabelWhereUniqueInput!]
-}
-
 input LocationRelateToOneForCreateInput {
   create: LocationCreateInput
   connect: LocationWhereUniqueInput
+}
+
+input LabelRelateToManyForCreateInput {
+  create: [LabelCreateInput!]
+  connect: [LabelWhereUniqueInput!]
 }
 
 input TagRelateToManyForCreateInput {

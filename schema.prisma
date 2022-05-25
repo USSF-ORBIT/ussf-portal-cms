@@ -130,30 +130,30 @@ model Location {
 }
 
 model Label {
-  id                 String    @id @default(cuid())
-  name               String    @unique @default("")
-  updatedBy          User?     @relation("Label_updatedBy", fields: [updatedById], references: [id])
-  updatedById        String?   @map("updatedBy")
-  createdBy          User?     @relation("Label_createdBy", fields: [createdById], references: [id])
-  createdById        String?   @map("createdBy")
-  updatedAt          DateTime? @updatedAt
-  createdAt          DateTime? @default(now())
-  from_Article_label Article[] @relation("Article_label")
+  id                  String    @id @default(cuid())
+  name                String    @unique @default("")
+  updatedBy           User?     @relation("Label_updatedBy", fields: [updatedById], references: [id])
+  updatedById         String?   @map("updatedBy")
+  createdBy           User?     @relation("Label_createdBy", fields: [createdById], references: [id])
+  createdById         String?   @map("createdBy")
+  updatedAt           DateTime? @updatedAt
+  createdAt           DateTime? @default(now())
+  from_Article_labels Article[] @relation("Article_labels")
 
   @@index([updatedById])
   @@index([createdById])
 }
 
 model Tag {
-  id               String    @id @default(cuid())
-  name             String    @unique @default("")
-  updatedBy        User?     @relation("Tag_updatedBy", fields: [updatedById], references: [id])
-  updatedById      String?   @map("updatedBy")
-  createdBy        User?     @relation("Tag_createdBy", fields: [createdById], references: [id])
-  createdById      String?   @map("createdBy")
-  updatedAt        DateTime? @updatedAt
-  createdAt        DateTime? @default(now())
-  from_Article_tag Article[] @relation("Article_tag")
+  id                String    @id @default(cuid())
+  name              String    @unique @default("")
+  updatedBy         User?     @relation("Tag_updatedBy", fields: [updatedById], references: [id])
+  updatedById       String?   @map("updatedBy")
+  createdBy         User?     @relation("Tag_createdBy", fields: [createdById], references: [id])
+  createdById       String?   @map("createdBy")
+  updatedAt         DateTime? @updatedAt
+  createdAt         DateTime? @default(now())
+  from_Article_tags Article[] @relation("Article_tags")
 
   @@index([updatedById])
   @@index([createdById])
@@ -171,10 +171,10 @@ model Article {
   archivedDate  DateTime?
   byline        Byline?           @relation("Article_byline", fields: [bylineId], references: [id])
   bylineId      String?           @map("byline")
-  label         Label[]           @relation("Article_label")
   location      Location?         @relation("Article_location", fields: [locationId], references: [id])
   locationId    String?           @map("location")
-  tag           Tag[]             @relation("Article_tag")
+  labels        Label[]           @relation("Article_labels")
+  tags          Tag[]             @relation("Article_tags")
   updatedBy     User?             @relation("Article_updatedBy", fields: [updatedById], references: [id])
   updatedById   String?           @map("updatedBy")
   createdBy     User?             @relation("Article_createdBy", fields: [createdById], references: [id])
