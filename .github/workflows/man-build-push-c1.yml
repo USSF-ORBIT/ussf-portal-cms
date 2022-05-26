@@ -19,7 +19,7 @@ jobs:
         run: |
           sudo sh scripts/add-dod-cas.sh
           docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
-          docker build -t $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
+          BUILD_KIT=1 docker build -t $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
           docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG"
           docker logout $C1_REGISTRY
