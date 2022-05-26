@@ -46,7 +46,8 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          build-args: BUILD=$IMAGE_TAG
+          build-args: |
+            BUILD=$IMAGE_TAG
 
       - name: Download task definition | Update Task Definition | Update ECS Service | Deploy new image
         env:
