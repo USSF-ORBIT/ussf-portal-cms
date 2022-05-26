@@ -3,7 +3,7 @@ import { text } from '@keystone-6/core/fields'
 
 import type { Lists } from '.keystone/types'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
+import { isAdmin, editReadAdminUI, canCreateArticle } from '../util/access'
 import { withTracking } from '../util/tracking'
 
 const Byline: Lists.Byline = list(
@@ -11,7 +11,7 @@ const Byline: Lists.Byline = list(
     access: {
       operation: {
         create: isAdmin,
-        query: () => true,
+        query: canCreateArticle,
         update: isAdmin,
         delete: isAdmin,
       },

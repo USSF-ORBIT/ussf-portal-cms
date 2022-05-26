@@ -24,7 +24,7 @@ const Article: Lists.Article = list(
     access: {
       operation: {
         create: canCreateArticle,
-        query: () => true,
+        query: canCreateArticle,
       },
       filter: {
         update: canUpdateDeleteArticle,

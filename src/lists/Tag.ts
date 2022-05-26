@@ -15,7 +15,7 @@ const Tag: Lists.Tag = list(
     access: {
       operation: {
         create: canCreateArticle,
-        query: () => true,
+        query: canCreateArticle,
       },
       filter: {
         update: canUpdateDeleteArticle,
