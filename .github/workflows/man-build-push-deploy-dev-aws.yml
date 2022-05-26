@@ -33,13 +33,10 @@ jobs:
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v3
-        env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         with:
           # list of Docker images to use as base name for tags
           images: |
-            $ECR_REGISTRY/$ECR_REPOSITORY
+            ${{ secrets.ECR_REGISTRY }}/${{ ECR_REPOSITORY }}
           tags: |
             type=sha
 
