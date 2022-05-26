@@ -11,6 +11,7 @@ jobs:
 
       - name: Build, tag, and push image to C1 Dev Artifactory
         id: build-c1-image
+        uses: docker/setup-buildx-action@v2
         env:
           IMAGE_TAG: ${{ github.sha }}
           C1_REGISTRY: ${{ secrets.C1_REGISTRY }}
@@ -19,7 +20,7 @@ jobs:
         run: |
           sudo sh scripts/add-dod-cas.sh
           docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
-          BUILD_KIT=1 docker build -t $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
+          docker build -t $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
           docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG"
           docker logout $C1_REGISTRY

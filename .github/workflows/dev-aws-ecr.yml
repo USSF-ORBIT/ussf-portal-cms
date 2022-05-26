@@ -28,13 +28,14 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-aws-image
+        uses: docker/setup-buildx-action@v2
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: keystone
           IMAGE_TAG: ${{ github.sha }}
 
         run: |
-          BUILD_KIT=1 docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           docker logout $ECR_REGISTRY
