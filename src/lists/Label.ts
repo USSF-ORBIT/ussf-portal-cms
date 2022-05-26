@@ -11,7 +11,7 @@ const Label: Lists.Label = list(
     access: {
       operation: {
         create: isAdmin,
-        query: canCreateArticle,
+        query: () => true,
         update: isAdmin,
         delete: isAdmin,
       },

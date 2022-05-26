@@ -11,7 +11,7 @@ const Byline: Lists.Byline = list(
     access: {
       operation: {
         create: isAdmin,
-        query: canCreateArticle,
+        query: () => true,
         update: isAdmin,
         delete: isAdmin,
       },
