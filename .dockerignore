@@ -11,9 +11,3 @@ Dockerfile.dev
 e2e
 docs
 docker-compose*
-README.md
-renovate.json
-CHANGELOG.md
-.eslint*
-.prettier*
-.tool-versions
