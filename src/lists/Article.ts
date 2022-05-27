@@ -19,6 +19,11 @@ import { slugify } from '../util/formatting'
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
 
+const ARTICLE_CATEGORIES = {
+  INTERNAL_NEWS: 'InternalNews',
+  ORBIT_BLOG: 'ORBITBlog',
+} as const
+
 const Article: Lists.Article = list(
   withTracking({
     access: {
@@ -48,6 +53,20 @@ const Article: Lists.Article = list(
     },
 
     fields: {
+      category: select({
+        type: 'enum',
+        options: (
+          Object.keys(ARTICLE_CATEGORIES) as Array<
+            keyof typeof ARTICLE_CATEGORIES
+          >
+        ).map((r) => ({
+          label: ARTICLE_CATEGORIES[r],
+          value: ARTICLE_CATEGORIES[r],
+        })),
+        validation: {
+          isRequired: true,
+        },
+      }),
       status: select({
         type: 'enum',
         options: (
