@@ -16,12 +16,13 @@ describe('Article schema', () => {
   let managerArticle: Record<string, any>
   let adminArticle: Record<string, any>
 
-  const articleQuery = `id slug title preview status`
+  const articleQuery = `id slug title preview status category`
 
   const testArticleData = {
     slug: 'test-article',
     title: 'Test Article',
     preview: 'This article is a test',
+    category: 'InternalNews',
   }
 
   const resetArticles = async () => {
@@ -72,6 +73,7 @@ describe('Article schema', () => {
           userContext.query.Article.createOne({
             data: {
               title: 'User Collection',
+              category: 'InternalNews',
             },
             query: articleQuery,
           })
@@ -119,6 +121,7 @@ describe('Article schema', () => {
           slug: 'author-article',
           title: 'Author Article',
           preview: 'This article is written by an author',
+          category: 'InternalNews',
         }
 
         authorArticle = await authorContext.query.Article.createOne({
@@ -220,6 +223,7 @@ describe('Article schema', () => {
           slug: 'manager-article',
           title: 'Manager Article',
           preview: 'This article is written by a manager',
+          category: 'InternalNews',
         }
 
         managerArticle = await managerContext.query.Article.createOne({
@@ -356,6 +360,7 @@ describe('Article schema', () => {
           slug: 'admin-article',
           title: 'Admin Article',
           preview: 'This article is written by an admin',
+          category: 'InternalNews',
         }
 
         adminArticle = await adminContext.query.Article.createOne({
@@ -488,11 +493,25 @@ describe('Article schema', () => {
       await resetArticles()
     })
 
+    it('category is required', async () => {
+      const testAuthorArticle = {
+        title: 'Author Article',
+      }
+
+      expect(
+        authorContext.query.Article.createOne({
+          data: testAuthorArticle,
+          query: articleQuery,
+        })
+      ).rejects.toThrow(/You provided invalid data for this operation./)
+    })
+
     it('must enter a valid slug', async () => {
       const testAuthorArticle = {
         slug: 'Invalid slug',
         title: 'Author Article',
         preview: 'This article is written by an author',
+        category: 'InternalNews',
       }
 
       expect(
@@ -508,6 +527,7 @@ describe('Article schema', () => {
         data: {
           slug: 'article-1',
           title: 'First article',
+          category: 'InternalNews',
         },
       })
 
@@ -516,6 +536,7 @@ describe('Article schema', () => {
           data: {
             slug: 'article-1',
             title: 'Second article',
+            category: 'InternalNews',
           },
         })
       ).rejects.toThrow(/Unique constraint failed/)
@@ -525,6 +546,7 @@ describe('Article schema', () => {
       const data = await authorContext.query.Article.createOne({
         data: {
           title: 'My Article With No Slug',
+          category: 'InternalNews',
         },
         query: articleQuery,
       })
@@ -536,6 +558,7 @@ describe('Article schema', () => {
       const article = await authorContext.query.Article.createOne({
         data: {
           title: 'An article needs a slug',
+          category: 'InternalNews',
         },
         query: articleQuery,
       })

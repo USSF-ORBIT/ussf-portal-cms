@@ -48,6 +48,11 @@ describe('Articles', () => {
     ])
 
     await page.locator('button:has-text("Create Article")').click()
+
+    await page.locator('label[for="category"]').click()
+    await page.keyboard.type('O')
+    await page.keyboard.press('Enter')
+
     await page.locator('#slug').fill('test-article-for-playwright')
     await page.locator('#title').fill('My Test Article')
     await page.locator('#preview').fill('This is my test article.')
