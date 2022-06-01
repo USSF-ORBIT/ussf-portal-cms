@@ -106,6 +106,8 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."U
 
   await client.query(`DROP TYPE IF EXISTS "public"."ArticleStatusType";`)
 
+  await client.query(`DROP TYPE IF EXISTS "public"."ArticleCategoryType";`)
+
   await client.query(
     `CREATE TYPE "public"."ArticleStatusType" AS ENUM ('Archived', 'Published', 'Draft');`
   )
