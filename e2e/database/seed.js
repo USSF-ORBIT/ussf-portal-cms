@@ -110,6 +110,10 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."U
     `CREATE TYPE "public"."ArticleStatusType" AS ENUM ('Archived', 'Published', 'Draft');`
   )
 
+  await client.query(
+    `CREATE TYPE "public"."ArticleCategoryType" AS ENUM ('InternalNews', 'ORBITBlog')`
+  )
+
   await client.query(`CREATE TABLE "public"."Article" (
     "id" text NOT NULL,
     "slug" text NOT NULL DEFAULT ''::text,
@@ -117,6 +121,7 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."U
     "preview" text NOT NULL DEFAULT ''::text,
     "body" jsonb NOT NULL DEFAULT '[{"type": "paragraph", "children": [{"text": ""}]}]'::jsonb,
     "status" "public"."ArticleStatusType" NOT NULL DEFAULT 'Draft'::"ArticleStatusType",
+    "category" "public"."ArticleCategoryType" NOT NULL,
     "keywords" text NOT NULL DEFAULT ''::text,
     "byline" jsonb NOT NULL DEFAULT '[{"name": ""}]'::jsonb,
     "location" jsonb NOT NULL DEFAULT '[{"name": ""}]'::jsonb,
