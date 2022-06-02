@@ -8,6 +8,7 @@ import {
   isAdmin,
   isAdminOrSelf,
   editReadAdminUI,
+  userQueryFilter,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -22,7 +23,7 @@ const User: Lists.User = list(
         delete: () => false,
       },
       filter: {
-        query: isAdminOrSelf,
+        query: userQueryFilter,
         update: isAdminOrSelf,
       },
     },
