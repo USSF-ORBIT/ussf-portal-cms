@@ -101,6 +101,16 @@ export const userQueryFilter: OperationFilterFn = ({ session }) => {
   return { userId: { equals: session?.userId } }
 }
 
+export const userItemView: ItemViewFn = ({ session, item }) => {
+  // Admin can edit all users
+  if (session?.isAdmin) return 'edit'
+
+  // Everyone else can only edit themselves
+  if (item?.id === session?.itemId) return 'edit'
+
+  return 'read'
+}
+
 /** Article helpers */
 export const canCreateArticle: OperationAccessFn = ({ session }) => {
   return (

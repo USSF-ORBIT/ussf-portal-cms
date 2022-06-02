@@ -9,6 +9,7 @@ import {
   isAdminOrSelf,
   editReadAdminUI,
   userQueryFilter,
+  userItemView,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -35,6 +36,9 @@ const User: Lists.User = list(
       isHidden: false, // TODO - only show complete UI to admin
       hideCreate: true,
       hideDelete: true,
+      itemView: {
+        defaultFieldMode: userItemView,
+      },
       listView: {
         initialColumns: [
           'userId',

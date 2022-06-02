@@ -11,6 +11,7 @@ import {
   showHideAdminUI,
   editReadAdminUI,
   userQueryFilter,
+  userItemView,
   canCreateArticle,
   canUpdateDeleteArticle,
   canPublishArchiveArticle,
@@ -124,6 +125,30 @@ describe('userQueryFilter', () => {
 
   it('returns false if there is no logged in user', () => {
     expect(userQueryFilter({})).toBe(false)
+  })
+})
+
+describe('userItemView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(userItemView({ session: testAdminSession })).toBe('edit')
+  })
+
+  it('returns edit if the logged in user is the user', () => {
+    expect(
+      userItemView({
+        session: testAuthorSession,
+        item: { id: testAuthorSession.id },
+      })
+    ).toBe('edit')
+  })
+
+  it('returns read if the logged in user is NOT the user', () => {
+    expect(
+      userItemView({
+        session: testAuthorSession,
+        item: { id: testAdminSession.id },
+      })
+    ).toBe('read')
   })
 })
 
