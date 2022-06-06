@@ -45,7 +45,6 @@ jobs:
         id: buildx
         with:
           install: true
-          buildkitd-flags: --debug
 
       - name: Build and push
         uses: docker/build-push-action@v3
