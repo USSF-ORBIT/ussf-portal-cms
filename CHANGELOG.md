@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.1.0...1.2.0) (2022-06-02)
+
+
+### Features
+
+* Add category field to article schema ([#55](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/55)) ([41d21f6](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/41d21f6d6865541396e1b01b994dbdc7703316fc))
+* Article schema (initial) ([#44](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/44)) ([ff50532](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/ff50532179dfa41486ebccdb84bfdd9c5989e6f3))
+* Schema for Article relationship fields (Byline, Location, Label, Tag) ([#48](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/48)) ([9524db8](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/9524db88c6b23fe1d097d7747d3e2455c52f1a6e))
+
+
+### Reverted Changes
+
+* Revert "chore: make Docker layers and overall image size smaller (#49)" (#52) ([fe3ec69](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/fe3ec693ca826f18d7e31cf593f82ead6c3bc3dd)), closes [#49](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/49) [#52](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/52)
+
 ## [1.1.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.0.0...1.1.0) (2022-05-09)
 
 

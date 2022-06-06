@@ -10,6 +10,8 @@ import {
   isAdminOrSelf,
   showHideAdminUI,
   editReadAdminUI,
+  userQueryFilter,
+  userItemView,
   canCreateArticle,
   canUpdateDeleteArticle,
   canPublishArchiveArticle,
@@ -90,6 +92,63 @@ describe('editReadAdminUI', () => {
 
   it('returns read if there is no logged in user', () => {
     expect(editReadAdminUI({})).toBe('read')
+  })
+})
+
+describe('userQueryFilter', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(
+      userQueryFilter({
+        session: testAdminSession,
+      })
+    ).toBe(true)
+  })
+
+  it('returns true if the logged in user is an author', () => {
+    expect(userQueryFilter({ session: testAuthorSession })).toBe(true)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(userQueryFilter({ session: testManagerSession })).toBe(true)
+  })
+
+  it('returns a filter on the logged in userId if not an admin, author, or manager', () => {
+    expect(
+      userQueryFilter({
+        session: testUserSession,
+      })
+    ).toEqual({
+      userId: {
+        equals: testUserSession.userId,
+      },
+    })
+  })
+
+  it('returns false if there is no logged in user', () => {
+    expect(userQueryFilter({})).toBe(false)
+  })
+})
+
+describe('userItemView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(userItemView({ session: testAdminSession })).toBe('edit')
+  })
+
+  it('returns edit if the logged in user is the user', () => {
+    expect(
+      userItemView({
+        session: testAuthorSession,
+        item: { id: testAuthorSession.id },
+      })
+    ).toBe('edit')
+  })
+
+  it('returns read if the logged in user is NOT the user', () => {
+    expect(
+      userItemView({
+        session: testAuthorSession,
+        item: { id: testAdminSession.id },
+      })
+    ).toBe('read')
   })
 })
 

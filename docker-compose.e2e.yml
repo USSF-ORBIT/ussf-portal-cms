@@ -3,7 +3,7 @@ version: '3.8'
 services:
   cms:
     container_name: cms
-    image: "${IMAGE_TAG}"
+    image: '${IMAGE_TAG}'
     build:
       context: .
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
       - keystone-db
       - redis
 
-# Portal client
+  # Portal client
   app:
     build:
       context: ../ussf-portal-client/
@@ -52,14 +52,14 @@ services:
       - idp
       - cms
 
-# Shared between CMS and Portal
+  # Shared between CMS and Portal
   redis:
     container_name: portal_redis
     image: redis:6.2
     ports:
       - '6379:6379'
 
-# Portal-specific services
+  # Portal-specific services
   mongo:
     container_name: mongo
     image: mongo:4.0.0
@@ -83,7 +83,7 @@ services:
     volumes:
       - ./users.php:/var/www/simplesamlphp/config/authsources.php
 
-# CMS-specific services
+  # CMS-specific services
   keystone-db:
     container_name: keystone-db
     image: postgres:14
