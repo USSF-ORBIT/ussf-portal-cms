@@ -3,9 +3,14 @@
 
 type Query {
   """
-   Search
+  Search
   """
   search(query: String!): [SearchResultItem]
+
+  """
+  Authenticated Item
+  """
+  authenticatedItem: AuthenticatedItem
   events(
     where: EventWhereInput! = {}
     orderBy: [EventOrderByInput!]! = []
@@ -92,6 +97,8 @@ type SearchResultItem {
   url: String!
   description: String!
 }
+
+union AuthenticatedItem = User
 
 type Event {
   id: ID!

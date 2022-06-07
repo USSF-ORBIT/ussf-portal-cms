@@ -4,11 +4,11 @@ import { config } from '@keystone-6/core'
 import { lists } from './src/schema'
 import { withSharedAuth } from './src/lib/auth'
 import { getAbsoluteUrl } from './src/util/getAbsoluteUrl'
-import { SearchSchema } from './src/lib/search'
+import { extendGraphqlSchema } from './src/lib/schema'
 
 export default withSharedAuth(
   config({
-    extendGraphqlSchema: SearchSchema,
+    extendGraphqlSchema,
     lists,
     db: {
       provider: 'postgresql',

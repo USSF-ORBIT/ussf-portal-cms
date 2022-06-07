@@ -1,29 +1,60 @@
-import { graphQLSchemaExtension } from '@keystone-6/core'
+import { gql, graphQLSchemaExtension } from '@keystone-6/core'
 import type { Context } from '.keystone/types'
 
-export const SearchSchema = graphQLSchemaExtension<Context>({
-  typeDefs: `
-        type Query {
-            """ Search """
-            search(query: String!): [SearchResultItem]
-        }
+// typeDefs for custom functionality
+// Any GraphQL extensions can be added here
+const typeDefs = gql`
+  extend type Query {
+    """
+    Search
+    """
+    search(query: String!): [SearchResultItem]
+    """
+    Authenticated Item
+    """
+    authenticatedItem: AuthenticatedItem
+  }
 
-        enum SearchResultItemType {
-            Article
-            Bookmark
-        }
+  enum SearchResultItemType {
+    Article
+    Bookmark
+  }
 
-        type SearchResultItem {
-            type: SearchResultItemType
-            title: String!
-            url: String!
-            description: String!
-        }
-    `,
+  type SearchResultItem {
+    type: SearchResultItemType
+    title: String!
+    url: String!
+    description: String!
+  }
+
+  union AuthenticatedItem = User
+`
+
+// Any custom GraphQL resolvers can be added here
+export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
+  typeDefs,
   resolvers: {
     Query: {
-      search: async (root, { query }, { session, db, prisma }) => {
-        // Split our terms and search for each one using OR
+      authenticatedItem: async (root, args, { session, db }) => {
+        if (typeof session?.userId === 'string') {
+          const user = await db.User.findOne({
+            where: { userId: session.userId },
+          })
+
+          return {
+            __typename: 'User',
+            listKey: 'User',
+            label: user.userId,
+            itemId: user.id,
+            ...user,
+          }
+        }
+
+        return null
+      },
+
+      search: async (_, { query }, { prisma }) => {
+        // Split our terms and search for each one using OR to maximize results
         const terms = query.split(' ').join('|')
 
         // Search Bookmark table
