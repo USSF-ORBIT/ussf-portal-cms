@@ -83,6 +83,34 @@ export const showHideAdminUI: CreateViewFn = ({ session }) =>
 export const editReadAdminUI: ItemViewFn = ({ session }) =>
   session?.isAdmin ? 'edit' : 'read'
 
+/** User helpers */
+export const userQueryFilter: OperationFilterFn = ({ session }) => {
+  // if the user is an Admin, they can access all the users
+  if (session?.isAdmin) return true
+
+  if (!session) return false
+
+  // CMS roles can view other users
+  if (
+    session?.role === USER_ROLES.AUTHOR ||
+    session?.role === USER_ROLES.MANAGER
+  )
+    return true
+
+  // otherwise, only allow access to themself
+  return { userId: { equals: session?.userId } }
+}
+
+export const userItemView: ItemViewFn = ({ session, item }) => {
+  // Admin can edit all users
+  if (session?.isAdmin) return 'edit'
+
+  // Everyone else can only edit themselves
+  if (item?.id === session?.itemId) return 'edit'
+
+  return 'read'
+}
+
 /** Article helpers */
 export const canCreateArticle: OperationAccessFn = ({ session }) => {
   return (
