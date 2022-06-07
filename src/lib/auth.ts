@@ -120,12 +120,14 @@ const withAuthData = (
 
 const extendGraphqlSchema = graphQLSchemaExtension<Context>({
   typeDefs: `
-    type Query {
+     type Query {
       """ Authenticated Item """
       authenticatedItem: AuthenticatedItem
+      
     }
 
     union AuthenticatedItem = User
+
   `,
   resolvers: {
     Query: {
@@ -158,6 +160,6 @@ export const withSharedAuth = (
   return {
     ...keystoneConfig,
     session: sessionWithUser,
-    extendGraphqlSchema,
+    ...extendGraphqlSchema,
   }
 }

@@ -4,15 +4,18 @@ import { config } from '@keystone-6/core'
 import { lists } from './src/schema'
 import { withSharedAuth } from './src/lib/auth'
 import { getAbsoluteUrl } from './src/util/getAbsoluteUrl'
+import { SearchSchema } from './src/lib/search'
 
 export default withSharedAuth(
   config({
+    extendGraphqlSchema: SearchSchema,
     lists,
     db: {
       provider: 'postgresql',
       url: `${process.env.DATABASE_URL}` || '',
       enableLogging: true,
       useMigrations: true,
+      prismaPreviewFeatures: ['fullTextSearch'],
     },
     ui: {
       publicPages: ['/api/sysinfo', '/no-access'],

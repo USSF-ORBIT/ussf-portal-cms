@@ -3,9 +3,9 @@
 
 type Query {
   """
-   Authenticated Item
+   Search
   """
-  authenticatedItem: AuthenticatedItem
+  search(query: String!): [SearchResultItem]
   events(
     where: EventWhereInput! = {}
     orderBy: [EventOrderByInput!]! = []
@@ -81,7 +81,17 @@ type Query {
   keystone: KeystoneMeta!
 }
 
-union AuthenticatedItem = User
+enum SearchResultItemType {
+  Article
+  Bookmark
+}
+
+type SearchResultItem {
+  type: SearchResultItemType
+  title: String!
+  url: String!
+  description: String!
+}
 
 type Event {
   id: ID!
