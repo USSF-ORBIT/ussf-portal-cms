@@ -123,11 +123,9 @@ const extendGraphqlSchema = graphQLSchemaExtension<Context>({
      type Query {
       """ Authenticated Item """
       authenticatedItem: AuthenticatedItem
-      
     }
 
     union AuthenticatedItem = User
-
   `,
   resolvers: {
     Query: {
