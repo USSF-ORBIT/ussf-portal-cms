@@ -1,5 +1,6 @@
 import { list } from '@keystone-6/core'
-import { relationship, select, text } from '@keystone-6/core/fields'
+import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
+import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
 
@@ -38,10 +39,16 @@ const Announcement: Lists.Announcement = list(
         },
         isIndexed: 'unique',
       }),
-      description: text({
-        validation: {
-          isRequired: true,
+      body: document({
+        formatting: {
+          inlineMarks: {
+            bold: true,
+            italic: true,
+            underline: true,
+            strikethrough: true,
+          },
         },
+        links: true,
       }),
       status: select({
         type: 'enum',
@@ -71,9 +78,55 @@ const Announcement: Lists.Announcement = list(
           },
         },
       }),
-      article: relationship({
-        ref: 'Article',
+      publishedDate: timestamp({
+        access: {
+          create: () => false,
+          update: () => false,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+        },
       }),
+      archivedDate: timestamp({
+        access: {
+          create: () => false,
+          update: () => false,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+        },
+      }),
+    },
+
+    hooks: {
+      resolveInput: async ({ inputData, item, resolvedData }) => {
+        // Workflow side effects
+        if (
+          inputData.status === ANNOUNCEMENT_STATUSES.ARCHIVED &&
+          item?.status !== ANNOUNCEMENT_STATUSES.ARCHIVED
+        ) {
+          // Set archivedDate if status is being changed to "Archived"
+          resolvedData.archivedDate = new Date()
+        } else if (
+          inputData.status === ANNOUNCEMENT_STATUSES.PUBLISHED &&
+          item?.status !== ANNOUNCEMENT_STATUSES.PUBLISHED
+        ) {
+          // Set publishedDate if status is being changed to "Published"
+          resolvedData.publishedDate = new Date()
+        }
+
+        return resolvedData
+      },
     },
   })
 )

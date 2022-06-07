@@ -889,13 +889,18 @@ input TagRelateToManyForCreateInput {
 type Announcement {
   id: ID!
   title: String
-  description: String
+  body: Announcement_body_Document
   status: AnnouncementStatusType
-  article: Article
+  publishedDate: DateTime
+  archivedDate: DateTime
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
+}
+
+type Announcement_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 enum AnnouncementStatusType {
@@ -915,9 +920,9 @@ input AnnouncementWhereInput {
   NOT: [AnnouncementWhereInput!]
   id: IDFilter
   title: StringFilter
-  description: StringFilter
   status: AnnouncementStatusTypeNullableFilter
-  article: ArticleWhereInput
+  publishedDate: DateTimeNullableFilter
+  archivedDate: DateTimeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
@@ -934,23 +939,19 @@ input AnnouncementStatusTypeNullableFilter {
 input AnnouncementOrderByInput {
   id: OrderDirection
   title: OrderDirection
-  description: OrderDirection
   status: OrderDirection
+  publishedDate: OrderDirection
+  archivedDate: OrderDirection
   updatedAt: OrderDirection
   createdAt: OrderDirection
 }
 
 input AnnouncementUpdateInput {
   title: String
-  description: String
+  body: JSON
   status: AnnouncementStatusType
-  article: ArticleRelateToOneForUpdateInput
-}
-
-input ArticleRelateToOneForUpdateInput {
-  create: ArticleCreateInput
-  connect: ArticleWhereUniqueInput
-  disconnect: Boolean
+  publishedDate: DateTime
+  archivedDate: DateTime
 }
 
 input AnnouncementUpdateArgs {
@@ -960,14 +961,10 @@ input AnnouncementUpdateArgs {
 
 input AnnouncementCreateInput {
   title: String
-  description: String
+  body: JSON
   status: AnnouncementStatusType
-  article: ArticleRelateToOneForCreateInput
-}
-
-input ArticleRelateToOneForCreateInput {
-  create: ArticleCreateInput
-  connect: ArticleWhereUniqueInput
+  publishedDate: DateTime
+  archivedDate: DateTime
 }
 
 """
