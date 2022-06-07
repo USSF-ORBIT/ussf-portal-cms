@@ -5,9 +5,10 @@ CREATE TYPE "AnnouncementStatusType" AS ENUM ('Draft', 'Published', 'Archived');
 CREATE TABLE "Announcement" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL DEFAULT E'',
-    "description" TEXT NOT NULL DEFAULT E'',
+    "body" JSONB NOT NULL DEFAULT '[{"type":"paragraph","children":[{"text":""}]}]',
     "status" "AnnouncementStatusType" NOT NULL DEFAULT E'Draft',
-    "article" TEXT,
+    "publishedDate" TIMESTAMP(3),
+    "archivedDate" TIMESTAMP(3),
     "updatedBy" TEXT,
     "createdBy" TEXT,
     "updatedAt" TIMESTAMP(3),
@@ -20,9 +21,6 @@ CREATE TABLE "Announcement" (
 CREATE UNIQUE INDEX "Announcement_title_key" ON "Announcement"("title");
 
 -- CreateIndex
-CREATE INDEX "Announcement_article_idx" ON "Announcement"("article");
-
--- CreateIndex
 CREATE INDEX "Announcement_updatedBy_idx" ON "Announcement"("updatedBy");
 
 -- CreateIndex
@@ -33,6 +31,3 @@ ALTER TABLE "Announcement" ADD CONSTRAINT "Announcement_updatedBy_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "Announcement" ADD CONSTRAINT "Announcement_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Announcement" ADD CONSTRAINT "Announcement_article_fkey" FOREIGN KEY ("article") REFERENCES "Article"("id") ON DELETE SET NULL ON UPDATE CASCADE;
