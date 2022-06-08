@@ -190,18 +190,6 @@ describe('Announcement schema', () => {
         ...authorAnnouncement,
         title: 'Update Author Announcement',
       })
-
-      // expect(
-      //   authorContext.query.Announcement.updateOne({
-      //     where: { id: testAnnouncement.id },
-      //     data: {
-      //       title: 'Author Updated Title',
-      //     },
-      //     query: announcementQuery,
-      //   })
-      // ).rejects.toThrow(
-      //   /Access denied: You cannot perform the 'update' operation on the list 'Announcement'./
-      // )
     })
 
     it('cannot delete an announcement', async () => {
