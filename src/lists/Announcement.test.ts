@@ -13,12 +13,12 @@ describe('Announcement schema', () => {
 
   let testAnnouncement: Record<string, any>
   let adminAnnouncement: Record<string, any>
+  let authorAnnouncement: Record<string, any>
 
-  const announcementQuery = `id title description status`
+  const announcementQuery = `id title status`
 
   const testAnnouncementData = {
     title: 'Test Announcement',
-    description: 'This is a test announcement',
   }
 
   const resetAnnouncements = async () => {
@@ -59,7 +59,6 @@ describe('Announcement schema', () => {
         userContext.query.Announcement.createOne({
           data: {
             title: 'User Announcement',
-            description: 'Attempt to create an announcement',
           },
           query: announcementQuery,
         })
@@ -104,7 +103,6 @@ describe('Announcement schema', () => {
     it('can create an announcement', async () => {
       const testAdminAnnouncement = {
         title: 'Admin Announcement',
-        description: 'This is an admin announcement',
       }
 
       adminAnnouncement = await adminContext.query.Announcement.createOne({
@@ -143,17 +141,14 @@ describe('Announcement schema', () => {
       })
     })
 
-    it('can delete an announcement', async () => {
-      await adminContext.query.Announcement.deleteOne({
-        where: { id: adminAnnouncement.id },
-      })
-
-      const data = await adminContext.query.Announcement.findOne({
-        where: { id: adminAnnouncement.id },
-        query: announcementQuery,
-      })
-
-      expect(data).toEqual(null)
+    it('cannot delete an announcement', async () => {
+      expect(
+        adminContext.query.Announcement.deleteOne({
+          where: { id: adminAnnouncement.id },
+        })
+      ).rejects.toThrow(
+        /Access denied: You cannot perform the 'delete' operation on the list 'Announcement'./
+      )
     })
   })
 
@@ -162,18 +157,16 @@ describe('Announcement schema', () => {
       await resetAnnouncements()
     })
 
-    it('cannot create an announcement', async () => {
-      expect(
-        authorContext.query.Announcement.createOne({
-          data: {
-            title: 'Author Announcement',
-            description: 'Attempt to create an announcement',
-          },
-          query: announcementQuery,
-        })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Announcement'./
-      )
+    it('can create an announcement', async () => {
+      const testAuthorAnnouncement = {
+        title: 'Author Announcement',
+      }
+      authorAnnouncement = await authorContext.query.Announcement.createOne({
+        data: testAuthorAnnouncement,
+        query: announcementQuery,
+      })
+
+      expect(authorAnnouncement).toMatchObject(testAuthorAnnouncement)
     })
 
     it('can query announcements', async () => {
@@ -181,21 +174,34 @@ describe('Announcement schema', () => {
         query: announcementQuery,
       })
 
-      expect(data).toHaveLength(1)
+      expect(data).toHaveLength(2)
     })
 
-    it('cannot update an announcement', async () => {
-      expect(
-        authorContext.query.Announcement.updateOne({
-          where: { id: testAnnouncement.id },
-          data: {
-            title: 'Author Updated Title',
-          },
-          query: announcementQuery,
-        })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Announcement'./
-      )
+    it('can update an announcement', async () => {
+      const data = await authorContext.query.Announcement.updateOne({
+        where: { id: authorAnnouncement.id },
+        data: {
+          title: 'Update Author Announcement',
+        },
+        query: announcementQuery,
+      })
+
+      expect(data).toMatchObject({
+        ...authorAnnouncement,
+        title: 'Update Author Announcement',
+      })
+
+      // expect(
+      //   authorContext.query.Announcement.updateOne({
+      //     where: { id: testAnnouncement.id },
+      //     data: {
+      //       title: 'Author Updated Title',
+      //     },
+      //     query: announcementQuery,
+      //   })
+      // ).rejects.toThrow(
+      //   /Access denied: You cannot perform the 'update' operation on the list 'Announcement'./
+      // )
     })
 
     it('cannot delete an announcement', async () => {
@@ -219,7 +225,6 @@ describe('Announcement schema', () => {
         managerContext.query.Announcement.createOne({
           data: {
             title: 'Manager Announcement',
-            description: 'Attempt to create an announcement',
           },
           query: announcementQuery,
         })

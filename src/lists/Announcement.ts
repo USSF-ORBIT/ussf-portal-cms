@@ -1,15 +1,14 @@
 import { list } from '@keystone-6/core'
-import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
+import { select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
 
 import { ANNOUNCEMENT_STATUSES } from '../util/workflows'
 import {
-  isAdmin,
-  editReadAdminUI,
   announcementStatusView,
   canCreateArticle,
+  canPublishArchiveArticle,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -17,18 +16,23 @@ const Announcement: Lists.Announcement = list(
   withTracking({
     access: {
       operation: {
-        create: isAdmin,
+        create: canCreateArticle,
         query: canCreateArticle,
-        update: isAdmin,
-        delete: isAdmin,
+        update: canCreateArticle,
+        delete: () => false,
       },
     },
 
     ui: {
-      hideCreate: ({ session }) => !isAdmin({ session }),
-      hideDelete: ({ session }) => !isAdmin({ session }),
+      hideCreate: ({ session }) => !canCreateArticle({ session }),
+      hideDelete: () => true,
       itemView: {
-        defaultFieldMode: editReadAdminUI,
+        defaultFieldMode: ({ session }) => {
+          if (canCreateArticle({ session })) {
+            return 'edit'
+          }
+          return 'hidden'
+        },
       },
     },
 
@@ -66,7 +70,7 @@ const Announcement: Lists.Announcement = list(
         },
         access: {
           create: () => false,
-          update: isAdmin,
+          update: canPublishArchiveArticle,
         },
         ui: {
           displayMode: 'segmented-control',
