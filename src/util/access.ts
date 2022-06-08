@@ -158,15 +158,3 @@ export const articleStatusView: ItemViewFn = ({ session }) => {
 
   return 'read'
 }
-
-export const announcementStatusView: ItemViewFn = ({ session }) => {
-  if (session?.isAdmin) return 'edit'
-
-  if (
-    session?.role === USER_ROLES.AUTHOR ||
-    session?.role === USER_ROLES.MANAGER
-  )
-    return 'read'
-
-  return 'hidden'
-}

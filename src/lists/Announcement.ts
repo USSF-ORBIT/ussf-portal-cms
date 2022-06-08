@@ -6,9 +6,12 @@ import type { Lists } from '.keystone/types'
 
 import { ANNOUNCEMENT_STATUSES } from '../util/workflows'
 import {
-  announcementStatusView,
   canCreateArticle,
+  canUpdateDeleteArticle,
   canPublishArchiveArticle,
+  articleCreateView,
+  articleItemView,
+  articleStatusView,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -17,22 +20,22 @@ const Announcement: Lists.Announcement = list(
     access: {
       operation: {
         create: canCreateArticle,
-        query: canCreateArticle,
-        update: canCreateArticle,
-        delete: () => false,
+        query: () => true,
+      },
+      filter: {
+        update: canUpdateDeleteArticle,
+        delete: canUpdateDeleteArticle,
       },
     },
 
     ui: {
       hideCreate: ({ session }) => !canCreateArticle({ session }),
-      hideDelete: () => true,
+      hideDelete: ({ session }) => !canCreateArticle({ session }),
+      createView: {
+        defaultFieldMode: articleCreateView,
+      },
       itemView: {
-        defaultFieldMode: ({ session }) => {
-          if (canCreateArticle({ session })) {
-            return 'edit'
-          }
-          return 'hidden'
-        },
+        defaultFieldMode: articleItemView,
       },
     },
 
@@ -78,7 +81,7 @@ const Announcement: Lists.Announcement = list(
             fieldMode: 'hidden',
           },
           itemView: {
-            fieldMode: announcementStatusView,
+            fieldMode: articleStatusView,
           },
         },
       }),
