@@ -14,6 +14,7 @@ describe('Announcement schema', () => {
   let testAnnouncement: Record<string, any>
   let adminAnnouncement: Record<string, any>
   let authorAnnouncement: Record<string, any>
+  let managerAnnouncement: Record<string, any>
 
   const announcementQuery = `id title status`
 
@@ -208,17 +209,16 @@ describe('Announcement schema', () => {
       await resetAnnouncements()
     })
 
-    it('cannot create an announcement', async () => {
-      expect(
-        managerContext.query.Announcement.createOne({
-          data: {
-            title: 'Manager Announcement',
-          },
-          query: announcementQuery,
-        })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Announcement'./
-      )
+    it('can create an announcement', async () => {
+      const testManagerAnnouncement = {
+        title: 'Manager Announcement',
+      }
+      managerAnnouncement = await managerContext.query.Announcement.createOne({
+        data: testManagerAnnouncement,
+        query: announcementQuery,
+      })
+
+      expect(managerAnnouncement).toMatchObject(testManagerAnnouncement)
     })
 
     it('can query announcements', async () => {
@@ -226,21 +226,22 @@ describe('Announcement schema', () => {
         query: announcementQuery,
       })
 
-      expect(data).toHaveLength(1)
+      expect(data).toHaveLength(2)
     })
 
-    it('cannot update an announcement', async () => {
-      expect(
-        managerContext.query.Announcement.updateOne({
-          where: { id: testAnnouncement.id },
-          data: {
-            title: 'Manager Updated Title',
-          },
-          query: announcementQuery,
-        })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Announcement'./
-      )
+    it('can update an announcement', async () => {
+      const data = await managerContext.query.Announcement.updateOne({
+        where: { id: managerAnnouncement.id },
+        data: {
+          title: 'Update Manager Announcement',
+        },
+        query: announcementQuery,
+      })
+
+      expect(data).toMatchObject({
+        ...managerAnnouncement,
+        title: 'Update Manager Announcement',
+      })
     })
 
     it('cannot delete an announcement', async () => {
