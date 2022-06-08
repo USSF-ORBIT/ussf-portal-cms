@@ -1,5 +1,5 @@
 import { list } from '@keystone-6/core'
-import { select, text, timestamp } from '@keystone-6/core/fields'
+import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
@@ -18,6 +18,11 @@ import { slugify } from '../util/formatting'
 
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
+
+const ARTICLE_CATEGORIES = {
+  INTERNAL_NEWS: 'InternalNews',
+  ORBIT_BLOG: 'ORBITBlog',
+} as const
 
 const Article: Lists.Article = list(
   withTracking({
@@ -48,6 +53,20 @@ const Article: Lists.Article = list(
     },
 
     fields: {
+      category: select({
+        type: 'enum',
+        options: (
+          Object.keys(ARTICLE_CATEGORIES) as Array<
+            keyof typeof ARTICLE_CATEGORIES
+          >
+        ).map((r) => ({
+          label: ARTICLE_CATEGORIES[r],
+          value: ARTICLE_CATEGORIES[r],
+        })),
+        validation: {
+          isRequired: true,
+        },
+      }),
       status: select({
         type: 'enum',
         options: (
@@ -165,6 +184,30 @@ const Article: Lists.Article = list(
             fieldMode: () => 'read',
           },
         },
+      }),
+
+      byline: relationship({
+        ref: 'Byline',
+        ui: {
+          hideCreate: true,
+        },
+      }),
+      location: relationship({
+        ref: 'Location',
+        ui: {
+          hideCreate: true,
+        },
+      }),
+      labels: relationship({
+        ref: 'Label',
+        many: true,
+        ui: {
+          hideCreate: true,
+        },
+      }),
+      tags: relationship({
+        ref: 'Tag',
+        many: true,
       }),
     },
 

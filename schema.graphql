@@ -38,6 +38,38 @@ type Query {
   ): [Collection!]
   collection(where: CollectionWhereUniqueInput!): Collection
   collectionsCount(where: CollectionWhereInput! = {}): Int
+  bylines(
+    where: BylineWhereInput! = {}
+    orderBy: [BylineOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Byline!]
+  byline(where: BylineWhereUniqueInput!): Byline
+  bylinesCount(where: BylineWhereInput! = {}): Int
+  locations(
+    where: LocationWhereInput! = {}
+    orderBy: [LocationOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Location!]
+  location(where: LocationWhereUniqueInput!): Location
+  locationsCount(where: LocationWhereInput! = {}): Int
+  labels(
+    where: LabelWhereInput! = {}
+    orderBy: [LabelOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Label!]
+  label(where: LabelWhereUniqueInput!): Label
+  labelsCount(where: LabelWhereInput! = {}): Int
+  tags(
+    where: TagWhereInput! = {}
+    orderBy: [TagOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Tag!]
+  tag(where: TagWhereUniqueInput!): Tag
+  tagsCount(where: TagWhereInput! = {}): Int
   articles(
     where: ArticleWhereInput! = {}
     orderBy: [ArticleOrderByInput!]! = []
@@ -463,8 +495,193 @@ input BookmarkRelateToManyForCreateInput {
   connect: [BookmarkWhereUniqueInput!]
 }
 
+type Byline {
+  id: ID!
+  name: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input BylineWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input BylineWhereInput {
+  AND: [BylineWhereInput!]
+  OR: [BylineWhereInput!]
+  NOT: [BylineWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input BylineOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input BylineUpdateInput {
+  name: String
+}
+
+input BylineUpdateArgs {
+  where: BylineWhereUniqueInput!
+  data: BylineUpdateInput!
+}
+
+input BylineCreateInput {
+  name: String
+}
+
+type Location {
+  id: ID!
+  name: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input LocationWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input LocationWhereInput {
+  AND: [LocationWhereInput!]
+  OR: [LocationWhereInput!]
+  NOT: [LocationWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input LocationOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input LocationUpdateInput {
+  name: String
+}
+
+input LocationUpdateArgs {
+  where: LocationWhereUniqueInput!
+  data: LocationUpdateInput!
+}
+
+input LocationCreateInput {
+  name: String
+}
+
+type Label {
+  id: ID!
+  name: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input LabelWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input LabelWhereInput {
+  AND: [LabelWhereInput!]
+  OR: [LabelWhereInput!]
+  NOT: [LabelWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input LabelOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input LabelUpdateInput {
+  name: String
+}
+
+input LabelUpdateArgs {
+  where: LabelWhereUniqueInput!
+  data: LabelUpdateInput!
+}
+
+input LabelCreateInput {
+  name: String
+}
+
+type Tag {
+  id: ID!
+  name: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input TagWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input TagWhereInput {
+  AND: [TagWhereInput!]
+  OR: [TagWhereInput!]
+  NOT: [TagWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input TagOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input TagUpdateInput {
+  name: String
+}
+
+input TagUpdateArgs {
+  where: TagWhereUniqueInput!
+  data: TagUpdateInput!
+}
+
+input TagCreateInput {
+  name: String
+}
+
 type Article {
   id: ID!
+  category: ArticleCategoryType
   status: ArticleStatusType
   slug: String
   title: String
@@ -473,10 +690,31 @@ type Article {
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
+  byline: Byline
+  location: Location
+  labels(
+    where: LabelWhereInput! = {}
+    orderBy: [LabelOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Label!]
+  labelsCount(where: LabelWhereInput! = {}): Int
+  tags(
+    where: TagWhereInput! = {}
+    orderBy: [TagOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
+}
+
+enum ArticleCategoryType {
+  InternalNews
+  ORBITBlog
 }
 
 enum ArticleStatusType {
@@ -499,6 +737,7 @@ input ArticleWhereInput {
   OR: [ArticleWhereInput!]
   NOT: [ArticleWhereInput!]
   id: IDFilter
+  category: ArticleCategoryTypeNullableFilter
   status: ArticleStatusTypeNullableFilter
   slug: StringFilter
   title: StringFilter
@@ -506,10 +745,21 @@ input ArticleWhereInput {
   keywords: StringFilter
   publishedDate: DateTimeNullableFilter
   archivedDate: DateTimeNullableFilter
+  byline: BylineWhereInput
+  location: LocationWhereInput
+  labels: LabelManyRelationFilter
+  tags: TagManyRelationFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
   createdAt: DateTimeNullableFilter
+}
+
+input ArticleCategoryTypeNullableFilter {
+  equals: ArticleCategoryType
+  in: [ArticleCategoryType!]
+  notIn: [ArticleCategoryType!]
+  not: ArticleCategoryTypeNullableFilter
 }
 
 input ArticleStatusTypeNullableFilter {
@@ -519,8 +769,21 @@ input ArticleStatusTypeNullableFilter {
   not: ArticleStatusTypeNullableFilter
 }
 
+input LabelManyRelationFilter {
+  every: LabelWhereInput
+  some: LabelWhereInput
+  none: LabelWhereInput
+}
+
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
+}
+
 input ArticleOrderByInput {
   id: OrderDirection
+  category: OrderDirection
   status: OrderDirection
   slug: OrderDirection
   title: OrderDirection
@@ -533,6 +796,7 @@ input ArticleOrderByInput {
 }
 
 input ArticleUpdateInput {
+  category: ArticleCategoryType
   status: ArticleStatusType
   slug: String
   title: String
@@ -541,6 +805,36 @@ input ArticleUpdateInput {
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
+  byline: BylineRelateToOneForUpdateInput
+  location: LocationRelateToOneForUpdateInput
+  labels: LabelRelateToManyForUpdateInput
+  tags: TagRelateToManyForUpdateInput
+}
+
+input BylineRelateToOneForUpdateInput {
+  create: BylineCreateInput
+  connect: BylineWhereUniqueInput
+  disconnect: Boolean
+}
+
+input LocationRelateToOneForUpdateInput {
+  create: LocationCreateInput
+  connect: LocationWhereUniqueInput
+  disconnect: Boolean
+}
+
+input LabelRelateToManyForUpdateInput {
+  disconnect: [LabelWhereUniqueInput!]
+  set: [LabelWhereUniqueInput!]
+  create: [LabelCreateInput!]
+  connect: [LabelWhereUniqueInput!]
+}
+
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 input ArticleUpdateArgs {
@@ -549,6 +843,7 @@ input ArticleUpdateArgs {
 }
 
 input ArticleCreateInput {
+  category: ArticleCategoryType
   status: ArticleStatusType
   slug: String
   title: String
@@ -557,6 +852,30 @@ input ArticleCreateInput {
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
+  byline: BylineRelateToOneForCreateInput
+  location: LocationRelateToOneForCreateInput
+  labels: LabelRelateToManyForCreateInput
+  tags: TagRelateToManyForCreateInput
+}
+
+input BylineRelateToOneForCreateInput {
+  create: BylineCreateInput
+  connect: BylineWhereUniqueInput
+}
+
+input LocationRelateToOneForCreateInput {
+  create: LocationCreateInput
+  connect: LocationWhereUniqueInput
+}
+
+input LabelRelateToManyForCreateInput {
+  create: [LabelCreateInput!]
+  connect: [LabelWhereUniqueInput!]
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
 }
 
 """
@@ -598,6 +917,33 @@ type Mutation {
   updateCollections(data: [CollectionUpdateArgs!]!): [Collection]
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteCollections(where: [CollectionWhereUniqueInput!]!): [Collection]
+  createByline(data: BylineCreateInput!): Byline
+  createBylines(data: [BylineCreateInput!]!): [Byline]
+  updateByline(where: BylineWhereUniqueInput!, data: BylineUpdateInput!): Byline
+  updateBylines(data: [BylineUpdateArgs!]!): [Byline]
+  deleteByline(where: BylineWhereUniqueInput!): Byline
+  deleteBylines(where: [BylineWhereUniqueInput!]!): [Byline]
+  createLocation(data: LocationCreateInput!): Location
+  createLocations(data: [LocationCreateInput!]!): [Location]
+  updateLocation(
+    where: LocationWhereUniqueInput!
+    data: LocationUpdateInput!
+  ): Location
+  updateLocations(data: [LocationUpdateArgs!]!): [Location]
+  deleteLocation(where: LocationWhereUniqueInput!): Location
+  deleteLocations(where: [LocationWhereUniqueInput!]!): [Location]
+  createLabel(data: LabelCreateInput!): Label
+  createLabels(data: [LabelCreateInput!]!): [Label]
+  updateLabel(where: LabelWhereUniqueInput!, data: LabelUpdateInput!): Label
+  updateLabels(data: [LabelUpdateArgs!]!): [Label]
+  deleteLabel(where: LabelWhereUniqueInput!): Label
+  deleteLabels(where: [LabelWhereUniqueInput!]!): [Label]
+  createTag(data: TagCreateInput!): Tag
+  createTags(data: [TagCreateInput!]!): [Tag]
+  updateTag(where: TagWhereUniqueInput!, data: TagUpdateInput!): Tag
+  updateTags(data: [TagUpdateArgs!]!): [Tag]
+  deleteTag(where: TagWhereUniqueInput!): Tag
+  deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
   createArticle(data: ArticleCreateInput!): Article
   createArticles(data: [ArticleCreateInput!]!): [Article]
   updateArticle(
