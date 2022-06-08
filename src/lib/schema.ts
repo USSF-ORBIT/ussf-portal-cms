@@ -5,26 +5,36 @@ import type { Context } from '.keystone/types'
 // Any GraphQL extensions can be added here
 const typeDefs = gql`
   extend type Query {
-    """
-    Search
-    """
     search(query: String!): [SearchResultItem]
-    """
-    Authenticated Item
-    """
     authenticatedItem: AuthenticatedItem
   }
 
-  enum SearchResultItemType {
+  enum SearchResultType {
     Article
     Bookmark
   }
 
-  type SearchResultItem {
-    type: SearchResultItemType
+  interface SearchResultItem {
     title: String!
-    url: String!
-    description: String!
+    preview: String!
+    type: SearchResultType!
+    permalink: String!
+  }
+
+  type BookmarkResult implements SearchResultItem {
+    title: String!
+    preview: String!
+    type: SearchResultType!
+    permalink: String!
+  }
+
+  type ArticleResult implements SearchResultItem {
+    title: String!
+    preview: String!
+    type: SearchResultType!
+    permalink: String!
+    date: String!
+    labels: [Label]
   }
 
   union AuthenticatedItem = User
@@ -34,6 +44,13 @@ const typeDefs = gql`
 export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
   typeDefs,
   resolvers: {
+    SearchResultItem: {
+      __resolveType(obj) {
+        if (obj.type === 'Bookmark') return 'BookmarkResult'
+        if (obj.type === 'Article') return 'ArticleResult'
+        return null
+      },
+    },
     Query: {
       authenticatedItem: async (root, args, { session, db }) => {
         if (typeof session?.userId === 'string') {
@@ -93,8 +110,8 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
         ).map((bookmark) => ({
           type: 'Bookmark',
           title: bookmark.label,
-          url: bookmark.url,
-          description: bookmark.description,
+          permalink: bookmark.url,
+          preview: bookmark.description,
         }))
 
         // Search Article table
@@ -123,13 +140,21 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
                   },
                 },
               ],
+              status: 'Published',
+            },
+
+            include: {
+              labels: true,
+              tags: true,
             },
           })
         ).map((article) => ({
           type: 'Article',
           title: article.title,
-          url: article.slug,
-          description: article.preview,
+          permalink: article.slug,
+          preview: article.preview,
+          labels: article.labels,
+          date: article.publishedDate?.toISOString(),
         }))
 
         return [...bookmarkResults, ...articleResults]

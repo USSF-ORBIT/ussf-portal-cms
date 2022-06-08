@@ -2,14 +2,7 @@
 # Modify your Keystone config when you want to change this.
 
 type Query {
-  """
-  Search
-  """
   search(query: String!): [SearchResultItem]
-
-  """
-  Authenticated Item
-  """
   authenticatedItem: AuthenticatedItem
   events(
     where: EventWhereInput! = {}
@@ -86,16 +79,32 @@ type Query {
   keystone: KeystoneMeta!
 }
 
-enum SearchResultItemType {
+enum SearchResultType {
   Article
   Bookmark
 }
 
-type SearchResultItem {
-  type: SearchResultItemType
+interface SearchResultItem {
   title: String!
-  url: String!
-  description: String!
+  preview: String!
+  type: SearchResultType!
+  permalink: String!
+}
+
+type BookmarkResult implements SearchResultItem {
+  title: String!
+  preview: String!
+  type: SearchResultType!
+  permalink: String!
+}
+
+type ArticleResult implements SearchResultItem {
+  title: String!
+  preview: String!
+  type: SearchResultType!
+  permalink: String!
+  date: String!
+  labels: [Label]
 }
 
 union AuthenticatedItem = User
