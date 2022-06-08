@@ -115,7 +115,7 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
         }))
 
         // Search Article table
-        // Fields: title, preview, keywords
+        // Fields: title, preview, keywords, labels, tags
         // #TODO: Add field searchBody
         const articleResults = (
           await prisma.article.findMany({
