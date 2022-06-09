@@ -76,43 +76,43 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
 
         // Search Bookmark table
         // Fields: label, url, description, keywords
-        // const bookmarkResults = (
-        //   await prisma.bookmark.findMany({
-        //     where: {
-        //       OR: [
-        //         {
-        //           description: {
-        //             search: terms,
-        //             mode: 'insensitive',
-        //           },
-        //         },
-        //         {
-        //           label: {
-        //             search: terms,
-        //             mode: 'insensitive',
-        //           },
-        //         },
-        //         {
-        //           url: {
-        //             contains: terms,
-        //             mode: 'insensitive',
-        //           },
-        //         },
-        //         {
-        //           keywords: {
-        //             search: terms,
-        //             mode: 'insensitive',
-        //           },
-        //         },
-        //       ],
-        //     },
-        //   })
-        // ).map((bookmark) => ({
-        //   type: 'Bookmark',
-        //   title: bookmark.label,
-        //   url: bookmark.url,
-        //   description: bookmark.description,
-        // }))
+        const bookmarkResults = (
+          await prisma.bookmark.findMany({
+            where: {
+              OR: [
+                {
+                  description: {
+                    search: terms,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  label: {
+                    search: terms,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  url: {
+                    contains: terms,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  keywords: {
+                    search: terms,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            },
+          })
+        ).map((bookmark) => ({
+          type: 'Bookmark',
+          title: bookmark.label,
+          permalink: bookmark.url,
+          preview: bookmark.description,
+        }))
 
         // Search Article table
         // Fields: title, preview, keywords, labels, tags
@@ -157,7 +157,7 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
           date: article.publishedDate?.toISOString(),
         }))
 
-        return [articleResults]
+        return [...bookmarkResults, ...articleResults]
       },
     },
   },
