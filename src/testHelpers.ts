@@ -10,8 +10,6 @@ import type { User } from '.prisma/client'
 import { lists } from './schema'
 import { extendGraphqlSchema } from './lib/schema'
 
-import { testArticles, testBookmarks } from './testData'
-
 const TEST_DATABASE = 'unit-test'
 const TEST_DATABASE_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${TEST_DATABASE}`
 
@@ -86,9 +84,6 @@ export const configTestEnv = async (): Promise<TestEnvWithSessions> => {
     data: testUsers,
     query: userQuery,
   })
-
-  await sudoContext.query.Article.createMany({ data: testArticles })
-  await sudoContext.query.Bookmark.createMany({ data: testBookmarks })
 
   const adminUser = users.find((u) => u.userId === adminUserData.userId) as User
   const cmsUser = users.find((u) => u.userId === userUserData.userId) as User

@@ -1,4 +1,5 @@
 import { GraphQLRequest } from '@keystone-6/core/testing'
+import { KeystoneContext } from '@keystone-6/core/types'
 import {
   myVector,
   publishedArticleData,
@@ -8,13 +9,19 @@ import {
 } from '../testData'
 
 import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { testArticles, testBookmarks } from '../testData'
 
 let testEnv: TestEnvWithSessions
 let graphQLRequest: GraphQLRequest
+let sudoContext: KeystoneContext
 
 beforeAll(async () => {
   testEnv = await configTestEnv()
   graphQLRequest = testEnv.testArgs.graphQLRequest
+  sudoContext = testEnv.sudoContext
+
+  await sudoContext.query.Article.createMany({ data: testArticles })
+  await sudoContext.query.Bookmark.createMany({ data: testBookmarks })
 })
 
 afterAll(async () => {
