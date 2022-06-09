@@ -157,7 +157,7 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
           date: article.publishedDate?.toISOString(),
         }))
 
-        return [...bookmarkResults, ...articleResults]
+        return [articleResults]
       },
     },
   },

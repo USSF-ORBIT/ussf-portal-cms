@@ -17,6 +17,7 @@ export const testConfig = config({
     provider: 'postgresql',
     url: TEST_DATABASE_CONNECTION,
     useMigrations: true,
+    prismaPreviewFeatures: ['fullTextSearch'],
   },
   lists,
 })
