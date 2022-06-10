@@ -6,10 +6,11 @@ import {
   searchTermArticleData,
   surf,
   orders,
+  testArticles,
+  testBookmarks,
 } from '../testData'
 
 import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
-import { testArticles, testBookmarks } from '../testData'
 
 let testEnv: TestEnvWithSessions
 let graphQLRequest: GraphQLRequest
