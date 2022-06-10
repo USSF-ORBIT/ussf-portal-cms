@@ -911,7 +911,6 @@ enum AnnouncementStatusType {
 
 input AnnouncementWhereUniqueInput {
   id: ID
-  title: String
 }
 
 input AnnouncementWhereInput {

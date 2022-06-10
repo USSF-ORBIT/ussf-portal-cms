@@ -193,7 +193,7 @@ model Article {
 
 model Announcement {
   id            String                 @id @default(cuid())
-  title         String                 @unique @default("")
+  title         String                 @default("")
   body          Json                   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   status        AnnouncementStatusType @default(Draft)
   publishedDate DateTime?

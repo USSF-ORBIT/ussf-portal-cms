@@ -18,9 +18,6 @@ CREATE TABLE "Announcement" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Announcement_title_key" ON "Announcement"("title");
-
--- CreateIndex
 CREATE INDEX "Announcement_updatedBy_idx" ON "Announcement"("updatedBy");
 
 -- CreateIndex

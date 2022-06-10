@@ -44,7 +44,6 @@ const Announcement: Lists.Announcement = list(
         validation: {
           isRequired: true,
         },
-        isIndexed: 'unique',
       }),
       body: document({
         formatting: {
