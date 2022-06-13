@@ -36,7 +36,7 @@ jobs:
         with:
           install: true
           config-inline: |
-            ca=["/etc/docker/ca-certificates.crt"]
+            ca=["/etc/ssl/certs/ca-certificates.crt"]
 
       - name: Build and push
         uses: docker/build-push-action@v3
