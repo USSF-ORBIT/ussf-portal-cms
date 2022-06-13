@@ -36,7 +36,8 @@ jobs:
         with:
           install: true
           config-inline: |
-            ca=["/etc/ssl/certs/ca-certificates.crt"]
+            [registry."${{ secrets.C1_REGISTRY }}"]
+              ca=["/etc/ssl/certs/ca-certificates.crt"]
 
       - name: Build and push
         uses: docker/build-push-action@v3
@@ -47,3 +48,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD=${{ github.sha }}
+          cache-from: type=registry,ref=registry.${{ secrets.C1_REGISTRY }}/${{ github.sha }}:buildcache
+          cache-to: type=registry,ref=registry.${{ secrets.C1_REGISTRY }}/${{ github.sha }}:buildcache,mode=max
