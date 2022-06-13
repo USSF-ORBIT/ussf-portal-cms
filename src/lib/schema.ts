@@ -145,6 +145,7 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
                 },
               ],
               status: 'Published',
+              category: 'InternalNews',
             },
 
             include: {
