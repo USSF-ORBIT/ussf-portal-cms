@@ -37,7 +37,7 @@ jobs:
           install: true
           config-inline: |
             [registry."registry.actions-runner-system.svc:5000"]
-              ca=["/etc/ssl/certs/registry.actions-runner-system.svc:5000/ca.crt"]
+              ca=["/etc/ssl/certs/registry.actions-runner-system.svc:5000/ca-certificates.crt"]
 
       - name: Build and push
         uses: docker/build-push-action@v3
