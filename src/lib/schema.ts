@@ -15,6 +15,7 @@ const typeDefs = gql`
   }
 
   interface SearchResultItem {
+    id: String!
     title: String!
     preview: String!
     type: SearchResultType!
@@ -22,6 +23,7 @@ const typeDefs = gql`
   }
 
   type BookmarkResult implements SearchResultItem {
+    id: String!
     title: String!
     preview: String!
     type: SearchResultType!
@@ -29,6 +31,7 @@ const typeDefs = gql`
   }
 
   type ArticleResult implements SearchResultItem {
+    id: String!
     title: String!
     preview: String!
     type: SearchResultType!
@@ -108,6 +111,7 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
             },
           })
         ).map((bookmark) => ({
+          id: bookmark.id,
           type: 'Bookmark',
           title: bookmark.label,
           permalink: bookmark.url,
@@ -149,6 +153,7 @@ export const extendGraphqlSchema = graphQLSchemaExtension<Context>({
             },
           })
         ).map((article) => ({
+          id: article.id,
           type: 'Article',
           title: article.title,
           permalink: article.slug,

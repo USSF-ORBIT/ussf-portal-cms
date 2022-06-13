@@ -93,6 +93,7 @@ enum SearchResultType {
 }
 
 interface SearchResultItem {
+  id: String!
   title: String!
   preview: String!
   type: SearchResultType!
@@ -100,6 +101,7 @@ interface SearchResultItem {
 }
 
 type BookmarkResult implements SearchResultItem {
+  id: String!
   title: String!
   preview: String!
   type: SearchResultType!
@@ -107,6 +109,7 @@ type BookmarkResult implements SearchResultItem {
 }
 
 type ArticleResult implements SearchResultItem {
+  id: String!
   title: String!
   preview: String!
   type: SearchResultType!

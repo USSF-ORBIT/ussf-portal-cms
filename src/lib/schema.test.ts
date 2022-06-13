@@ -35,6 +35,7 @@ describe('Search Resolver', () => {
   query Search($query: String!) {
     search(query: $query) {
       __typename
+      id
       title
       preview
       permalink
