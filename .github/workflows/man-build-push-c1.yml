@@ -47,4 +47,6 @@ jobs:
           tags: ${{ secrets.C1_REGISTRY }}/${{ secrets.C1_REPOSITORY }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
+            REGISTRY=${{ secrets.C1_REGISTRY }}
+            REPOSITORY=${{ secrets.C1_REPOSITORY }}
             BUILD=${{ github.sha }}
