@@ -10,6 +10,7 @@ import Location from './lists/Location'
 import Label from './lists/Label'
 import Tag from './lists/Tag'
 import Article from './lists/Article'
+import Announcement from './lists/Announcement'
 
 export const lists: Lists = {
   Event,
@@ -21,4 +22,5 @@ export const lists: Lists = {
   Label,
   Tag,
   Article,
+  Announcement,
 }
