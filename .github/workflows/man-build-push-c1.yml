@@ -19,13 +19,8 @@ jobs:
           config-inline: |
             [registry."${{ secrets.C1_REGISTRY }}"]
               ca=["/etc/ssl/certs/ca-certificates.crt"]
-
-      - name: Login to JFrog 
-        uses: docker/login-action@v2.0.0
-        with:
-          registry: ${{ secrets.C1_REGISTRY }}
-          username: portal
-          password: ${{ secrets.C1_ARTIFACTORY_TOKEN }}
+      - run: |
+          docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} ${{ secrets.C1_REGISTRY }}
 
       - name: Docker meta
         id: meta
@@ -50,3 +45,6 @@ jobs:
             REGISTRY=${{ secrets.C1_REGISTRY }}
             REPOSITORY=${{ secrets.C1_REPOSITORY }}
             BUILD=${{ github.sha }}
+
+      - run: |
+          docker logout ${{ secrets.C1_REGISTRY }}
