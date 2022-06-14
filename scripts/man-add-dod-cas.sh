@@ -1,6 +1,7 @@
 #!/bin/bash
 # Import DoD root certificates into linux CA store
 
+    mkdir -p /etc/docker/certs.d/
 
     # Location of bundle from DISA site
     bundle=https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip
@@ -20,12 +21,10 @@
                awk -F '(=|= )' '{gsub(/ /, "_", $NF); print $NF}'
         )
         mv $i ${name}.crt
+        cp /etc/docker/certs.d/
     done
 
     # update certificate stores
     update-ca-certificates
-
-    mkdir -p /etc/docker/certs.d/
-    cp /usr/local/share/ca-certificates/* /etc/docker/certs.d/
 
     rm certificates_pkcs7_DoD.zip
