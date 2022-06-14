@@ -48,5 +48,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.output.images }}:${{ github.sha }}
+          tags: ${{ secrets.C1_REGISTRY}}/${{ secrets.C1_REPOSITORY }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
