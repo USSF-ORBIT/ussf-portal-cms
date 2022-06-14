@@ -13,14 +13,6 @@ jobs:
       - run: |
           sudo sh scripts/add-dod-cas.sh
 
-      - name: Login to JFrog
-        uses: docker/login-action@v2.0.0
-        with:
-          registry: ${{ secrets.C1_REGISTRY }}
-          username: portal
-          password: ${{ secrets.C1_ARTIFACTORY_TOKEN }}
-          ecr: false
-
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
