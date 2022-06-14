@@ -34,7 +34,7 @@ jobs:
               http = false
               insecure = true
 
-      - name: Build and push
+      - name: Build
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -43,7 +43,7 @@ jobs:
           tags: ${{ secrets.C1_REGISTRY}}/${{ secrets.C1_REPOSITORY }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build, tag, and push image to C1 Dev Artifactory
+      - name: Push image to C1 Dev Artifactory
         id: build-c1-image
         env:
           IMAGE_TAG: ${{ github.sha }}
