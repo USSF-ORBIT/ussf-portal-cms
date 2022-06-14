@@ -21,7 +21,7 @@
                awk -F '(=|= )' '{gsub(/ /, "_", $NF); print $NF}'
         )
         mv $i ${name}.crt
-        cp /etc/docker/certs.d/
+        cp /etc/docker/certs.d/*
     done
 
     # update certificate stores
