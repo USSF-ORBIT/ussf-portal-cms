@@ -47,6 +47,21 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          push: true
+          push: false
+          load: true
           tags: ${{ secrets.C1_REGISTRY}}/${{ secrets.C1_REPOSITORY }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build, tag, and push image to C1 Dev Artifactory
+        id: build-c1-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          C1_REGISTRY: ${{ secrets.C1_REGISTRY }}
+          C1_REPOSITORY: ${{ secrets.C1_REPOSITORY }}
+
+        run: |
+          sudo sh scripts/add-dod-cas.sh
+          docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
+          docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG"
+          docker logout $C1_REGISTRY
