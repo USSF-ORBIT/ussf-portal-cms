@@ -12,18 +12,7 @@ jobs:
       - run: |
           sudo sh scripts/man-add-dod-cas.sh
 
-      - uses: docker/setup-buildx-action@v2
-        id: buildx
-        with:
-          buildkitd-flags: --debug
-          install: true
-          config-inline: |
-            [registry."${{ secrets.C1_REGISTRY }}"]
-              ca=["/etc/ssl/certs/ca-certificates.crt"]
-              http = false
-              insecure = true
-
-      - name: Login to JFrog 
+      - name: Login to JFrog
         uses: docker/login-action@v2.0.0
         with:
           registry: ${{ secrets.C1_REGISTRY }}
@@ -42,6 +31,17 @@ jobs:
           flavor: |
             latest=false
 
+      - uses: docker/setup-buildx-action@v2
+        id: buildx
+        with:
+          buildkitd-flags: --debug
+          install: true
+          # config-inline: |
+          #   [registry."${{ secrets.C1_REGISTRY }}"]
+          #     ca=["/etc/ssl/certs/ca-certificates.crt"]
+          #     http = false
+          #     insecure = true
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -49,7 +49,3 @@ jobs:
           push: true
           tags: ${{ secrets.C1_REGISTRY }}/${{ secrets.C1_REPOSITORY }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            REGISTRY=${{ secrets.C1_REGISTRY }}
-            REPOSITORY=${{ secrets.C1_REPOSITORY }}
-            BUILD=${{ github.sha }}
