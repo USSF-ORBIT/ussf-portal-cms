@@ -27,4 +27,6 @@
     # update certificate stores
     update-ca-certificates
 
+    cp /etc/docker/certs.d/*/* /etc/docker/certs.d/
+
     rm certificates_pkcs7_DoD.zip
