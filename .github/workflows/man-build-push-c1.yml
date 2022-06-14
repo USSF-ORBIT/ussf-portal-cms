@@ -36,11 +36,11 @@ jobs:
         with:
           buildkitd-flags: --debug
           install: true
-          # config-inline: |
-          #   [registry."${{ secrets.C1_REGISTRY }}"]
-          #     ca=["/etc/ssl/certs/ca-certificates.crt"]
-          #     http = false
-          #     insecure = true
+          config-inline: |
+            [registry."${{ secrets.C1_REGISTRY }}"]
+              ca=["/etc/ssl/certs/adoptium/cacerts"]
+              http = false
+              insecure = true
 
       - name: Build and push
         uses: docker/build-push-action@v3
