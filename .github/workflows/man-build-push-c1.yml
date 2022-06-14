@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2
 
       - run: |
-          sudo sh scripts/man-add-dod-cas.sh
+          sudo sh scripts/add-dod-cas.sh
 
       - name: Login to JFrog
         uses: docker/login-action@v2.0.0
@@ -35,8 +35,6 @@ jobs:
       - uses: docker/setup-buildx-action@v2
         id: buildx
         with:
-          buildkitd-flags: --debug
-          driver-opts: image=moby/buildkit:master
           config-inline: |
             [registry."${{ secrets.C1_REGISTRY }}"]
               ca=["/etc/ssl/certs/adoptium/cacerts"]
@@ -60,7 +58,7 @@ jobs:
           C1_REPOSITORY: ${{ secrets.C1_REPOSITORY }}
 
         run: |
-          sudo sh scripts/add-dod-cas.sh
+
           docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
           docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG"
