@@ -20,6 +20,8 @@ jobs:
           config-inline: |
             [registry."${{ secrets.C1_REGISTRY }}"]
               ca=["/etc/ssl/certs/ca-certificates.crt"]
+              http = false
+              insecure = true
 
       - name: Login to JFrog 
         uses: docker/login-action@v2.0.0
