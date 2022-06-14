@@ -30,6 +30,9 @@ export const publishedArticleData = {
   keywords: 'foo',
   publishedDate: new Date().toISOString(),
   labels: { create: { name: 'All Guardians' } },
+  body: JSON.parse(
+    `[{"type":"paragraph","children":[{"text":"Lorem ipsum"}]}]`
+  ),
 }
 
 export const draftArticleData = {
