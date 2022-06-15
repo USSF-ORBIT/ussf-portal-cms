@@ -62,6 +62,8 @@ model User {
   from_Article_createdBy      Article[]      @relation("Article_createdBy")
   from_Announcement_updatedBy Announcement[] @relation("Announcement_updatedBy")
   from_Announcement_createdBy Announcement[] @relation("Announcement_createdBy")
+  from_CallToAction_updatedBy CallToAction[] @relation("CallToAction_updatedBy")
+  from_CallToAction_createdBy CallToAction[] @relation("CallToAction_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -204,6 +206,20 @@ model Announcement {
   createdById   String?                @map("createdBy")
   updatedAt     DateTime?              @updatedAt
   createdAt     DateTime?              @default(now())
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model CallToAction {
+  id          String    @id @default(cuid())
+  name        String    @default("")
+  updatedBy   User?     @relation("CallToAction_updatedBy", fields: [updatedById], references: [id])
+  updatedById String?   @map("updatedBy")
+  createdBy   User?     @relation("CallToAction_createdBy", fields: [createdById], references: [id])
+  createdById String?   @map("createdBy")
+  updatedAt   DateTime? @updatedAt
+  createdAt   DateTime? @default(now())
 
   @@index([updatedById])
   @@index([createdById])

@@ -15,7 +15,7 @@ import {
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
-const Announcement: Lists.Announcement = list(
+export const Announcement: Lists.Announcement = list(
   withTracking({
     access: {
       operation: {
@@ -55,6 +55,13 @@ const Announcement: Lists.Announcement = list(
           },
         },
         links: true,
+        relationships: {
+          callToAction: {
+            listKey: 'CallToAction',
+            label: 'CTA',
+            selection: 'id name',
+          },
+        },
       }),
       status: select({
         type: 'enum',
@@ -137,4 +144,10 @@ const Announcement: Lists.Announcement = list(
   })
 )
 
-export default Announcement
+export const CallToAction = list(
+  withTracking({
+    fields: {
+      name: text(),
+    },
+  })
+)
