@@ -1,7 +1,4 @@
 import type { KeystoneConfig, SessionStrategy } from '@keystone-6/core/types'
-import { graphQLSchemaExtension } from '@keystone-6/core'
-
-import type { Context } from '.keystone/types'
 
 import type {
   SessionData,
@@ -118,38 +115,6 @@ const withAuthData = (
   }
 }
 
-const extendGraphqlSchema = graphQLSchemaExtension<Context>({
-  typeDefs: `
-    type Query {
-      """ Authenticated Item """
-      authenticatedItem: AuthenticatedItem
-    }
-
-    union AuthenticatedItem = User
-  `,
-  resolvers: {
-    Query: {
-      authenticatedItem: async (root, args, { session, db }) => {
-        if (typeof session?.userId === 'string') {
-          const user = await db.User.findOne({
-            where: { userId: session.userId },
-          })
-
-          return {
-            __typename: 'User',
-            listKey: 'User',
-            label: user.userId,
-            itemId: user.id,
-            ...user,
-          }
-        }
-
-        return null
-      },
-    },
-  },
-})
-
 export const withSharedAuth = (
   keystoneConfig: KeystoneConfig
 ): KeystoneConfig => {
@@ -158,6 +123,5 @@ export const withSharedAuth = (
   return {
     ...keystoneConfig,
     session: sessionWithUser,
-    extendGraphqlSchema,
   }
 }
