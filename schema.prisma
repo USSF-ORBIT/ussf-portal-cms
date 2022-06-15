@@ -133,15 +133,16 @@ model Location {
 }
 
 model Label {
-  id                  String    @id @default(cuid())
-  name                String    @unique @default("")
-  updatedBy           User?     @relation("Label_updatedBy", fields: [updatedById], references: [id])
-  updatedById         String?   @map("updatedBy")
-  createdBy           User?     @relation("Label_createdBy", fields: [createdById], references: [id])
-  createdById         String?   @map("createdBy")
-  updatedAt           DateTime? @updatedAt
-  createdAt           DateTime? @default(now())
-  from_Article_labels Article[] @relation("Article_labels")
+  id                  String        @id @default(cuid())
+  name                String        @unique @default("")
+  type                LabelTypeType
+  updatedBy           User?         @relation("Label_updatedBy", fields: [updatedById], references: [id])
+  updatedById         String?       @map("updatedBy")
+  createdBy           User?         @relation("Label_createdBy", fields: [createdById], references: [id])
+  createdById         String?       @map("createdBy")
+  updatedAt           DateTime?     @updatedAt
+  createdAt           DateTime?     @default(now())
+  from_Article_labels Article[]     @relation("Article_labels")
 
   @@index([updatedById])
   @@index([createdById])
@@ -214,6 +215,12 @@ enum UserRoleType {
   User
   Author
   Manager
+}
+
+enum LabelTypeType {
+  Source
+  Audience
+  Base
 }
 
 enum ArticleCategoryType {
