@@ -1,12 +1,16 @@
 # Default owners for everything
-* @suzubara @abbyoung @esacteksab
+
+- @suzubara @abbyoung @esacteksab @gidjin
 
 # Github settings
-.github/settings.yml @suzubara @abbyoung @esacteksab @noahfirth
+
+.github/settings.yml @suzubara @abbyoung @esacteksab @noahfirth @gidjin
 
 # CODEOWNERS prevent renovate automerge since it will automatically ask for review
+
 # See documentation for more details: https://docs.renovatebot.com/automerge-configuration/
+
 # Solution: make files used by renovate owned by everyone
 
-**/*/package.json
-**/*/yarn.lock
+**/\*/package.json
+**/\*/yarn.lock
