@@ -122,6 +122,7 @@ ALTER TABLE "public"."User" ADD FOREIGN KEY ("updatedBy") REFERENCES "public"."U
     "title" text NOT NULL DEFAULT ''::text,
     "preview" text NOT NULL DEFAULT ''::text,
     "body" jsonb NOT NULL DEFAULT '[{"type": "paragraph", "children": [{"text": ""}]}]'::jsonb,
+    "searchBody" text NOT NULL DEFAULT ''::text,
     "status" "public"."ArticleStatusType" NOT NULL DEFAULT 'Draft'::"ArticleStatusType",
     "category" "public"."ArticleCategoryType" NOT NULL,
     "keywords" text NOT NULL DEFAULT ''::text,
