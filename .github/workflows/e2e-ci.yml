@@ -29,7 +29,7 @@ jobs:
       - name: Build image for testing
         env:
           IMAGE_TAG: ${{ github.sha }}
-        run: BUILD_KIT=1 docker build -t $IMAGE_TAG --target e2e .
+        run: docker build -t $IMAGE_TAG --target e2e .
         working-directory: ./ussf-portal-cms
 
       - name: Docker compose
