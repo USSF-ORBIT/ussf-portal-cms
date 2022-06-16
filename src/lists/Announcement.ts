@@ -1,6 +1,7 @@
 import { list } from '@keystone-6/core'
 import { select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
+// import { componentBlocks } from 'components/component-blocks'
 
 import type { Lists } from '.keystone/types'
 
@@ -56,12 +57,19 @@ export const Announcement: Lists.Announcement = list(
         },
         links: true,
         relationships: {
-          callToAction: {
-            listKey: 'CallToAction',
-            label: 'CTA',
-            selection: 'id name',
+          article: {
+            listKey: 'Article',
+            label: 'Article',
+            selection: 'id slug',
           },
         },
+        // relationships: {
+        //   callToAction: {
+        //     listKey: 'CallToAction',
+        //     label: 'CTA',
+        //     selection: 'id name',
+        //   },
+        // },
       }),
       status: select({
         type: 'enum',
@@ -144,10 +152,10 @@ export const Announcement: Lists.Announcement = list(
   })
 )
 
-export const CallToAction = list(
-  withTracking({
-    fields: {
-      name: text(),
-    },
-  })
-)
+// export const CallToAction = list(
+//   withTracking({
+//     fields: {
+//       name: text(),
+//     },
+//   })
+// )
