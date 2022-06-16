@@ -10,7 +10,7 @@ import Location from './lists/Location'
 import Label from './lists/Label'
 import Tag from './lists/Tag'
 import Article from './lists/Article'
-import { Announcement, CallToAction } from './lists/Announcement'
+import Announcement from './lists/Announcement'
 
 export const lists: Lists = {
   Event,

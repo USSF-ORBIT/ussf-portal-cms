@@ -1,7 +1,6 @@
 import { list } from '@keystone-6/core'
 import { select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
-// import { componentBlocks } from 'components/component-blocks'
 
 import type { Lists } from '.keystone/types'
 
@@ -15,8 +14,9 @@ import {
   articleStatusView,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
+import { componentBlocks } from '../components/component-blocks'
 
-export const Announcement: Lists.Announcement = list(
+const Announcement: Lists.Announcement = list(
   withTracking({
     access: {
       operation: {
@@ -56,6 +56,10 @@ export const Announcement: Lists.Announcement = list(
           },
         },
         links: true,
+        ui: {
+          views: require.resolve('../components/component-blocks'),
+        },
+        componentBlocks,
         relationships: {
           article: {
             listKey: 'Article',
@@ -151,6 +155,8 @@ export const Announcement: Lists.Announcement = list(
     },
   })
 )
+
+export default Announcement
 
 // export const CallToAction = list(
 //   withTracking({
