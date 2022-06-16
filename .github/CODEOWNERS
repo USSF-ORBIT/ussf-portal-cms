@@ -12,5 +12,5 @@
 
 # Solution: make files used by renovate owned by everyone
 
-**/\*/package.json
-**/\*/yarn.lock
+**/*/package.json
+**/*/yarn.lock
