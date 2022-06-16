@@ -23,5 +23,4 @@ export const lists: Lists = {
   Tag,
   Article,
   Announcement,
-  // CallToAction,
 }

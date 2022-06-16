@@ -67,13 +67,6 @@ const Announcement: Lists.Announcement = list(
             selection: 'id slug',
           },
         },
-        // relationships: {
-        //   callToAction: {
-        //     listKey: 'CallToAction',
-        //     label: 'CTA',
-        //     selection: 'id name',
-        //   },
-        // },
       }),
       status: select({
         type: 'enum',
@@ -157,11 +150,3 @@ const Announcement: Lists.Announcement = list(
 )
 
 export default Announcement
-
-// export const CallToAction = list(
-//   withTracking({
-//     fields: {
-//       name: text(),
-//     },
-//   })
-// )
