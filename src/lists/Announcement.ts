@@ -60,13 +60,6 @@ const Announcement: Lists.Announcement = list(
           views: require.resolve('../components/component-blocks'),
         },
         componentBlocks,
-        relationships: {
-          article: {
-            listKey: 'Article',
-            label: 'Article',
-            selection: 'id slug',
-          },
-        },
       }),
       status: select({
         type: 'enum',
