@@ -9,7 +9,40 @@ jobs:
     steps:
       - uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
 
-      - name: Build, tag, and push image to C1 Dev Artifactory
+      - run: |
+          sudo sh scripts/add-dod-cas.sh
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ${{ secrets.C1_REGISTRY }}/${{ secrets.C1_REPOSITORY }}
+          tags: |
+            type=sha,prefix=,format=long
+          flavor: |
+            latest=false
+
+      - uses: docker/setup-buildx-action@v2
+        id: buildx
+        with:
+          config-inline: |
+            [registry."${{ secrets.C1_REGISTRY }}"]
+              ca=["/etc/ssl/certs/adoptium/cacerts"]
+              http = false
+              insecure = true
+
+      - name: Build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: false
+          load: true
+          tags: ${{ secrets.C1_REGISTRY}}/${{ secrets.C1_REPOSITORY }}:${{ github.sha }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Push image to C1 Dev Artifactory
         id: build-c1-image
         env:
           IMAGE_TAG: ${{ github.sha }}
@@ -17,9 +50,8 @@ jobs:
           C1_REPOSITORY: ${{ secrets.C1_REPOSITORY }}
 
         run: |
-          sudo sh scripts/add-dod-cas.sh
+
           docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
-          BUILD_KIT=1 docker build -t $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG . --build-arg BUILD=$IMAGE_TAG
           docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG"
           docker logout $C1_REGISTRY

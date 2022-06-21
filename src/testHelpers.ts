@@ -8,6 +8,7 @@ import { KeystoneContext } from '@keystone-6/core/types'
 
 import type { User } from '.prisma/client'
 import { lists } from './schema'
+import { extendGraphqlSchema } from './lib/schema'
 
 const TEST_DATABASE = 'unit-test'
 const TEST_DATABASE_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${TEST_DATABASE}`
@@ -17,8 +18,10 @@ export const testConfig = config({
     provider: 'postgresql',
     url: TEST_DATABASE_CONNECTION,
     useMigrations: true,
+    prismaPreviewFeatures: ['fullTextSearch'],
   },
   lists,
+  extendGraphqlSchema,
 })
 
 const adminUserData = {
