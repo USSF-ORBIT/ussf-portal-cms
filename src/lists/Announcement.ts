@@ -44,6 +44,9 @@ const Announcement: Lists.Announcement = list(
       title: text({
         validation: {
           isRequired: true,
+          length: {
+            max: 100,
+          },
         },
       }),
       body: document({
