@@ -43,6 +43,7 @@ describe('Search Resolver', () => {
         date
         labels {
           name
+          type
         }
       }
     }
@@ -85,7 +86,7 @@ describe('Search Resolver', () => {
           permalink: searchTermArticleData.slug,
           preview: searchTermArticleData.preview,
           date: expect.any(String),
-          labels: [searchTermArticleData.labels.create],
+          labels: [],
         }),
       ])
     )

@@ -627,10 +627,17 @@ input LocationCreateInput {
 type Label {
   id: ID!
   name: String
+  type: LabelTypeType
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
+}
+
+enum LabelTypeType {
+  Source
+  Audience
+  Base
 }
 
 input LabelWhereUniqueInput {
@@ -644,21 +651,31 @@ input LabelWhereInput {
   NOT: [LabelWhereInput!]
   id: IDFilter
   name: StringFilter
+  type: LabelTypeTypeNullableFilter
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
   createdAt: DateTimeNullableFilter
 }
 
+input LabelTypeTypeNullableFilter {
+  equals: LabelTypeType
+  in: [LabelTypeType!]
+  notIn: [LabelTypeType!]
+  not: LabelTypeTypeNullableFilter
+}
+
 input LabelOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  type: OrderDirection
   updatedAt: OrderDirection
   createdAt: OrderDirection
 }
 
 input LabelUpdateInput {
   name: String
+  type: LabelTypeType
 }
 
 input LabelUpdateArgs {
@@ -668,6 +685,7 @@ input LabelUpdateArgs {
 
 input LabelCreateInput {
   name: String
+  type: LabelTypeType
 }
 
 type Tag {
