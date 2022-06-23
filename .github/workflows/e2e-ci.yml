@@ -16,7 +16,7 @@ jobs:
           path: ./ussf-portal-cms
 
       - name: Read Node.js version from package.json
-        run: echo ::set-output name=nodeVersion::$(node -p "require('./package.json').engines.node")
+        run: echo ::set-output name=nodeVersion::$(node -p "require('./ussf-portal-cms/package.json').engines.node")
         id: engines
 
       - name: Set up node
