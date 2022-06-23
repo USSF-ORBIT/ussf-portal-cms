@@ -29,7 +29,7 @@ export const publishedArticleData = {
   preview: 'A test article that is published.',
   keywords: 'foo',
   publishedDate: new Date().toISOString(),
-  labels: { create: { name: 'All Guardians' } },
+  labels: { create: { name: 'All Guardians', type: 'Audience' } },
 }
 
 export const draftArticleData = {
@@ -48,7 +48,6 @@ export const searchTermArticleData = {
   status: 'Published',
   publishedDate: new Date().toISOString(),
   preview: 'This will match on the search term MyVector.',
-  labels: { create: { name: 'Internal USSF News' } },
 }
 
 export const testArticles = [

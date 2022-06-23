@@ -10,6 +10,7 @@ describe('Label schema', () => {
 
   const testLabel = {
     name: 'My Label',
+    type: 'Source',
   }
 
   beforeAll(async () => {
@@ -26,7 +27,7 @@ describe('Label schema', () => {
     it('can create a new label', async () => {
       const data = await adminContext.query.Label.createOne({
         data: testLabel,
-        query: 'id name createdAt updatedAt',
+        query: 'id name createdAt updatedAt type',
       })
 
       expect(data).toMatchObject({
@@ -79,7 +80,7 @@ describe('Label schema', () => {
       // Create new Label for non admin tests
       const newLabel = await adminContext.query.Label.createOne({
         data: testLabel,
-        query: 'id name createdAt updatedAt',
+        query: 'id name createdAt updatedAt type',
       })
 
       expect(newLabel).toMatchObject({
@@ -94,7 +95,7 @@ describe('Label schema', () => {
   describe('as a non admin user', () => {
     it('can query all labels', async () => {
       const data = await userContext.query.Label.findMany({
-        query: 'id createdAt updatedAt name',
+        query: 'id createdAt updatedAt name type',
       })
 
       expect(data).toHaveLength(1)
