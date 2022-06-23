@@ -171,6 +171,7 @@ model Article {
   title         String              @default("")
   preview       String              @default("")
   body          Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  searchBody    String              @default("")
   keywords      String              @default("")
   publishedDate DateTime?
   archivedDate  DateTime?
