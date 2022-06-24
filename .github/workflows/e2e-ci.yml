@@ -10,15 +10,19 @@ jobs:
   playwright:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up node
-        uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a # tag=v3
-        with:
-          node-version: '14.19.1'
-
       - name: Check out repository
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
         with:
           path: ./ussf-portal-cms
+
+      - name: Read Node.js version from package.json
+        run: echo ::set-output name=nodeVersion::$(node -p "require('./ussf-portal-cms/package.json').engines.node")
+        id: engines
+
+      - name: Set up node
+        uses: actions/setup-node@17f8bd926464a1afa4c6a11669539e9c1ba77048 # tag=v3
+        with:
+          node-version: ${{ steps.engines.outputs.nodeVersion }}
 
       - name: Check out portal client
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
