@@ -742,6 +742,7 @@ type Article {
   title: String
   preview: String
   body: Article_body_Document
+  searchBody: String
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
@@ -797,6 +798,7 @@ input ArticleWhereInput {
   slug: StringFilter
   title: StringFilter
   preview: StringFilter
+  searchBody: StringFilter
   keywords: StringFilter
   publishedDate: DateTimeNullableFilter
   archivedDate: DateTimeNullableFilter
@@ -843,6 +845,7 @@ input ArticleOrderByInput {
   slug: OrderDirection
   title: OrderDirection
   preview: OrderDirection
+  searchBody: OrderDirection
   keywords: OrderDirection
   publishedDate: OrderDirection
   archivedDate: OrderDirection
@@ -857,6 +860,7 @@ input ArticleUpdateInput {
   title: String
   preview: String
   body: JSON
+  searchBody: String
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime
@@ -904,6 +908,7 @@ input ArticleCreateInput {
   title: String
   preview: String
   body: JSON
+  searchBody: String
   keywords: String
   publishedDate: DateTime
   archivedDate: DateTime

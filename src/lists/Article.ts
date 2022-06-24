@@ -24,6 +24,25 @@ const ARTICLE_CATEGORIES = {
   ORBIT_BLOG: 'ORBITBlog',
 } as const
 
+type DocumentSubFieldJSON = {
+  text?: string
+  children?: Array<DocumentSubFieldJSON>
+}
+
+// Until Keystone supports full-text search of the document field, we're rolling our own 😎
+// Whenever the body of an article is updated, this function parses
+// the JSON, extracts the text fields, and returns an array to store
+const parseSearchBody = (body: Array<DocumentSubFieldJSON>, arr: string[]) => {
+  body.map((item) => {
+    if (item?.text !== undefined) {
+      return arr.push(item.text)
+    }
+    if (item.children) {
+      return parseSearchBody(item.children, arr)
+    }
+  })
+}
+
 const Article: Lists.Article = list(
   withTracking({
     access: {
@@ -151,6 +170,27 @@ const Article: Lists.Article = list(
         dividers: true,
         links: true,
       }),
+      searchBody: text({
+        ui: {
+          itemView: {
+            fieldMode: 'hidden',
+          },
+          createView: {
+            fieldMode: 'hidden',
+          },
+        },
+        hooks: {
+          resolveInput: async ({ resolvedData }) => {
+            // If the body field has been updated, parse it and return it as the new searchBody value
+            if (resolvedData.body) {
+              const results: string[] = []
+              parseSearchBody(resolvedData.body, results)
+              return results.join(' ')
+            }
+          },
+        },
+      }),
+
       keywords: text({
         ui: {
           displayMode: 'textarea',

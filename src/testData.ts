@@ -29,6 +29,9 @@ export const publishedArticleData = {
   preview: 'A test article that is published.',
   keywords: 'foo',
   publishedDate: new Date().toISOString(),
+  body: JSON.parse(
+    `[{"type":"paragraph","children":[{"text":"Lorem ipsum"}]}]`
+  ),
   labels: { create: { name: 'All Guardians', type: 'Audience' } },
 }
 
