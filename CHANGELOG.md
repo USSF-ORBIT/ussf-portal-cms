@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.2.0...1.3.0) (2022-06-27)
+
+
+### Features
+
+* Add Label type field ([31be494](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/31be4940ce995f071df6aa63a17126968a9ecfc7))
+* Announcement schema ([#53](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/53)) ([31c32ac](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/31c32acd8a47a0c1a4cb7fd3538388e2ee1e6cda))
+
+
+### Bug Fixes
+
+* Allow CMS authors & managers to view other users ([#57](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/57)) ([efa8567](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/efa8567a27079a14cdda2f0944aa48e19d913ee5))
+
 ## [1.2.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.1.0...1.2.0) (2022-06-02)
 
 
