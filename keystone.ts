@@ -6,9 +6,19 @@ import { withSharedAuth } from './src/lib/auth'
 import { getAbsoluteUrl } from './src/util/getAbsoluteUrl'
 import { extendGraphqlSchema } from './src/lib/schema'
 
+const {
+  S3_BUCKET_NAME: bucketName,
+  S3_REGION: region,
+  S3_ACCESS_KEY_ID: accessKeyId,
+  S3_SECRET_ACCESS_KEY: secretAccessKey,
+} = process.env
+
+console.log('Bucket Name is ', bucketName)
+
 export default withSharedAuth(
   config({
     extendGraphqlSchema,
+
     lists,
     db: {
       provider: 'postgresql',
@@ -56,6 +66,17 @@ export default withSharedAuth(
     server: {
       cors: {
         origin: `${process.env.PORTAL_URL}`,
+      },
+    },
+    storage: {
+      my_images: {
+        kind: 's3',
+        type: 'image',
+        bucketName: bucketName || '',
+        region: region || '',
+        accessKeyId: accessKeyId || '',
+        secretAccessKey: secretAccessKey || '',
+        signed: { expiry: 5000 },
       },
     },
   })
