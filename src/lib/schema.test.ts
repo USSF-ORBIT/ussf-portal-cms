@@ -43,6 +43,7 @@ describe('Search Resolver', () => {
         date
         labels {
           name
+          type
         }
       }
     }
@@ -85,7 +86,7 @@ describe('Search Resolver', () => {
           permalink: searchTermArticleData.slug,
           preview: searchTermArticleData.preview,
           date: expect.any(String),
-          labels: [searchTermArticleData.labels.create],
+          labels: [],
         }),
       ])
     )
@@ -218,6 +219,38 @@ describe('Search Resolver', () => {
           title: myVector.label,
           permalink: myVector.url,
           preview: myVector.description,
+        }),
+      ])
+    )
+  })
+
+  it('returns results by searching article document body', async () => {
+    /*
+    Query String: 'lorem ipsum', case insensitive
+    Search Fields Tested: Article.searchBody
+    Expected Results:
+      publishedArticleData (ArticleResult)
+    */
+
+    const searchResults = await graphQLRequest({
+      query: searchQuery,
+      variables: {
+        query: 'lorem ipsum',
+      },
+    }).expect(200)
+
+    const results = searchResults.body.data.search
+
+    expect(results).toHaveLength(1)
+    expect(results).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          __typename: 'ArticleResult',
+          title: publishedArticleData.title,
+          permalink: publishedArticleData.slug,
+          preview: publishedArticleData.preview,
+          labels: [publishedArticleData.labels.create],
+          date: expect.any(String),
         }),
       ])
     )
