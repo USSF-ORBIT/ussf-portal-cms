@@ -15,7 +15,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a # tag=v4
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -25,7 +25,7 @@ jobs:
           flavor: |
             latest=false
 
-      - uses: docker/setup-buildx-action@v2
+      - uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6 # tag=v2
         id: buildx
         with:
           config-inline: |
@@ -35,7 +35,7 @@ jobs:
               insecure = true
 
       - name: Build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8 # tag=v3
         with:
           context: .
           push: false
