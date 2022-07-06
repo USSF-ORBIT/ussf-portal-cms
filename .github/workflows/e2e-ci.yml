@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
         with:
           path: ./ussf-portal-cms
 
@@ -25,7 +25,7 @@ jobs:
           node-version: ${{ steps.engines.outputs.nodeVersion }}
 
       - name: Check out portal client
-        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
         with:
           repository: USSF-ORBIT/ussf-portal-client
           path: ./ussf-portal-client
