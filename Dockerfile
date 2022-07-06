@@ -1,5 +1,5 @@
 ##--------- Stage: builder ---------##
-FROM node:14.19.1-slim AS builder
+FROM node:14.19.3-slim AS builder
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends openssl libc6 yarn
@@ -19,7 +19,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM node:14.19.1-slim AS e2e
+FROM node:14.19.3-slim AS e2e
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
@@ -37,7 +37,7 @@ CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app
 
 ##--------- Stage: runner ---------##
 # Runtime container
-FROM node:14.19.1-slim AS runner
+FROM node:14.19.3-slim AS runner
 
 WORKDIR /app
 
