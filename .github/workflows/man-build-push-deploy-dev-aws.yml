@@ -23,7 +23,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2 # renovate: tag=v1
+        uses: aws-actions/amazon-ecr-login@b874a33292cc9887d2e80bc63f6f1a11fccb4a7b # tag=v1
 
       - name: Login to ECR
         uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # tag=v2
