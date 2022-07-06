@@ -34,7 +34,7 @@
     "@k6-contrib/list-plugins": "1.1.0",
     "@keystone-6/auth": "3.0.0",
     "@keystone-6/core": "2.0.0",
-    "@keystone-6/fields-document": "3.0.0",
+    "@keystone-6/fields-document": "4.0.0",
     "cookie-signature": "1.2.0",
     "dotenv": "16.0.1",
     "pino": "8.0.0",
