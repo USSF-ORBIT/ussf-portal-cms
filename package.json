@@ -31,7 +31,7 @@
     "@babel/core": "7.18.5",
     "@babel/preset-env": "7.18.2",
     "@babel/preset-typescript": "7.17.12",
-    "@k6-contrib/list-plugins": "1.1.0",
+    "@k6-contrib/list-plugins": "2.0.0",
     "@keystone-6/auth": "3.0.0",
     "@keystone-6/core": "2.0.0",
     "@keystone-6/fields-document": "4.0.0",

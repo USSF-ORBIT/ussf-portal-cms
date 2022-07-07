@@ -2765,10 +2765,10 @@
   resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-5.2.0.tgz#fcebb14cffbf25adaaeec20d4579530e896ecd4a"
   integrity sha512-0OriPYIaMLB3XiLQMe0BXKVIqeriTn3H7JMOzTsHEtt7Zqq+TetCu97KnAhU3ckiQZKBxfZshft+H1OC4D1lXw==
 
-"@k6-contrib/list-plugins@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@k6-contrib/list-plugins/-/list-plugins-1.1.0.tgz#e21a54513554ce2a3eae1c08271e195bb46bce2d"
-  integrity sha512-xOd+NNxWwIXaOWtjo1q+TxeFspHx/cIwJm++tJ2XGmqJnNjJ8flry9s5YWcGwgEO46UD31x7KBgrqsgLEJMiiA==
+"@k6-contrib/list-plugins@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@k6-contrib/list-plugins/-/list-plugins-2.0.0.tgz#66d351bc8bba6fd739d94b11c4395cb226c6f17b"
+  integrity sha512-J7TskEJ/N3FgXcOhaca6l+S+TLtaR2YLwaWP5dzb9NGJv3GZpXWj6LDHf323K8AOx9kPKD/Di1y9JGMt/R+ZAw==
   dependencies:
     "@babel/core" "^7.16.0"
     "@babel/runtime" "^7.16.3"
