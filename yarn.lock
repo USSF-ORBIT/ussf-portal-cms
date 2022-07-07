@@ -2773,15 +2773,15 @@
     "@babel/core" "^7.16.0"
     "@babel/runtime" "^7.16.3"
 
-"@keystone-6/auth@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@keystone-6/auth/-/auth-3.0.0.tgz#7ec941c6a33f6f607ab4dd2fb833331b0456368f"
-  integrity sha512-kREhVoIJdIGHJzXn5QPshRULmMNwRp+hSW+sjjTb+owNlQLC9GWwym7aHq01NR8SK+Eb1tVOK2cNQ5wHfAuM9w==
+"@keystone-6/auth@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@keystone-6/auth/-/auth-4.0.0.tgz#2a6885630cb152d384d2a11617e2bad8fe7bbc13"
+  integrity sha512-q45iS1JvXyZ3CBH3Z2tpGD7WtGfAY1Z/oEpCd5VKAgyG9gRv8egEsgg1iTjVYwVBtEvPmlw7hmc3KsvM1c7PYw==
   dependencies:
     "@babel/runtime" "^7.16.3"
     "@keystone-ui/button" "^7.0.0"
     "@keystone-ui/core" "^5.0.0"
-    "@keystone-ui/fields" "^7.0.0"
+    "@keystone-ui/fields" "^7.1.0"
     "@keystone-ui/loading" "^6.0.0"
     "@keystone-ui/notice" "^6.0.0"
     cross-fetch "^3.1.4"
