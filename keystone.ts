@@ -13,8 +13,6 @@ const {
   S3_SECRET_ACCESS_KEY: secretAccessKey,
 } = process.env
 
-console.log('Bucket Name is ', bucketName)
-
 export default withSharedAuth(
   config({
     extendGraphqlSchema,
