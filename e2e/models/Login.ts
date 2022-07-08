@@ -39,8 +39,11 @@ export class LoginPage {
   }
 
   async logout() {
-    await this.logoutMenuBtn.click()
-    await Promise.all([this.page.waitForNavigation(), this.logoutBtn.click()])
-    await expect(this.page.locator('h1')).toHaveText('Space Force Portal Login')
+    // await this.logoutBtn.click()
+    await this.page.locator('button span:has-text("Sign out")').click()
+    // await Promise.all([this.page.waitForNavigation(), this.logoutBtn.click()])
+    await expect(
+      this.page.locator('h1:has-text("Space Force Portal Login")')
+    ).toBeVisible()
   }
 }

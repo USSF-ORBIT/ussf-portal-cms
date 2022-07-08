@@ -45,14 +45,16 @@ describe('Event logging', () => {
 
     await expect(
       page.locator('legend:has-text("Updated By") + div')
-    ).toHaveText('(No User)')
+    ).toHaveText('Select...')
 
     await page.fill('#name', 'Johnathan Henke')
-    await page.locator('button:has-text("Save changes")').click()
+    await page.locator('button span:has-text("Save changes")').click()
 
-    await expect(page.locator('legend:has-text("Updated By") + a')).toHaveText(
-      'JOHN.HENKE.562270783@testusers.cce.af.mil'
-    )
+    await expect(
+      page.locator(
+        'legend:has-text("Updated By") + div:has-text("JOHN.HENKE.562270783@testusers.cce.af.mil")'
+      )
+    ).toBeVisible()
 
     await loginPage.logout()
 
@@ -69,13 +71,15 @@ describe('Event logging', () => {
       page.locator('a:left-of(:text("update User"), 20)').click(),
     ])
 
-    await expect(page.locator('label:has-text("Input Data")'))
-      .toHaveText(`Input Data{
+    await expect(page.locator('label:has-text("Input Data") + div'))
+      .toHaveText(`{
   "name": "Johnathan Henke"
 }`)
 
-    await expect(page.locator('legend:has-text("Actor") + a')).toHaveText(
-      'JOHN.HENKE.562270783@testusers.cce.af.mil'
-    )
+    await expect(
+      page.locator(
+        'legend:has-text("Actor") + div:has-text("JOHN.HENKE.562270783@testusers.cce.af.mil")'
+      )
+    ).toBeVisible()
   })
 })

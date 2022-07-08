@@ -47,7 +47,7 @@ describe('Articles', () => {
       page.locator('h3:has-text("Articles")').click(),
     ])
 
-    await page.locator('button:has-text("Create Article")').click()
+    await page.locator('text=Create Article').click()
 
     await page.locator('label[for="category"]').click()
     await page.keyboard.type('O')
@@ -59,9 +59,7 @@ describe('Articles', () => {
 
     await Promise.all([
       page.waitForNavigation(),
-      page
-        .locator('form[role="dialog"] button:has-text("Create Article")')
-        .click(),
+      page.locator('form span:has-text("Create Article")').click(),
     ])
 
     await page

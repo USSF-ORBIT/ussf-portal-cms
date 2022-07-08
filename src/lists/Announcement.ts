@@ -14,6 +14,7 @@ import {
   articleStatusView,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
+import { componentBlocks } from '../components/component-blocks'
 
 const Announcement: Lists.Announcement = list(
   withTracking({
@@ -43,6 +44,9 @@ const Announcement: Lists.Announcement = list(
       title: text({
         validation: {
           isRequired: true,
+          length: {
+            max: 100,
+          },
         },
       }),
       body: document({
@@ -55,6 +59,10 @@ const Announcement: Lists.Announcement = list(
           },
         },
         links: true,
+        ui: {
+          views: require.resolve('../components/component-blocks'),
+        },
+        componentBlocks,
       }),
       status: select({
         type: 'enum',
