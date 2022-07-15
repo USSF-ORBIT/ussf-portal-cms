@@ -36,6 +36,10 @@ type DocumentSubFieldJSON = {
   children?: Array<DocumentSubFieldJSON>
 }
 
+const isLocal = (): boolean => {
+  return process.env.NODE_ENV === 'development'
+}
+
 // Until Keystone supports full-text search of the document field, we're rolling our own 😎
 // Whenever the body of an article is updated, this function parses
 // the JSON, extracts the text fields, and returns an array to store
@@ -173,12 +177,12 @@ const Article: Lists.Article = list(
         },
       }),
       hero: image({
-        storage: 'cms_images',
-        access: { create: () => true, update: () => true },
+        storage: isLocal() ? 'local_images' : 'cms_images',
+        access: { create: () => true, update: () => true, read: () => true },
       }),
       attachments: file({
-        storage: 'cms_files',
-        access: { create: () => true, update: () => true },
+        storage: isLocal() ? 'local_files' : 'cms_files',
+        access: { create: () => true, update: () => true, read: () => true },
       }),
       body: document({
         formatting: true,

@@ -11,6 +11,7 @@ const {
   S3_REGION: region,
   S3_ACCESS_KEY_ID: accessKeyId,
   S3_SECRET_ACCESS_KEY: secretAccessKey,
+  ASSET_BASE_URL: baseUrl,
 } = process.env
 
 export default withSharedAuth(
@@ -75,6 +76,15 @@ export default withSharedAuth(
         secretAccessKey: secretAccessKey || '',
         signed: { expiry: 5000 },
       },
+      local_images: {
+        kind: 'local',
+        type: 'image',
+        generateUrl: (path) => `${baseUrl}/images${path}`,
+        serverRoute: {
+          path: '/images',
+        },
+        storagePath: 'public/images',
+      },
       cms_files: {
         kind: 's3',
         type: 'file',
@@ -84,6 +94,17 @@ export default withSharedAuth(
         secretAccessKey: secretAccessKey || '',
         signed: { expiry: 5000 },
       },
+      local_files: {
+        kind: 'local',
+        type: 'file',
+        generateUrl: (path) => `${baseUrl}/files${path}`,
+        serverRoute: {
+          path: '/files',
+        },
+        storagePath: 'public/files',
+      },
     },
   })
 )
+
+// https://keystonejs.com/docs/guides/images-and-files#images-and-files
