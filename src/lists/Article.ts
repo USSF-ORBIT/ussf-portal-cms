@@ -1,5 +1,12 @@
 import { list } from '@keystone-6/core'
-import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
+import {
+  file,
+  image,
+  relationship,
+  select,
+  text,
+  timestamp,
+} from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
@@ -164,6 +171,14 @@ const Article: Lists.Article = list(
         ui: {
           displayMode: 'textarea',
         },
+      }),
+      hero: image({
+        storage: 'cms_images',
+        access: { create: () => true, update: () => true },
+      }),
+      attachments: file({
+        storage: 'cms_files',
+        access: { create: () => true, update: () => true },
       }),
       body: document({
         formatting: true,
