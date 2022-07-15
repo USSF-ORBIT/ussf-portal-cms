@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.3.0...1.4.0) (2022-07-13)
+
+
+### Features
+
+* Create custom CTA for announcements ([#62](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/62)) ([32a6277](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/32a627712eee6f383c788d7856118b859930de7b))
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#73](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/73)) ([5848cc3](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/5848cc39b02141da760eccce8df0cfbf00cbcd83))
+* **deps:** update dependency @k6-contrib/list-plugins to v2 ([#84](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/84)) ([b874063](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/b874063605a8bd7ae1dcbe4c98c92a302a7a6d82))
+* **deps:** update dependency @keystone-6/auth to v4 ([#85](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/85)) ([35584a9](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/35584a9c280bf0bd63c982d1b014b4af827a01bf))
+* **deps:** update dependency @keystone-6/fields-document to v4 ([#86](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/86)) ([41b74fb](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/41b74fb2c4383f28558c573ef8ba6f80962bb38b))
+
 ## [1.3.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.2.0...1.3.0) (2022-06-27)
 
 
