@@ -10,6 +10,11 @@ const requireVars = [
   'REDIS_URL',
   'SESSION_SECRET',
   'SESSION_DOMAIN',
+  'S3_BUCKET_NAME',
+  'S3_REGION',
+  'S3_SECRET_ACCESS_KEY',
+  'S3_ACCESS_KEY_ID',
+  'ASSET_BASE_URL',
 ]
 
 function startup() {

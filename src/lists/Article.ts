@@ -1,5 +1,12 @@
 import { list } from '@keystone-6/core'
-import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
+import {
+  file,
+  image,
+  relationship,
+  select,
+  text,
+  timestamp,
+} from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
@@ -27,6 +34,10 @@ const ARTICLE_CATEGORIES = {
 type DocumentSubFieldJSON = {
   text?: string
   children?: Array<DocumentSubFieldJSON>
+}
+
+const isLocal = (): boolean => {
+  return process.env.NODE_ENV === 'development'
 }
 
 // Until Keystone supports full-text search of the document field, we're rolling our own 😎
@@ -164,6 +175,12 @@ const Article: Lists.Article = list(
         ui: {
           displayMode: 'textarea',
         },
+      }),
+      hero: image({
+        storage: isLocal() ? 'local_images' : 'cms_images',
+      }),
+      attachments: file({
+        storage: isLocal() ? 'local_files' : 'cms_files',
       }),
       body: document({
         formatting: true,
