@@ -106,5 +106,3 @@ export default withSharedAuth(
     },
   })
 )
-
-// https://keystonejs.com/docs/guides/images-and-files#images-and-files
