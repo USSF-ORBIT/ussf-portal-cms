@@ -178,11 +178,9 @@ const Article: Lists.Article = list(
       }),
       hero: image({
         storage: isLocal() ? 'local_images' : 'cms_images',
-        access: { create: () => true, update: () => true, read: () => true },
       }),
       attachments: file({
         storage: isLocal() ? 'local_files' : 'cms_files',
-        access: { create: () => true, update: () => true, read: () => true },
       }),
       body: document({
         formatting: true,
