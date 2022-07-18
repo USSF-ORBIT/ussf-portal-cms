@@ -6,7 +6,7 @@ SSID=rdsss-$(date +"%s")
 
 # Create Snapshot
 aws rds create-db-snapshot \
-  --db-instance-identifier terraform-20220214212230326300000001 \
+  --db-instance-identifier ${RDS_INSTANCE} \
   --db-snapshot-identifier $SSID --tags Key=sha,Value=${IMAGE_TAG}
 
 # RDS Snapshot
