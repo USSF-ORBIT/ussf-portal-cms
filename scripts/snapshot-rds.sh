@@ -21,4 +21,3 @@ until [ "$DBSS" = "available" ]
       sleep 30
     done
     echo "$SSID available!"
-    continue

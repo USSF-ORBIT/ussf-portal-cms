@@ -62,7 +62,7 @@ jobs:
           RDS_INSTANCE: ${{ secrets.RDS_INSTANCE }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          ./scripts/snapshot-docdb.sh
+          ./scripts/snapshot-rds.sh
 
       - name: Download task definition | Update Task Definition | Update ECS Service | Deploy new image
         env:
