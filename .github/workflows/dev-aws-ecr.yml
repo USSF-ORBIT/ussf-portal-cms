@@ -57,6 +57,13 @@ jobs:
           build-args: |
             BUILD=${{ github.sha }}
 
+      - name: Snapshot RDS
+        env:
+          RDS_INSTANCE: ${{ secrets.RDS_INSTANCE }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          ./scripts/snapshot-rds.sh
+
       - name: Download task definition | Update Task Definition | Update ECS Service | Deploy new image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
