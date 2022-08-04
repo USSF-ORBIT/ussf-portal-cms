@@ -56,21 +56,21 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@playwright-testing-library/test@4.2.1":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@playwright-testing-library/test/-/test-4.2.1.tgz#4f77e4827fadbcd74d078e2f0f7818a3d4ddf76d"
-  integrity sha512-95EJjXMYETxc2LgMGH9FEQE8AoUV8roWvK79Cu+qEg3ZrZkScROWp60L/0ow60RnvUMXTMdr0tgPhidIAsvKpA==
+"@playwright-testing-library/test@4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@playwright-testing-library/test/-/test-4.3.0.tgz#bd9bedba7e01c39db2dc3b83ee2b521897d79c0e"
+  integrity sha512-WwcbqjRMeF7DhDDdoXTPUiIghaonsewDYLxQd2gYDvMHRhCUaZyOpK0GUc8UJPU+S7tgyZs2+T0zdljx1m1skw==
   dependencies:
     "@testing-library/dom" "^7.31.2"
     wait-for-expect "^3.0.2"
 
-"@playwright/test@1.23.1":
-  version "1.23.1"
-  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.23.1.tgz#209cceb81c579d1cd2835f15c2bb3a8345103d60"
-  integrity sha512-dKplLPSYPZgnsBk1xxOophhpx3ZVg8DveoNJgLPe096lDCfmaIIreLsYF+4hqzy3PG61IP+aEnG5VAOjC3bhbA==
+"@playwright/test@1.24.2":
+  version "1.24.2"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.24.2.tgz#283ea8cc497f9742037458659bf235f4776cf1f0"
+  integrity sha512-Q4X224pRHw4Dtkk5PoNJplZCokLNvVbXD9wDQEMrHcEuvWpJWEQDeJ9gEwkZ3iCWSFSWBshIX177B231XW4wOQ==
   dependencies:
     "@types/node" "*"
-    playwright-core "1.23.1"
+    playwright-core "1.24.2"
 
 "@testing-library/dom@^7.31.2":
   version "7.31.2"
@@ -227,10 +227,10 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-plugin-playwright@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-playwright/-/eslint-plugin-playwright-0.9.0.tgz#e14ac6c834f2704b293fc3f45cd40d771ec2e840"
-  integrity sha512-5bxAhiKjRASSgtQ4IipwtdesgQ8GT9m0PK61Uqxclu/TpiZS4eaAksydVeiiSPIOQph5GvuuLA7+oBS0WkWO6w==
+eslint-plugin-playwright@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-playwright/-/eslint-plugin-playwright-0.10.0.tgz#b90faba9002bc594b879435f3c83b198722b00f6"
+  integrity sha512-67iCGx4UZS8Z/Z9CcNbWjoJ7v5t7awfV2REm6hjEywYhE36GsOwGzgvDJ+dYdNwC1enLxFijUvwzfnIUin+5DA==
 
 has-flag@^3.0.0:
   version "3.0.0"
@@ -308,10 +308,10 @@ pgpass@1.x:
   dependencies:
     split2 "^4.1.0"
 
-playwright-core@1.23.1:
-  version "1.23.1"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.23.1.tgz#af02bd7568af1017e477433b1b003ba84e1eb312"
-  integrity sha512-9CXsE0gawph4KXl6oUaa0ehHRySZjHvly4TybcBXDvzK3N3o6L/eZ8Q6iVWUiMn0LLS5bRFxo1qEtOETlYJxjw==
+playwright-core@1.24.2:
+  version "1.24.2"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.24.2.tgz#47bc5adf3dcfcc297a5a7a332449c9009987db26"
+  integrity sha512-zfAoDoPY/0sDLsgSgLZwWmSCevIg1ym7CppBwllguVBNiHeixZkc1AdMuYUPZC6AdEYc4CxWEyLMBTw2YcmRrA==
 
 postgres-array@~2.0.0:
   version "2.0.0"
