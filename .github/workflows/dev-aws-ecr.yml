@@ -2,6 +2,9 @@ name: Automated Docker Build Main Push AWS Dev
 
 on:
   push:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md**'
     branches: [main]
 
 jobs:
