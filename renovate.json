@@ -26,6 +26,12 @@
       "managers": ["dockerfile"],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "groupName": "github-actions",
+      "managers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "labels": ["dependencies"]
     }
   ],
   "ignorePresets": [":prHourlyLimit2"]
