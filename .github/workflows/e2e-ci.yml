@@ -15,8 +15,8 @@ on:
 jobs:
   run-e2e-tests:
     uses: USSF-ORBIT/ussf-portal/.github/workflows/run-e2e-tests.yml@sc-721-investigate-triggering-e2e
-      with:
-        cms-image-tag: asdf
+    with:
+      cms-image-tag: ${{ github.sha }}
 #   playwright:
 #     runs-on: ubuntu-latest
 #     steps:
