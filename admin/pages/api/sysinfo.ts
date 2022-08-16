@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-const __BUILD_ID__ = process.env.IMAGE_TAG
+const __BUILD_ID__ = process.env.BUILD_ID
 const __NODE_ENV__ = process.env.NODE_ENV
-const __VERSION__ = process.env.npm_package_version
+const __VERSION__ = process.env.VERSION
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   res.status(200).json({
