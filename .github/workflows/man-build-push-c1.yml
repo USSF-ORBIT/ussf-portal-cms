@@ -33,6 +33,10 @@ jobs:
               http = false
               insecure = true
 
+      - name: Read CMS version from package.json
+        run: echo ::set-output name=cmsVersion::$(node -p "require('./package.json').version")
+        id: details
+
       - name: Build
         uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3
         with:
@@ -41,6 +45,9 @@ jobs:
           load: true
           tags: ${{ secrets.C1_REGISTRY}}/${{ secrets.C1_REPOSITORY }}:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD=${{ github.sha }}
+            CMS_VERSION=${{ steps.details.outputs.cmsVersion }}
 
       - name: Push image to C1 Dev Artifactory
         id: build-c1-image

@@ -46,6 +46,10 @@ jobs:
         with:
           install: true
 
+      - name: Read CMS version from package.json
+        run: echo ::set-output name=cmsVersion::$(node -p "require('./package.json').version")
+        id: details
+
       - name: Build and push
         uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3
         with:
@@ -55,6 +59,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD=${{ github.sha }}
+            CMS_VERSION=${{ steps.details.outputs.cmsVersion }}
 
       - name: Download task definition | Update Task Definition | Update ECS Service | Deploy new image
         env:
