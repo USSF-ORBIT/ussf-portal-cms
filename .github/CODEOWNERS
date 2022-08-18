@@ -4,7 +4,7 @@
 
 # Github settings
 
-.github/settings.yml @abbyoung @esacteksab @noahfirth @gidjin @minhlai
+.github/settings.yml @abbyoung @esacteksab @gidjin @minhlai
 
 # CODEOWNERS prevent renovate automerge since it will automatically ask for review
 
@@ -12,5 +12,5 @@
 
 # Solution: make files used by renovate owned by everyone
 
-**/\*/package.json
-**/\*/yarn.lock
+**/*/package.json
+**/*/yarn.lock
