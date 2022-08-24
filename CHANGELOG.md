@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.2...1.4.3) (2022-08-24)
+
+
+### Bug Fixes
+
+* update docker build to embed info for sysinfo response ([#120](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/120)) ([f5691f0](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/f5691f00aedb02819cfb48416b663e885a899cdb))
+
 ### [1.4.2](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.1...1.4.2) (2022-08-16)
 
 ### [1.4.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.0...1.4.1) (2022-08-01)
