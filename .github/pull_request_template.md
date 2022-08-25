@@ -46,6 +46,7 @@
   - [ ] Including jest-axe checks when UI changes
 - [ ] Created/modified automated E2E tests in Playwright
   - [ ] Including [axe-playwright](https://github.com/abhinaba-ghosh/axe-playwright) checks when UI changes
+  - [ ] Checked that the E2E test build is not failing
 - Performed [a11y testing](https://github.com/trussworks/accessibility/blob/master/sample_a11y_testing_process.md):
   - [ ] Checked responsiveness in mobile, tablet, and desktop
   - [ ] Checked keyboard navigability
@@ -61,6 +62,7 @@
 - [ ] Pulled this branch locally and tested it
 - [ ] Reviewed this code and left comments
 - [ ] Checked that all code is adequately covered by tests
+  - [ ] Checked that the E2E test build is not failing
 - [ ] Made it clear which comments need to be addressed before this work is merged
 - [ ] Considered marking this as accepted even if there are small changes needed
 - Performed [a11y testing](https://github.com/trussworks/accessibility/blob/master/sample_a11y_testing_process.md):
