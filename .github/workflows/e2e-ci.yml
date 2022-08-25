@@ -1,11 +1,11 @@
-name: Playwright E2E tests
+name: E2E tests
 
 on:
   push:
     paths-ignore:
       - 'docs/**'
       - '**.md**'
-    branches: [main, playwright-spike]
+    branches: [main]
   pull_request:
     paths-ignore:
       - 'docs/**'
@@ -13,68 +13,5 @@ on:
     branches: [main]
 
 jobs:
-  playwright:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
-        with:
-          path: ./ussf-portal-cms
-
-      - name: Read Node.js version from package.json
-        run: echo ::set-output name=nodeVersion::$(node -p "require('./ussf-portal-cms/package.json').engines.node")
-        id: engines
-
-      - name: Set up node
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3
-        with:
-          node-version: ${{ steps.engines.outputs.nodeVersion }}
-
-      - name: Check out portal client
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
-        with:
-          repository: USSF-ORBIT/ussf-portal-client
-          path: ./ussf-portal-client
-
-      - name: Build image for testing
-        env:
-          IMAGE_TAG: ${{ github.sha }}
-        run: docker build -t $IMAGE_TAG --target e2e .
-        working-directory: ./ussf-portal-cms
-
-      - name: Docker compose
-        run: docker-compose -f docker-compose.e2e.yml up -d
-        working-directory: ./ussf-portal-cms
-        env:
-          IMAGE_TAG: ${{ github.sha }}
-
-      - name: Docker logs
-        uses: jwalton/gh-docker-logs@a8cb5301950dd4d2b86619cd487b3b281526b178 # tag=v2.2.0
-        with:
-          dest: './ussf-portal-cms/logs'
-
-      - name: Install deps
-        run: yarn e2e:install
-        working-directory: ./ussf-portal-cms
-
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-        working-directory: ./ussf-portal-cms/e2e
-
-      - name: Run e2e tests
-        run: yarn e2e:test
-        working-directory: ./ussf-portal-cms
-
-      - name: Upload logs
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # tag=v3
-        if: always()
-        with:
-          name: container-logs
-          path: ussf-portal-cms/logs
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # tag=v3
-        with:
-          name: playwright-results
-          path: ussf-portal-cms/e2e/test-results
+  run-e2e-tests:
+    uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-run-e2e-tests.yml@main
