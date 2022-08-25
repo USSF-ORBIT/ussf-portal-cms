@@ -21,11 +21,7 @@
     "pre-commit": "lint-staged",
     "test": "jest --runInBand --testTimeout=60000",
     "test:watch": "jest --watch --runInBand --testTimeout=60000",
-    "release": "standard-version -t ''",
-    "e2e:install": "yarn --cwd e2e/ install && cd e2e/ && npx playwright install",
-    "e2e:test": "yarn --cwd e2e/ playwright test",
-    "e2e:debug": "PWDEBUG=1 yarn --cwd e2e/ playwright test --headed",
-    "e2e:codegen": "yarn --cwd e2e/ playwright codegen localhost:3001"
+    "release": "standard-version -t ''"
   },
   "dependencies": {
     "@babel/core": "7.18.10",
@@ -56,7 +52,6 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jsx-a11y": "6.6.1",
-    "eslint-plugin-playwright": "0.10.0",
     "eslint-plugin-react": "7.30.1",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-security": "1.5.0",
