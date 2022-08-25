@@ -131,6 +131,10 @@
       {
         "type": "docs",
         "section": "Documentation"
+      },
+      {
+        "type": "security",
+        "section": "Security Improvements"
       }
     ]
   }
