@@ -1,4 +1,4 @@
-name: Automated Docker Build Main Push AWS Dev
+name: Docker Build Main Push AWS Dev
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - 'docs/**'
       - '**.md**'
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-push-dev-aws:
@@ -50,6 +51,10 @@ jobs:
         with:
           install: true
 
+      - name: Read CMS version from package.json
+        run: echo ::set-output name=cmsVersion::$(node -p "require('./package.json').version")
+        id: details
+
       - name: Build and push
         uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3
         with:
@@ -59,6 +64,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD=${{ github.sha }}
+            CMS_VERSION=${{ steps.details.outputs.cmsVersion }}
 
       - name: Snapshot RDS
         env:
