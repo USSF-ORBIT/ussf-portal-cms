@@ -6,16 +6,22 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY . .
+COPY ["package*.json", "yarn.lock", "keystone.ts", "schema.graphql", "schema.prisma", "./"]
+
+COPY ./src/ /app/src/
 
 ENV NODE_ENV development
 
 RUN yarn install --frozen-lockfile
 
+COPY ["tsconfig.json", ".eslintignore", ".eslintrc.json", "babel.config.js", "./"]
+
 RUN yarn build
 
 # Install only production deps this time
 RUN yarn install --production --ignore-scripts --prefer-offline
+
+COPY . .
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
