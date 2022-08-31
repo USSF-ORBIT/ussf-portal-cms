@@ -1,4 +1,4 @@
-name: Docker build and cache to AWS ECR
+name: Docker Build Cache Push AWS ECR
 
 on:
   workflow_dispatch:
@@ -73,7 +73,7 @@ jobs:
           build-args: |
             BUILD=${{ github.sha }}
             CMS_VERSION=${{ steps.details.outputs.cmsVersion }}
-            
+
       - name: Build and push
         uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # tag=v3
         with:
