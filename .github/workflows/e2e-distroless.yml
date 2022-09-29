@@ -2,6 +2,8 @@ name: E2E distroless tests
 
 on:
   workflow_dispatch:
+  push:
+     branches: [minh-distroless-experiment]
 
 jobs:
   run-e2e-tests:
