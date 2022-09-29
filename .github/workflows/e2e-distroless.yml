@@ -4,7 +4,9 @@ on:
   workflow_dispatch:
   push:
      branches: [minh-distroless-experiment]
-
+  pull_request:
+    branches: [main]
+    
 jobs:
   run-e2e-tests:
     uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-run-e2e-tests.yml@main
