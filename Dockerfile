@@ -18,11 +18,16 @@ RUN yarn build
 RUN yarn install --production --ignore-scripts --prefer-offline
 
 ##--------- Stage: e2e ---------##
-# E2E image for running tests (same as prod but without certs)
-FROM node:14.20.1-slim AS e2e
+FROM node:14.20.1-slim AS build-env
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+
+##--------- Stage: e2e ---------##
+# E2E image for running tests (same as prod but without certs)
+FROM gcr.io/distroless/nodejs:14 AS e2e
+
+COPY --from=build-env /lib/aarch64-linux-gnu/  /lib/aarch64-linux-gnu/
 
 WORKDIR /app
 
@@ -33,7 +38,7 @@ ENV NODE_ENV production
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["node", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: runner ---------##
 # Runtime container
