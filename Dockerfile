@@ -57,8 +57,9 @@ ENV NODE_ENV production
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+# CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 # CMD ["node", "/app/node_modules/.bin/prisma migrate deploy"]
+CMD ["/app/node_modules/.bin/prisma", "migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 
 ##--------- Stage: runner ---------##
