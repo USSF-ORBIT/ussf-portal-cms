@@ -17,7 +17,7 @@ RUN yarn build
 # Install only production deps this time
 RUN yarn install --production --ignore-scripts --prefer-offline
 
-##--------- Stage: e2e ---------##
+##--------- Stage: build-env ---------##
 FROM node:14.20.1-slim AS build-env
 
 RUN apt-get update \
