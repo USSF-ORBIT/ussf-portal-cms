@@ -21,13 +21,28 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 FROM node:14.20.1-slim AS build-env
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+    && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init zlib1g
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
+# FROM node:14.20.1-slim AS e2e
 FROM gcr.io/distroless/nodejs:14 AS e2e
+# FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
-COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
+# COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
+COPY --from=build-env /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
+COPY --from=build-env /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
+COPY --from=build-env /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
+COPY --from=build-env /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
+
+# COPY --from=build-env /usr/lib/aarch64-linux-gnu/libcrypto*  /usr/lib/aarch64-linux-gnu/
+# COPY --from=build-env /usr/lib/aarch64-linux-gnu/libssl*  /usr/lib/aarch64-linux-gnu/
+# COPY --from=build-env /usr/bin/openssl  /usr/bin/openssl
+
+# COPY --from=build-env /usr/bin/ldd /usr/bin/ldd
+
+# RUN apt-get update \
+#     && apt-get install -y --no-install-recommends openssl
 
 WORKDIR /app
 
@@ -38,7 +53,9 @@ ENV NODE_ENV production
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["node", "/app/node_modules/.bin/prisma migrate deploy && node ./node_modules/next/dist/bin/next start"]
+CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node /app/node_modules/next/dist/bin/next start"]
+# CMD ["node", "/app/node_modules/.bin/prisma migrate deploy"]
+
 
 ##--------- Stage: runner ---------##
 # Runtime container
