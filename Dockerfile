@@ -38,7 +38,7 @@ COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
 # COPY --from=build-env /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
 # COPY --from=build-env /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
 # COPY --from=build-env /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
-
+COPY --from=build-env /usr/bin/dumb-init /usr/bin/dumb-init
 # COPY --from=build-env /usr/lib/aarch64-linux-gnu/libcrypto*  /usr/lib/aarch64-linux-gnu/
 # COPY --from=build-env /usr/lib/aarch64-linux-gnu/libssl*  /usr/lib/aarch64-linux-gnu/
 # COPY --from=build-env /usr/bin/openssl  /usr/bin/openssl
@@ -60,7 +60,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 # CMD ["node", "/app/node_modules/.bin/prisma migrate deploy"]
 # CMD ["/app/node_modules/.bin/prisma", "migrate", "deploy", ";", "/app/node_modules/.bin/keystone", "start"]
-CMD ["startup/entrypoint.js"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["node", "/app/node_modules/.bin/prisma", "migrate", "deploy"]
 
 ##--------- Stage: runner ---------##
 # Runtime container
