@@ -61,7 +61,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # CMD ["node", "/app/node_modules/.bin/prisma migrate deploy"]
 # CMD ["/app/node_modules/.bin/prisma", "migrate", "deploy", ";", "/app/node_modules/.bin/keystone", "start"]
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma", "migrate", "deploy", "&&", "/nodejs/bin/node", "-r". "/app/startup/index.js", "/app/node_modules/.bin/keystone", "start"]
+CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma", "migrate", "deploy", "/usr/bin/dumb-init -- ", "/nodejs/bin/node", "-r". "/app/startup/index.js", "/app/node_modules/.bin/keystone", "start"]
 
 ##--------- Stage: runner ---------##
 # Runtime container
