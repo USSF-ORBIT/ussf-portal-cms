@@ -82,7 +82,7 @@ jobs:
           ./scripts/deploy-dev-aws.sh
 
   trivy-scan-image:
-    needs: build-and-push-aws
+    needs: build-and-push-dev-aws
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials
