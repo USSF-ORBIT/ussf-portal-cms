@@ -11,7 +11,7 @@ import { lists } from './schema'
 import { extendGraphqlSchema } from './lib/schema'
 
 const TEST_DATABASE = 'unit-test'
-const TEST_DATABASE_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${TEST_DATABASE}`
+const TEST_DATABASE_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${TEST_DATABASE}?connect_timeout=10`
 
 export const testConfig = config({
   db: {

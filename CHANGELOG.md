@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.5](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.4...1.4.5) (2022-10-05)
+
+### [1.4.4](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.3...1.4.4) (2022-09-16)
+
+
+### Security Improvements
+
+* bump moment-timezone from 0.5.34 to 0.5.37 ([#134](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/134)) ([6b37f6c](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/6b37f6ce5bef5abdcc3ec4149d768e9418bcca7f))
+
+### [1.4.3](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.2...1.4.3) (2022-08-24)
+
+
+### Bug Fixes
+
+* update docker build to embed info for sysinfo response ([#120](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/120)) ([f5691f0](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/f5691f00aedb02819cfb48416b663e885a899cdb))
+
 ### [1.4.2](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.1...1.4.2) (2022-08-16)
 
 ### [1.4.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.0...1.4.1) (2022-08-01)

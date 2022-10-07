@@ -159,7 +159,9 @@ branches:
         strict: true
         # Required. The list of status checks to require in order to merge into this branch
         contexts:
-          ['lint-and-test', 'action-semantic-pull-request', 'playwright']
+          # TODO Temporarily removing e2e tests from required builds as they are flakey and need to be stabilized first
+          # ['lint-and-test', 'action-semantic-pull-request', 'run-e2e-tests']
+          ['lint-and-test', 'action-semantic-pull-request']
       # Required. Enforce all configured restrictions for administrators. Set to true to enforce required status checks for repository administrators. Set to null to disable.
       enforce_admins: true
       # Commits pushed to matching branches must have verified signatures. Set to false to disable.

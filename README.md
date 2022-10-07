@@ -39,8 +39,8 @@ Environment variables for Postgres are set in the `docker-compose.services.yml` 
 
 If running on standard port 5432, this makes the connection url one of the following:
 
-- `postgres://keystone:keystonecms@host.docker.internal:6666/keystone` (connecting from one docker container to another)
-- `postgres://keystone:keystonecms@0.0.0.0:5432/keystone` (connecting from host machine)
+- `postgres://keystone:keystonecms@host.docker.internal:6666/keystone?connect_timeout=10` (connecting from one docker container to another)
+- `postgres://keystone:keystonecms@0.0.0.0:5432/keystone?connect_timeout=10` (connecting from host machine)
 
 Caveat: If you're also running Postgres on your local machine, you may run into some port conflicts with the Postgres Docker container. In the docker-compose file, you can map `5432` to an unused port to resolve.
 
