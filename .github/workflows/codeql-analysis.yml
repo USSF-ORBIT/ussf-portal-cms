@@ -80,4 +80,4 @@ jobs:
         if: always()
         with:
           name: codeql-sarif-reports
-          path: /home/runner/work/ussf-portal-client/results/javascript.sarif
+          path: /home/runner/work/ussf-portal-cms/results/javascript.sarif
