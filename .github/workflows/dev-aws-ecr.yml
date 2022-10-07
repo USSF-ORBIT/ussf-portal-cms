@@ -80,3 +80,39 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           ./scripts/deploy-dev-aws.sh
+
+  trivy-scan-image:
+    needs: build-and-push-aws
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # tag=v1
+        with:
+          aws-access-key-id: ${{ secrets.GHA_ECR_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.GHA_ECR_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+          role-to-assume: ${{ secrets.GHA_ECR_ROLE_ASSUMPTION }}
+          role-skip-session-tagging: true
+          role-duration-seconds: '3600'
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@9149ade017c57f86dea2f76a01f8b2d5bd06b10f # tag=v1
+
+      - name: Aqua Security Trivy
+        id: scan-aws-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: keystone
+          IMAGE_TAG: ${{ github.sha }}
+        uses: aquasecurity/trivy-action@d63413b0a4a4482237085319f7f4a1ce99a8f2ac # tag=0.7.1
+        with:
+          image-ref: '${{ steps.login-ecr.outputs.registry }}/keystone:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          ignore-unfixed: true
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@b398f525a5587552e573b247ac661067fafa920b # tag=v2
+        with:
+          sarif_file: 'trivy-results.sarif'
