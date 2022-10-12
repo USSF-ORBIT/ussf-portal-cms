@@ -23,6 +23,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 FROM node:14.20.1-slim AS e2e
 
 RUN apt-get update \
+    && apt-get dist-upgrade -y \
     && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
 
 WORKDIR /app
@@ -45,6 +46,7 @@ WORKDIR /app
 COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
+    && apt-get dist-upgrade -y \
     && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init \
     && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
     && rm -rf /var/lib/apt/lists/*
