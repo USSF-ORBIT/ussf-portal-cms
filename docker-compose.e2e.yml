@@ -88,7 +88,7 @@ services:
   # CMS-specific services
   keystone-db:
     container_name: keystone-db
-    image: postgres:14
+    image: postgres:15
     restart: always
     ports:
       - '5432:5432'
