@@ -62,6 +62,9 @@
     "prettier": "2.7.1",
     "standard-version": "9.5.0"
   },
+  "resolutions": {
+    "undici": "5.5.1"
+  },
   "engines": {
     "node": "14.20.1"
   },
