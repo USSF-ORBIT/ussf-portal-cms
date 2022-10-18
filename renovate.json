@@ -29,7 +29,7 @@
     },
     {
       "groupName": "github-actions",
-      "managers": ["github-actions"],
+      "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch"],
       "labels": ["dependencies"]
     }
