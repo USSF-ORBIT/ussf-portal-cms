@@ -14,6 +14,7 @@ To run Keystone outside, you will also need a [Postgres](https://www.postgresql.
 Set these variables for Keystone in a `.envrc.local` file (only needed for local development):
 
 - `PORTAL_PATH` (path to the `ussf-portal-client` directory on your machine, used for running the portal app service in Docker)
+- `PORT` to `3001` if you are running CMS alongside Portal, as Portal will default to using port `3000` and come into conflict with CMS
 
 These env variables are already set in `.envrc` and only need to be added to your local file if you want to override the defaults:
 
@@ -42,7 +43,17 @@ If running on standard port 5432, this makes the connection url one of the follo
 - `postgres://keystone:keystonecms@host.docker.internal:6666/keystone?connect_timeout=10` (connecting from one docker container to another)
 - `postgres://keystone:keystonecms@0.0.0.0:5432/keystone?connect_timeout=10` (connecting from host machine)
 
-Caveat: If you're also running Postgres on your local machine, you may run into some port conflicts with the Postgres Docker container. In the docker-compose file, you can map `5432` to an unused port to resolve.
+Caveat: If you're also running Postgres on your local machine, you may run into some port conflicts with the Postgres Docker container. This may result in errors that say:
+
+```
+Error: P3000: Failed to create database: Prisma could not connect to a default database (`postgres` or `template1`), it cannot create the specified database.
+```
+when running `yarn dev` OR when running e2e tests, 
+```
+error: role "keystone" does not exist
+```
+Both errors are the result of the same issue, which is that the app is trying to connect to a local instance of Postgres.
+In the docker-compose file, you can map `5432` to an unused port to resolve. Or stop Postgres on your local machine.
 
 ### Keystone App
 
