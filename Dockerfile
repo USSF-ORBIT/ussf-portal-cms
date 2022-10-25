@@ -66,7 +66,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY --from=build-env /bin/sh  /bin/sh
 
 ENTRYPOINT [ "/bin/sh" ]
-CMD ["/app/node_modules/.bin/prisma", "migrate", "deploy", ";", "/app/node_modules/.bin/keystone", "start"]
+CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 # CMD ["-r", "./startup/deploy.js", "-r". "./startup/index.js", "node_modules/.bin/keystone", "start"]
 
