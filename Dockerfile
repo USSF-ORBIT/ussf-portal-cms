@@ -2,6 +2,7 @@
 FROM node:14.20.1-slim AS builder
 
 RUN apt-get update \
+    && apt-get dist-upgrade -y \
     && apt-get install -y --no-install-recommends openssl libc6 yarn
 
 WORKDIR /app
@@ -48,6 +49,7 @@ COPY --from=build-env /usr/bin/dumb-init /usr/bin/dumb-init
 # RUN apt-get update \
 #     && apt-get install -y --no-install-recommends openssl
 
+
 WORKDIR /app
 
 COPY --from=builder /app /app
@@ -72,6 +74,7 @@ WORKDIR /app
 COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
+    && apt-get dist-upgrade -y \
     && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init \
     && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
     && rm -rf /var/lib/apt/lists/*
