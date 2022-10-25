@@ -37,9 +37,9 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
-##--------- Stage: runner ---------##
-# Runtime container
-FROM node:14.20.1-slim AS runner
+
+##--------- Stage: build-env ---------##
+FROM node:14.20.1-slim AS build-env
 
 WORKDIR /app
 
@@ -47,11 +47,21 @@ COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init \
-    && chmod +x add-rds-cas.sh && sh add-rds-cas.sh \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init zlib1g \
+    && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
+
+##--------- Stage: runner ---------##
+# Runtime container
+FROM gcr.io/distroless/nodejs:14 AS runner
+
+WORKDIR /app
 
 COPY --from=builder /app /app
+
+COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
+COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
+COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
+COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
 
 ENV NODE_ENV production
 ARG BUILD
@@ -62,4 +72,8 @@ ENV VERSION $CMS_VERSION
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD node_modules/.bin/keystone prisma migrate deploy ; dumb-init node -r ./startup/index.js node_modules/.bin/keystone start
+COPY --from=build-env  ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-us-gov-bundle.pem", "/app/us-gov-west-1-bundle.pem", "./"]
+COPY --from=build-env /bin/sh  /bin/sh
+
+ENTRYPOINT [ "/bin/sh", "-c" ]
+CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
