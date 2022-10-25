@@ -30,10 +30,10 @@ RUN apt-get update \
 FROM gcr.io/distroless/nodejs:14 AS e2e
 # FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
-COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
-COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
-COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
-COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+# COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
+# COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
+# COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
+# COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
 
 # COPY --from=build-env /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
 # COPY --from=build-env /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
@@ -65,8 +65,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 COPY --from=build-env /bin/sh  /bin/sh
 
-ENTRYPOINT [ "/bin/sh" ]
-CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+ENTRYPOINT [ "/bin/sh", "-c" ]
+CMD [ "/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start" ]
+# CMD ["&& /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+# CMD ["/nodejs/bin/node", "/app/node_modules/.bin/prisma", "migrate", "deploy", "&& /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 # CMD ["-r", "./startup/deploy.js", "-r". "./startup/index.js", "node_modules/.bin/keystone", "start"]
 
