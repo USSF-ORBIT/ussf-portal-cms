@@ -28,7 +28,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@9149ade017c57f86dea2f76a01f8b2d5bd06b10f # tag=v1
+        uses: aws-actions/amazon-ecr-login@eb9a709a709d0d6e4b34a02d34494041831f6999 # tag=v1
 
       - name: Login to ECR
         uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # tag=v2
@@ -97,7 +97,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@9149ade017c57f86dea2f76a01f8b2d5bd06b10f # tag=v1
+        uses: aws-actions/amazon-ecr-login@eb9a709a709d0d6e4b34a02d34494041831f6999 # tag=v1
 
       - name: Aqua Security Trivy
         id: scan-aws-image
