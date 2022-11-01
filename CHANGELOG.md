@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.6](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.5...1.4.6) (2022-10-28)
+
+
+### Security Improvements
+
+* update undici to 5.5.1 ([#176](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/176)) ([f4b7621](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/f4b7621509d66a774cb0b68b4b1a93943596134e))
+* upgrades busyboy which should update dicer ([#177](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/177)) ([732f9b6](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/732f9b6f8640cfe1834eb656a94855844490fa9c))
+
+
+### Documentation
+
+* update readme to include port override and postgres troubleshooting ([#185](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/185)) ([5a19208](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/5a1920849f757403eaa14ce5abfc57b65454a2c3))
+
+
+### Reverted Changes
+
+* Revert "chore(deps): update amannn/action-semantic-pull-request action to v5 (#192)" (#198) ([44ad36e](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/44ad36e5023a571ad75f9619551b0b20b6acd704)), closes [#192](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/192) [#198](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/198)
+
 ### [1.4.5](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.4...1.4.5) (2022-10-05)
 
 ### [1.4.4](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.3...1.4.4) (2022-09-16)
