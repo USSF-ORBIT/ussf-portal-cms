@@ -21,6 +21,8 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
 FROM gcr.io/distroless/nodejs:14 AS e2e
+# The below image is an arm64 debug image that has helpful binaries for debugging, such as a shell, for local debugging
+# FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
 WORKDIR /app
 
@@ -30,6 +32,12 @@ COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+
+# The below copies are for hosts running on ARM64, such as M1 Macbooks. Uncomment the lines below and comment out the equivalent lines above.
+# COPY --from=builder /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
 
 ENV NODE_ENV production
 
