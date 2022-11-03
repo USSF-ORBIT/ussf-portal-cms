@@ -58,8 +58,9 @@ In the docker-compose file, you can map `5432` to an unused port to resolve. Or 
 
 ### Keystone App
 
-- Run required services (`yarn services:up`) or required services + Portal (`yarn portal:up`)
+- Run required services (`yarn services:up`)
 - Run Keystone in dev mode (`yarn dev`)
+- Run portal client (`cd ../ussf-portal-client && yarn dev`)
 
 _or_
 
