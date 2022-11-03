@@ -7,6 +7,7 @@
     "url": "github:USSF-ORBIT/ussf-portal-cms"
   },
   "scripts": {
+    "services:removeall": "docker ps --quiet --all | xargs docker rm --force",
     "services:up": "docker compose up -d",
     "services:down": "docker compose down",
     "dev": "node -r ./startup/index.js node_modules/.bin/keystone dev",
