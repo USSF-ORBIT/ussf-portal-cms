@@ -11,12 +11,13 @@ To run Keystone outside, you will also need a [Postgres](https://www.postgresql.
 
 ### Environment variables
 
-Set these variables for Keystone in a `.envrc.local` file (only needed for local development):
+The following are set in `.envrc` and only need to be added to your local `.envrc.local` file if you want to override the defaults
 
-- `PORTAL_PATH` (path to the `ussf-portal-client` directory on your machine, used for running the portal app service in Docker)
+These variables for Keystone are only needed for local development:
+
 - `PORT` to `3001` if you are running CMS alongside Portal, as Portal will default to using port `3000` and come into conflict with CMS
 
-These env variables are already set in `.envrc` and only need to be added to your local file if you want to override the defaults:
+These env variables are already set:
 
 - `SESSION_SECRET` - must be a string at least 32 chars, must be the same value set in the Portal application
 - `SESSION_DOMAIN` - the domain used for both the Portal app & CMS apps, must be the same value set in the Portal application
@@ -57,8 +58,9 @@ In the docker-compose file, you can map `5432` to an unused port to resolve. Or 
 
 ### Keystone App
 
-- Run required services (`yarn services:up`) or required services + Portal (`yarn portal:up`)
+- Run required services (`yarn services:up`)
 - Run Keystone in dev mode (`yarn dev`)
+- Run portal client (`cd ../ussf-portal-client && yarn dev`)
 
 _or_
 
@@ -71,12 +73,6 @@ _or_
 
 - `yarn services:up`: Starts all required services in Docker
   - Stop containers with `yarn services:down`
-- `yarn portal:up`: Starts all required services _and_ NextJS App/Portal in Docker
-  - Stop containers with `yarn portal:down`
 - `yarn dev`: Starts Keystone in development mode and watches for changed files
 - `yarn test`: Run Jest unit tests.
   - Run in watch mode with `yarn test:watch`
-- `yarn e2e:test`: Run Playwright E2E tests
-  - You have to first run `yarn e2e:install` to install Playwright & E2E dependencies
-  - This runs the tests in a headless browser by default. You can also run `yarn e2e:test --headed` to run in a headed browser.
-  - To debug tests, run `yarn e2e:debug`. This will automatically pause the tests and you can step through them using the Playwright debugger.
