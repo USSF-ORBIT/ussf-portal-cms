@@ -49,6 +49,24 @@ COPY --from=builder /bin/sh  /bin/sh
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
+##--------- Stage: e2e-local ---------##
+# E2E image for running tests (same as prod but without certs)
+FROM node:14.20.1-slim AS e2e-local
+
+RUN apt-get update \
+    && apt-get dist-upgrade -y \
+    && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+
+ENV NODE_ENV production
+
+EXPOSE 3001
+ENV NEXT_TELEMETRY_DISABLED 1
+
+CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
 FROM node:14.20.1-slim AS build-env
