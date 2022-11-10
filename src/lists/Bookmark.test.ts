@@ -1,10 +1,8 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Bookmark schema', () => {
-  let testEnv: TestEnvWithSessions
-
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
 
@@ -14,16 +12,8 @@ describe('Bookmark schema', () => {
     description: 'This is an example link',
     keywords: 'example bookmark testing',
   }
-
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-  })
-
-  afterAll(async () => {
-    await testEnv.disconnect()
-  })
+  // Set up test environment, seed data, and return contexts
+  beforeAll(async () => ({ adminContext, userContext } = await configTestEnv()))
 
   describe('as an admin user', () => {
     it('can create new bookmarks', async () => {
@@ -89,7 +79,7 @@ describe('Bookmark schema', () => {
           where: { id: existingBookmarks[0].id },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Bookmark'./
+        'Access denied: You cannot delete that Bookmark - it may not exist'
       )
     })
   })
@@ -115,9 +105,7 @@ describe('Bookmark schema', () => {
           data: testBookmark,
           query: 'id url label description keywords createdAt updatedAt',
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Bookmark'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that Bookmark')
     })
 
     it('cannot update bookmarks', async () => {
@@ -134,7 +122,7 @@ describe('Bookmark schema', () => {
           query: 'id url label description keywords createdAt updatedAt',
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Bookmark'./
+        'Access denied: You cannot update that Bookmark - it may not exist'
       )
     })
 
@@ -148,7 +136,7 @@ describe('Bookmark schema', () => {
           where: { id: existingBookmarks[0].id },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Bookmark'./
+        'Access denied: You cannot delete that Bookmark - it may not exist'
       )
     })
   })

@@ -17,8 +17,7 @@ type Event {
   createdAt: DateTime
 }
 
-scalar DateTime
-  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
 
 input EventWhereUniqueInput {
   id: ID
@@ -253,12 +252,7 @@ type Bookmark {
   label: String
   description: String
   keywords: String
-  collections(
-    where: CollectionWhereInput! = {}
-    orderBy: [CollectionOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Collection!]
+  collections(where: CollectionWhereInput! = {}, orderBy: [CollectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Collection!]
   collectionsCount(where: CollectionWhereInput! = {}): Int
   updatedBy: User
   createdBy: User
@@ -338,12 +332,7 @@ input CollectionRelateToManyForCreateInput {
 type Collection {
   id: ID!
   title: String
-  bookmarks(
-    where: BookmarkWhereInput! = {}
-    orderBy: [BookmarkOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Bookmark!]
+  bookmarks(where: BookmarkWhereInput! = {}, orderBy: [BookmarkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Bookmark!]
   bookmarksCount(where: BookmarkWhereInput! = {}): Int
   showInSitesApps: Boolean
   updatedBy: User
@@ -630,19 +619,9 @@ type Article {
   archivedDate: DateTime
   byline: Byline
   location: Location
-  labels(
-    where: LabelWhereInput! = {}
-    orderBy: [LabelOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Label!]
+  labels(where: LabelWhereInput! = {}, orderBy: [LabelOrderByInput!]! = [], take: Int, skip: Int! = 0): [Label!]
   labelsCount(where: LabelWhereInput! = {}): Int
-  tags(
-    where: TagWhereInput! = {}
-    orderBy: [TagOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   updatedBy: User
   createdBy: User
@@ -773,9 +752,7 @@ input ImageFieldInput {
   upload: Upload!
 }
 
-"""
-The `Upload` scalar type represents a file upload.
-"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 input BylineRelateToOneForUpdateInput {
@@ -930,10 +907,7 @@ input AnnouncementCreateInput {
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
-scalar JSON
-  @specifiedBy(
-    url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf"
-  )
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Mutation {
   createEvent(data: EventCreateInput!): Event
@@ -950,19 +924,13 @@ type Mutation {
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
   createBookmark(data: BookmarkCreateInput!): Bookmark
   createBookmarks(data: [BookmarkCreateInput!]!): [Bookmark]
-  updateBookmark(
-    where: BookmarkWhereUniqueInput!
-    data: BookmarkUpdateInput!
-  ): Bookmark
+  updateBookmark(where: BookmarkWhereUniqueInput!, data: BookmarkUpdateInput!): Bookmark
   updateBookmarks(data: [BookmarkUpdateArgs!]!): [Bookmark]
   deleteBookmark(where: BookmarkWhereUniqueInput!): Bookmark
   deleteBookmarks(where: [BookmarkWhereUniqueInput!]!): [Bookmark]
   createCollection(data: CollectionCreateInput!): Collection
   createCollections(data: [CollectionCreateInput!]!): [Collection]
-  updateCollection(
-    where: CollectionWhereUniqueInput!
-    data: CollectionUpdateInput!
-  ): Collection
+  updateCollection(where: CollectionWhereUniqueInput!, data: CollectionUpdateInput!): Collection
   updateCollections(data: [CollectionUpdateArgs!]!): [Collection]
   deleteCollection(where: CollectionWhereUniqueInput!): Collection
   deleteCollections(where: [CollectionWhereUniqueInput!]!): [Collection]
@@ -974,10 +942,7 @@ type Mutation {
   deleteBylines(where: [BylineWhereUniqueInput!]!): [Byline]
   createLocation(data: LocationCreateInput!): Location
   createLocations(data: [LocationCreateInput!]!): [Location]
-  updateLocation(
-    where: LocationWhereUniqueInput!
-    data: LocationUpdateInput!
-  ): Location
+  updateLocation(where: LocationWhereUniqueInput!, data: LocationUpdateInput!): Location
   updateLocations(data: [LocationUpdateArgs!]!): [Location]
   deleteLocation(where: LocationWhereUniqueInput!): Location
   deleteLocations(where: [LocationWhereUniqueInput!]!): [Location]
@@ -995,19 +960,13 @@ type Mutation {
   deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
   createArticle(data: ArticleCreateInput!): Article
   createArticles(data: [ArticleCreateInput!]!): [Article]
-  updateArticle(
-    where: ArticleWhereUniqueInput!
-    data: ArticleUpdateInput!
-  ): Article
+  updateArticle(where: ArticleWhereUniqueInput!, data: ArticleUpdateInput!): Article
   updateArticles(data: [ArticleUpdateArgs!]!): [Article]
   deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteArticles(where: [ArticleWhereUniqueInput!]!): [Article]
   createAnnouncement(data: AnnouncementCreateInput!): Announcement
   createAnnouncements(data: [AnnouncementCreateInput!]!): [Announcement]
-  updateAnnouncement(
-    where: AnnouncementWhereUniqueInput!
-    data: AnnouncementUpdateInput!
-  ): Announcement
+  updateAnnouncement(where: AnnouncementWhereUniqueInput!, data: AnnouncementUpdateInput!): Announcement
   updateAnnouncements(data: [AnnouncementUpdateArgs!]!): [Announcement]
   deleteAnnouncement(where: AnnouncementWhereUniqueInput!): Announcement
   deleteAnnouncements(where: [AnnouncementWhereUniqueInput!]!): [Announcement]
@@ -1015,84 +974,34 @@ type Mutation {
 }
 
 type Query {
-  events(
-    where: EventWhereInput! = {}
-    orderBy: [EventOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Event!]
+  events(where: EventWhereInput! = {}, orderBy: [EventOrderByInput!]! = [], take: Int, skip: Int! = 0): [Event!]
   event(where: EventWhereUniqueInput!): Event
   eventsCount(where: EventWhereInput! = {}): Int
-  users(
-    where: UserWhereInput! = {}
-    orderBy: [UserOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [User!]
+  users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
-  bookmarks(
-    where: BookmarkWhereInput! = {}
-    orderBy: [BookmarkOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Bookmark!]
+  bookmarks(where: BookmarkWhereInput! = {}, orderBy: [BookmarkOrderByInput!]! = [], take: Int, skip: Int! = 0): [Bookmark!]
   bookmark(where: BookmarkWhereUniqueInput!): Bookmark
   bookmarksCount(where: BookmarkWhereInput! = {}): Int
-  collections(
-    where: CollectionWhereInput! = {}
-    orderBy: [CollectionOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Collection!]
+  collections(where: CollectionWhereInput! = {}, orderBy: [CollectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Collection!]
   collection(where: CollectionWhereUniqueInput!): Collection
   collectionsCount(where: CollectionWhereInput! = {}): Int
-  bylines(
-    where: BylineWhereInput! = {}
-    orderBy: [BylineOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Byline!]
+  bylines(where: BylineWhereInput! = {}, orderBy: [BylineOrderByInput!]! = [], take: Int, skip: Int! = 0): [Byline!]
   byline(where: BylineWhereUniqueInput!): Byline
   bylinesCount(where: BylineWhereInput! = {}): Int
-  locations(
-    where: LocationWhereInput! = {}
-    orderBy: [LocationOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Location!]
+  locations(where: LocationWhereInput! = {}, orderBy: [LocationOrderByInput!]! = [], take: Int, skip: Int! = 0): [Location!]
   location(where: LocationWhereUniqueInput!): Location
   locationsCount(where: LocationWhereInput! = {}): Int
-  labels(
-    where: LabelWhereInput! = {}
-    orderBy: [LabelOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Label!]
+  labels(where: LabelWhereInput! = {}, orderBy: [LabelOrderByInput!]! = [], take: Int, skip: Int! = 0): [Label!]
   label(where: LabelWhereUniqueInput!): Label
   labelsCount(where: LabelWhereInput! = {}): Int
-  tags(
-    where: TagWhereInput! = {}
-    orderBy: [TagOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Tag!]
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
   tag(where: TagWhereUniqueInput!): Tag
   tagsCount(where: TagWhereInput! = {}): Int
-  articles(
-    where: ArticleWhereInput! = {}
-    orderBy: [ArticleOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Article!]
+  articles(where: ArticleWhereInput! = {}, orderBy: [ArticleOrderByInput!]! = [], take: Int, skip: Int! = 0): [Article!]
   article(where: ArticleWhereUniqueInput!): Article
   articlesCount(where: ArticleWhereInput! = {}): Int
-  announcements(
-    where: AnnouncementWhereInput! = {}
-    orderBy: [AnnouncementOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Announcement!]
+  announcements(where: AnnouncementWhereInput! = {}, orderBy: [AnnouncementOrderByInput!]! = [], take: Int, skip: Int! = 0): [Announcement!]
   announcement(where: AnnouncementWhereUniqueInput!): Announcement
   announcementsCount(where: AnnouncementWhereInput! = {}): Int
   keystone: KeystoneMeta!
@@ -1105,8 +1014,6 @@ type KeystoneMeta {
 }
 
 type KeystoneAdminMeta {
-  enableSignout: Boolean!
-  enableSessionItem: Boolean!
   lists: [KeystoneAdminUIListMeta!]!
   list(key: String!): KeystoneAdminUIListMeta
 }
@@ -1128,6 +1035,7 @@ type KeystoneAdminUIListMeta {
   fields: [KeystoneAdminUIFieldMeta!]!
   initialSort: KeystoneAdminUISort
   isHidden: Boolean!
+  isSingleton: Boolean
 }
 
 type KeystoneAdminUIFieldMeta {
