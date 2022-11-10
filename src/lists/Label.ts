@@ -1,8 +1,6 @@
 import { list } from '@keystone-6/core'
 import { select, text } from '@keystone-6/core/fields'
 
-import type { Lists } from '.keystone/types'
-
 import { isAdmin, editReadAdminUI } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -12,7 +10,7 @@ const LABEL_TYPES = {
   BASE: 'Base',
 }
 
-const Label: Lists.Label = list(
+const Label = list(
   withTracking({
     access: {
       operation: {

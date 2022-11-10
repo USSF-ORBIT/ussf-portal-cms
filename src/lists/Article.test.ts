@@ -1,10 +1,8 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Article schema', () => {
-  let testEnv: TestEnvWithSessions
-
   let sudoContext: KeystoneContext
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
@@ -41,18 +39,17 @@ describe('Article schema', () => {
     })
   }
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    sudoContext = testEnv.sudoContext
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-    authorContext = testEnv.authorContext
-    managerContext = testEnv.managerContext
-  })
-
-  afterAll(async () => {
-    await testEnv.disconnect()
-  })
+  // Set up test environment, seed data, and return contexts
+  beforeAll(
+    async () =>
+      ({
+        adminContext,
+        userContext,
+        authorContext,
+        managerContext,
+        sudoContext,
+      } = await configTestEnv())
+  )
 
   describe('access', () => {
     describe('as a non-admin user with the User role', () => {
@@ -77,9 +74,7 @@ describe('Article schema', () => {
             },
             query: articleQuery,
           })
-        ).rejects.toThrow(
-          /Access denied: You cannot perform the 'create' operation on the list 'Article'./
-        )
+        ).rejects.toThrow('Access denied: You cannot create that Article')
       })
 
       it('cannot update an article', async () => {
@@ -94,7 +89,7 @@ describe('Article schema', () => {
             query: articleQuery,
           })
         ).rejects.toThrow(
-          /Access denied: You cannot perform the 'update' operation on the list 'Article'./
+          'Access denied: You cannot update that Article - it may not exist'
         )
       })
 
@@ -106,7 +101,7 @@ describe('Article schema', () => {
             },
           })
         ).rejects.toThrow(
-          /Access denied: You cannot perform the 'delete' operation on the list 'Article'./
+          'Access denied: You cannot delete that Article - it may not exist'
         )
       })
     })
@@ -167,7 +162,7 @@ describe('Article schema', () => {
             query: articleQuery,
           })
         ).rejects.toThrow(
-          /Access denied: You cannot perform the 'update' operation on the item./
+          'Access denied: You cannot update that Article - you cannot update the fields ["status"]'
         )
       })
 
@@ -196,7 +191,7 @@ describe('Article schema', () => {
             query: articleQuery,
           })
         ).rejects.toThrow(
-          /Access denied: You cannot perform the 'update' operation on the item./
+          'Access denied: You cannot update that Article - it may not exist'
         )
       })
 
@@ -208,7 +203,7 @@ describe('Article schema', () => {
             },
           })
         ).rejects.toThrow(
-          /Access denied: You cannot perform the 'delete' operation on the item./
+          'Access denied: You cannot delete that Article - it may not exist'
         )
       })
     })

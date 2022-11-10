@@ -1,8 +1,6 @@
 import { list } from '@keystone-6/core'
 import { text, checkbox, timestamp, select } from '@keystone-6/core/fields'
 
-import type { Lists } from '.keystone/types'
-
 import {
   USER_ROLES,
   isAdmin,
@@ -13,7 +11,7 @@ import {
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
-const User: Lists.User = list(
+const User = list(
   withTracking({
     // No one can create or delete users
     // Admin can view & edit all users
@@ -22,6 +20,8 @@ const User: Lists.User = list(
       operation: {
         create: () => false,
         delete: () => false,
+        update: () => true,
+        query: () => true,
       },
       filter: {
         query: userQueryFilter,

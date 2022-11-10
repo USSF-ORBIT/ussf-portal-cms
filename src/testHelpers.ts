@@ -1,27 +1,33 @@
-import {
-  TestEnv,
-  setupTestEnv,
-  setupTestRunner,
-} from '@keystone-6/core/testing'
-import { config } from '@keystone-6/core'
+import { resetDatabase } from '@keystone-6/core/testing'
+import { getContext } from '@keystone-6/core/context'
 import { KeystoneContext } from '@keystone-6/core/types'
-
-import type { User } from '.prisma/client'
+import * as PrismaModule from '@prisma/client'
+import { config } from '@keystone-6/core'
+import type { User } from '@prisma/client'
+import baseConfig from '../keystone'
 import { lists } from './schema'
-import { extendGraphqlSchema } from './lib/schema'
 
 const TEST_DATABASE = 'unit-test'
 const TEST_DATABASE_CONNECTION = `postgres://keystone:keystonecms@0.0.0.0:5432/${TEST_DATABASE}?connect_timeout=10`
 
+export type PortalContexts = {
+  sudoContext: KeystoneContext
+  adminContext: KeystoneContext
+  userContext: KeystoneContext
+  authorContext: KeystoneContext
+  managerContext: KeystoneContext
+}
+
 export const testConfig = config({
+  ...baseConfig,
   db: {
     provider: 'postgresql',
     url: TEST_DATABASE_CONNECTION,
     useMigrations: true,
     prismaPreviewFeatures: ['fullTextSearch'],
+    ...baseConfig,
   },
   lists,
-  extendGraphqlSchema,
 })
 
 const adminUserData = {
@@ -60,23 +66,12 @@ export const testUsers = [
   managerUserData,
 ]
 
-export type TestEnvWithSessions = TestEnv & {
-  sudoContext: KeystoneContext
-  adminContext: KeystoneContext
-  userContext: KeystoneContext
-  authorContext: KeystoneContext
-  managerContext: KeystoneContext
-}
-
-export const configTestEnv = async (): Promise<TestEnvWithSessions> => {
+export const configTestEnv = async () => {
   // Set up Keystone test environment
-  const testEnv = await setupTestEnv({ config: testConfig })
-  const context = testEnv.testArgs.context
-
-  await testEnv.connect()
+  const context = getContext(testConfig, PrismaModule)
+  await resetDatabase(TEST_DATABASE_CONNECTION, 'schema.prisma')
 
   const sudoContext = context.sudo()
-
   const userQuery = 'id userId name role isAdmin isEnabled'
 
   // Seed data
@@ -122,15 +117,13 @@ export const configTestEnv = async (): Promise<TestEnvWithSessions> => {
     listKey: 'User',
   })
 
-  return {
-    ...testEnv,
+  const portalContexts: PortalContexts = {
     sudoContext,
     adminContext,
     userContext,
     authorContext,
     managerContext,
   }
-}
 
-export const configTestRunner = async () =>
-  setupTestRunner({ config: testConfig })
+  return portalContexts
+}

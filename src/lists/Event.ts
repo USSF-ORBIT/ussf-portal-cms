@@ -1,12 +1,10 @@
 import { list, graphql } from '@keystone-6/core'
 import { json, relationship, text, virtual } from '@keystone-6/core/fields'
 
-import type { Lists } from '.keystone/types'
-
 import { isAdmin } from '../util/access'
 import { withAtTracking } from '../util/tracking'
 
-const Event: Lists.Event = list(
+const Event = list(
   withAtTracking({
     access: {
       operation: {
