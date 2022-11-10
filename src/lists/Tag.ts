@@ -1,8 +1,6 @@
 import { list } from '@keystone-6/core'
 import { text } from '@keystone-6/core/fields'
 
-import type { Lists } from '.keystone/types'
-
 import {
   canCreateArticle,
   articleItemView,
@@ -10,12 +8,14 @@ import {
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
-const Tag: Lists.Tag = list(
+const Tag = list(
   withTracking({
     access: {
       operation: {
         create: canCreateArticle,
         query: () => true,
+        update: () => true,
+        delete: () => true,
       },
       filter: {
         update: canUpdateDeleteArticle,

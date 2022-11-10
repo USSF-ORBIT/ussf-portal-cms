@@ -2,8 +2,6 @@ import { list } from '@keystone-6/core'
 import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
-import type { Lists } from '.keystone/types'
-
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
 import {
@@ -43,12 +41,14 @@ const parseSearchBody = (body: Array<DocumentSubFieldJSON>, arr: string[]) => {
   })
 }
 
-const Article: Lists.Article = list(
+const Article = list(
   withTracking({
     access: {
       operation: {
         create: canCreateArticle,
         query: () => true,
+        update: () => true,
+        delete: () => true,
       },
       filter: {
         update: canUpdateDeleteArticle,
@@ -187,6 +187,7 @@ const Article: Lists.Article = list(
               parseSearchBody(resolvedData.body, results)
               return results.join(' ')
             }
+            return resolvedData.body //this doesn't make sense, temp fix
           },
         },
       }),

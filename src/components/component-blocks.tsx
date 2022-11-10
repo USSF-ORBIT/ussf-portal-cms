@@ -10,11 +10,14 @@ export const componentBlocks = {
     preview: (props) => {
       return (
         <NotEditable>
-          <button type="button">{props.fields.ctaText.value}</button>
+          <div>
+            <button type="button">{props.fields.ctaText.value}</button>
+          </div>
         </NotEditable>
       )
     },
     label: 'Call To Action',
+    chromeless: true,
     schema: {
       ctaText: fields.text({
         label: 'Button text',
