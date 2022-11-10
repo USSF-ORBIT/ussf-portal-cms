@@ -1,10 +1,8 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Label schema', () => {
-  let testEnv: TestEnvWithSessions
-
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
 
@@ -13,15 +11,8 @@ describe('Label schema', () => {
     type: 'Source',
   }
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-  })
-
-  afterAll(async () => {
-    await testEnv.disconnect()
-  })
+  // Set up test environment, seed data, and return contexts
+  beforeAll(async () => ({ adminContext, userContext } = await configTestEnv()))
 
   describe('as an admin user', () => {
     it('can create a new label', async () => {
@@ -113,9 +104,7 @@ describe('Label schema', () => {
           data: testLabel,
           query: 'id createdAt updatedAt name',
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Label'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that Label')
     })
 
     it('cannot update labels', async () => {
@@ -132,7 +121,7 @@ describe('Label schema', () => {
           query: 'id createdAt updatedAt name',
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Label'./
+        'Access denied: You cannot update that Label - it may not exist'
       )
     })
 
@@ -146,7 +135,7 @@ describe('Label schema', () => {
           where: { id: existingLabels[0].id },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Label'./
+        'Access denied: You cannot delete that Label - it may not exist'
       )
     })
   })

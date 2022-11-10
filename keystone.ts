@@ -5,6 +5,8 @@ import { lists } from './src/schema'
 import { withSharedAuth } from './src/lib/auth'
 import { getAbsoluteUrl } from './src/util/getAbsoluteUrl'
 import { extendGraphqlSchema } from './src/lib/schema'
+import redisClient from './src/lib/redis'
+import { session } from './src/lib/session'
 
 export default withSharedAuth(
   config({
@@ -16,7 +18,14 @@ export default withSharedAuth(
       enableLogging: true,
       useMigrations: true,
       prismaPreviewFeatures: ['fullTextSearch'],
+      async onConnect() {
+        await redisClient.connect()
+      },
     },
+    // @ts-expect-error We use a custom SharedSessionStrategy that does not
+    // include a `start` method. This makes the TS gods angry,
+    // but does not impact functionality.
+    session,
     ui: {
       publicPages: ['/api/sysinfo', '/no-access'],
       pageMiddleware: async ({ context, isValidSession }) => {
@@ -50,7 +59,7 @@ export default withSharedAuth(
           return { kind: 'redirect', to }
         }
       },
-      enableSessionItem: true,
+
       isAccessAllowed: ({ session }) => session?.accessAllowed === true,
     },
     server: {

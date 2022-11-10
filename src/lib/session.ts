@@ -14,11 +14,12 @@ const redisSessionStore = ({
   client: typeof redisClient
 }): SessionStoreFunction => {
   return ({ maxAge }) => ({
-    async connect() {
-      await client.connect()
-    },
+    // async connect() {
+    //   await client.connect()
+    // },
     async get(key) {
       const result = await client.get(key)
+
       if (typeof result === 'string') {
         return JSON.parse(result)
       }
@@ -29,9 +30,9 @@ const redisSessionStore = ({
     async delete(key) {
       await client.del(key)
     },
-    async disconnect() {
-      await client.quit()
-    },
+    // async disconnect() {
+    //   await client.quit()
+    // },
   })
 }
 
@@ -42,7 +43,7 @@ const SESSION_DOMAIN = process.env.SESSION_DOMAIN || 'localhost'
 const SESSION_EXPIRATION = 60 * 60 * 4 // 4 hours
 
 // The shared session strategy will never "start" a new session
-export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'>
+export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'> // this change is preventing us from passing into config
 
 export const sharedRedisSession = ({
   store: storeOption,
@@ -61,9 +62,11 @@ export const sharedRedisSession = ({
 }): SharedSessionStrategy<SessionData> => {
   const store =
     typeof storeOption === 'function' ? storeOption({ maxAge }) : storeOption
-  let isConnected = false
 
   return {
+    // async start() {
+    //   return ''
+    // },
     // Get session out of Redis store
     async get({ req }) {
       const cookies = cookie.parse(req.headers.cookie || '')
@@ -71,11 +74,6 @@ export const sharedRedisSession = ({
 
       // No matching cookie
       if (!token) return
-
-      if (!isConnected) {
-        await store.connect?.()
-        isConnected = true
-      }
 
       const unsigned = unsign(token, SESSION_SECRET)
 
@@ -93,10 +91,10 @@ export const sharedRedisSession = ({
 
       if (!token) return
 
-      if (!isConnected) {
-        await store.connect?.()
-        isConnected = true
-      }
+      // if (!isConnected) {
+      //   await store.connect?.()
+      //   isConnected = true
+      // }
 
       await store.delete(`sess:${token}`)
 
@@ -122,3 +120,6 @@ export const session = sharedRedisSession({
     client: redisClient,
   }),
 })
+
+// #TODO Try to add generic start funciton and see if sessions still function as expected w/ redirect
+// could be another story
