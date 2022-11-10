@@ -10,9 +10,7 @@ export const componentBlocks = {
     preview: (props) => {
       return (
         <NotEditable>
-          <div>
-            <button type="button">{props.fields.ctaText.value}</button>
-          </div>
+          <button type="button">{props.fields.ctaText.value}</button>
         </NotEditable>
       )
     },
