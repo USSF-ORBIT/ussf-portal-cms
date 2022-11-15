@@ -1,5 +1,5 @@
 ##--------- Stage: builder ---------##
-FROM node:14.20.1-slim AS builder
+FROM node:18.10.0-slim AS builder
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
@@ -20,7 +20,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM gcr.io/distroless/nodejs:14 AS e2e
+FROM gcr.io/distroless/nodejs:18 AS e2e
 # The below image is an arm64 debug image that has helpful binaries for debugging, such as a shell, for local debugging
 # FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
