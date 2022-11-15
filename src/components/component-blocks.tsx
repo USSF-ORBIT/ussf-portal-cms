@@ -15,7 +15,6 @@ export const componentBlocks = {
       )
     },
     label: 'Call To Action',
-    chromeless: true,
     schema: {
       ctaText: fields.text({
         label: 'Button text',

@@ -1,7 +1,7 @@
 import { list } from '@keystone-6/core'
 import { select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
-
+import path from 'path'
 import { ANNOUNCEMENT_STATUSES } from '../util/workflows'
 import {
   canCreateArticle,
@@ -59,11 +59,10 @@ const Announcement = list(
           },
         },
         links: true,
-        // #TODO fix compile error in config.js
-        // ui: {
-        //   views: require.resolve('../components/component-blocks'),
-        // },
-        // componentBlocks,
+        ui: {
+          views: path.resolve('./src/components/component-blocks'),
+        },
+        componentBlocks,
       }),
       status: select({
         type: 'enum',
