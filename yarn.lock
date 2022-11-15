@@ -4263,6 +4263,11 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32.tgz#90a71bbdfd5172fc674009346a6ad6b84410cc0a"
   integrity sha512-HUCmkXAU2jqp2O1RvNtbE+seLGLyJGEABZS/R38rZjSAafAy0WzBuHq+tbZMnD+b5OSCsTVtIPVcuvx1ySxcWQ==
 
+"@prisma/engines-version@^4.7.0-16.59141a40487d94bf2ab7bb42ad81abbab5772a2d":
+  version "4.7.0-16.59141a40487d94bf2ab7bb42ad81abbab5772a2d"
+  resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-4.7.0-16.59141a40487d94bf2ab7bb42ad81abbab5772a2d.tgz#99226b801331b6c296e769eb26319fb8113b1492"
+  integrity sha512-ozIXZcXQTSObpgYXcv5ByRMIklyKuxn306tOB8eZBxc4elKxVja6uZpam7ay1o2JOKZSdmj5PkYWbY14GkrEgw==
+
 "@prisma/engines@4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-4.3.1.tgz#fb0ad69eded13827fb4cd81995a351c234e8327f"
