@@ -43,7 +43,7 @@ const SESSION_DOMAIN = process.env.SESSION_DOMAIN || 'localhost'
 const SESSION_EXPIRATION = 60 * 60 * 4 // 4 hours
 
 // The shared session strategy will never "start" a new session
-export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'> // this change is preventing us from passing into config
+export type SharedSessionStrategy<T> = Omit<SessionStrategy<T>, 'start'>
 
 export const sharedRedisSession = ({
   store: storeOption,
@@ -64,9 +64,8 @@ export const sharedRedisSession = ({
     typeof storeOption === 'function' ? storeOption({ maxAge }) : storeOption
 
   return {
-    // async start() {
-    //   return ''
-    // },
+    // #TODO Try to add generic start funciton and see if sessions still function as expected w/ redirect
+
     // Get session out of Redis store
     async get({ req }) {
       const cookies = cookie.parse(req.headers.cookie || '')
@@ -90,11 +89,6 @@ export const sharedRedisSession = ({
       const token = cookies[`${TOKEN_NAME}`]
 
       if (!token) return
-
-      // if (!isConnected) {
-      //   await store.connect?.()
-      //   isConnected = true
-      // }
 
       await store.delete(`sess:${token}`)
 
@@ -120,6 +114,3 @@ export const session = sharedRedisSession({
     client: redisClient,
   }),
 })
-
-// #TODO Try to add generic start funciton and see if sessions still function as expected w/ redirect
-// could be another story
