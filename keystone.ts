@@ -8,6 +8,14 @@ import { extendGraphqlSchema } from './src/lib/schema'
 import redisClient from './src/lib/redis'
 import { session } from './src/lib/session'
 
+const {
+  S3_BUCKET_NAME: bucketName,
+  S3_REGION: region,
+  S3_ACCESS_KEY_ID: accessKeyId,
+  S3_SECRET_ACCESS_KEY: secretAccessKey,
+  ASSET_BASE_URL: baseUrl,
+} = process.env
+
 export default withSharedAuth(
   config({
     extendGraphqlSchema,
@@ -26,6 +34,45 @@ export default withSharedAuth(
     // include a `start` method. This makes the TS gods angry,
     // but does not impact functionality.
     session,
+    storage: {
+      cms_images: {
+        kind: 's3',
+        type: 'image',
+        bucketName: bucketName || '',
+        region: region || '',
+        accessKeyId: accessKeyId || '',
+        secretAccessKey: secretAccessKey || '',
+        signed: { expiry: 5000 },
+      },
+      local_images: {
+        kind: 'local',
+        type: 'image',
+        generateUrl: (path: string) => `${baseUrl}/images${path}`,
+        serverRoute: {
+          path: '/images',
+        },
+        storagePath: 'public/images',
+      },
+      cms_files: {
+        kind: 's3',
+        type: 'file',
+        bucketName: bucketName || '',
+        region: region || '',
+        accessKeyId: accessKeyId || '',
+        secretAccessKey: secretAccessKey || '',
+        signed: { expiry: 5000 },
+      },
+      local_files: {
+        kind: 'local',
+        type: 'file',
+        generateUrl: (path: string) => `${baseUrl}/files${path}`,
+        serverRoute: {
+          path: '/files',
+        },
+        storagePath: 'public/files',
+      },
+    },
+
     ui: {
       publicPages: ['/api/sysinfo', '/no-access'],
       pageMiddleware: async ({ context, isValidSession }) => {

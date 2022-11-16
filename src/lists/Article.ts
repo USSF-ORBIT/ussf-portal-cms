@@ -1,9 +1,16 @@
 import { list } from '@keystone-6/core'
-import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
+import {
+  image,
+  relationship,
+  select,
+  text,
+  timestamp,
+} from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
+import { isLocal } from '../util/getNodeEnv'
 import {
   canCreateArticle,
   canUpdateDeleteArticle,
@@ -164,6 +171,9 @@ const Article = list(
         ui: {
           displayMode: 'textarea',
         },
+      }),
+      hero: image({
+        storage: isLocal() ? 'local_images' : 'cms_images',
       }),
       body: document({
         formatting: true,
