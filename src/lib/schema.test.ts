@@ -15,10 +15,8 @@ import { configTestEnv } from '../testHelpers'
 let sudoContext: KeystoneContext
 
 beforeAll(async () => {
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
-  // The parentheses ( ... ) around the assignment statement are required when using object literal destructuring assignment without a declaration.
-  // Prefixing semicolon required without delcaration
-  ;({ sudoContext } = await configTestEnv())
+  const context = await configTestEnv()
+  sudoContext = context.sudoContext
   await sudoContext.query.Article.createMany({ data: testArticles })
   await sudoContext.query.Bookmark.createMany({ data: testBookmarks })
 })

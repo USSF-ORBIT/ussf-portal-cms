@@ -80,7 +80,7 @@ describe('Announcement schema', () => {
           query: announcementQuery,
         })
       ).rejects.toThrow(
-        /Access denied: You cannot update that Announcement - it may not exist/ //double check this
+        /Access denied: You cannot update that Announcement - it may not exist/
       )
     })
 

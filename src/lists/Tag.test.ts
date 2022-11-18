@@ -26,11 +26,11 @@ describe('Tag schema', () => {
   }
 
   beforeAll(async () => {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
-    // The parentheses ( ... ) around the assignment statement are required when using object literal destructuring assignment without a declaration.
-    // Prefixing semicolon required without delcaration
-    ;({ sudoContext, userContext, authorContext, managerContext } =
-      await configTestEnv())
+    const context = await configTestEnv()
+    sudoContext = context.sudoContext
+    userContext = context.userContext
+    authorContext = context.authorContext
+    managerContext = context.managerContext
 
     await resetTags()
   })

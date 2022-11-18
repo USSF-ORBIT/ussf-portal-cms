@@ -48,10 +48,11 @@ describe('Event schema', () => {
   }
 
   beforeAll(async () => {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
-    // The parentheses ( ... ) around the assignment statement are required when using object literal destructuring assignment without a declaration.
-    // Prefixing semicolon required without delcaration
-    ;({ adminContext, userContext, sudoContext } = await configTestEnv())
+    // const context = await configTestEnv()
+    // adminContext = context.adminContext
+    // userContext = context.userContext
+    // sudoContext = context.sudoContext
+
     await resetEvents()
   })
 
