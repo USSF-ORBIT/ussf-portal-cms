@@ -3,7 +3,7 @@ import { getContext } from '@keystone-6/core/context'
 import { KeystoneContext } from '@keystone-6/core/types'
 import * as PrismaModule from '@prisma/client'
 import { config } from '@keystone-6/core'
-import type { User } from '@prisma/client'
+import type { User } from '.prisma/client'
 import baseConfig from '../keystone'
 import { lists } from './schema'
 
@@ -25,7 +25,6 @@ export const testConfig = config({
     url: TEST_DATABASE_CONNECTION,
     useMigrations: true,
     prismaPreviewFeatures: ['fullTextSearch'],
-    ...baseConfig,
   },
   lists,
 })

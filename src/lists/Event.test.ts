@@ -48,10 +48,10 @@ describe('Event schema', () => {
   }
 
   beforeAll(async () => {
-    // const context = await configTestEnv()
-    // adminContext = context.adminContext
-    // userContext = context.userContext
-    // sudoContext = context.sudoContext
+    const context = await configTestEnv()
+    adminContext = context.adminContext
+    userContext = context.userContext
+    sudoContext = context.sudoContext
 
     await resetEvents()
   })
