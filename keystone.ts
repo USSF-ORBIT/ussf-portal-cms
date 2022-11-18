@@ -23,7 +23,7 @@ export default withSharedAuth(
       },
     },
     // @ts-expect-error We use a custom SharedSessionStrategy that does not
-    // include a `start` method. This makes the TS gods angry,
+    // include a `start` method. This makes the TS compiler angry,
     // but does not impact functionality.
     session,
     ui: {
