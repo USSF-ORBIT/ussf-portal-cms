@@ -14,9 +14,6 @@ const redisSessionStore = ({
   client: typeof redisClient
 }): SessionStoreFunction => {
   return ({ maxAge }) => ({
-    // async connect() {
-    //   await client.connect()
-    // },
     async get(key) {
       const result = await client.get(key)
 
@@ -30,9 +27,6 @@ const redisSessionStore = ({
     async delete(key) {
       await client.del(key)
     },
-    // async disconnect() {
-    //   await client.quit()
-    // },
   })
 }
 
