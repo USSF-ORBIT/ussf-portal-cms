@@ -33,7 +33,7 @@ jobs:
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
-        run: echo "{dir}={$(yarn cache dir)}" >> $GITHUB_OUTPUT
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@1c73980b09e7aea7201f325a7aa3ad00beddcdda # tag=v3
         id: yarn-cache
@@ -41,7 +41,7 @@ jobs:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-yarn-${{ steps.yarn-cache-dir-path.outputs.dir }}
 
       # The yarn cache is not node_modules
       - name: Install dependencies
