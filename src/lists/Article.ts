@@ -10,7 +10,7 @@ import { document } from '@keystone-6/fields-document'
 
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
-import { isLocal } from '../util/getNodeEnv'
+import { isProduction } from '../util/getNodeEnv'
 import {
   canCreateArticle,
   canUpdateDeleteArticle,
@@ -173,7 +173,7 @@ const Article = list(
         },
       }),
       hero: image({
-        storage: isLocal() ? 'local_images' : 'cms_images',
+        storage: isProduction() ? 'cms_images' : 'local_images',
       }),
       body: document({
         formatting: true,
