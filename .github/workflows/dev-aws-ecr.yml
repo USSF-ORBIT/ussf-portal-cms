@@ -52,7 +52,7 @@ jobs:
           install: true
 
       - name: Read CMS version from package.json
-        run: echo ::set-output name=cmsVersion::$(node -p "require('./package.json').version")
+        run: echo "cmsVersion=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
         id: details
 
       - name: Build and push

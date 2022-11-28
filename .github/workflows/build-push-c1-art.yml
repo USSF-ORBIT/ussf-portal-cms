@@ -39,7 +39,7 @@ jobs:
               insecure = true
 
       - name: Read CMS version from package.json
-        run: echo ::set-output name=cmsVersion::$(node -p "require('./package.json').version")
+        run: echo "cmsVersion=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
         id: details
 
       - name: Build
@@ -65,5 +65,5 @@ jobs:
 
           docker login -u portal -p ${{ secrets.C1_ARTIFACTORY_TOKEN }} $C1_REGISTRY
           docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG"
+          echo "image=$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
           docker logout $C1_REGISTRY
