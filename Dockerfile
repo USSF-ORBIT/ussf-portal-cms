@@ -51,7 +51,7 @@ CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/b
 
 ##--------- Stage: e2e-local ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM node:14.20.1-slim AS e2e-local
+FROM node:18.10.0-slim AS e2e-local
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
@@ -69,7 +69,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:14.20.1-slim AS build-env
+FROM node:18.10.0-slim AS build-env
 
 WORKDIR /app
 
@@ -82,7 +82,7 @@ RUN apt-get update \
 
 ##--------- Stage: runner ---------##
 # Runtime container
-FROM gcr.io/distroless/nodejs:14 AS runner
+FROM gcr.io/distroless/nodejs:18 AS runner
 
 WORKDIR /app
 
