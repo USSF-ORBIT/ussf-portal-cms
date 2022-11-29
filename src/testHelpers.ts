@@ -21,6 +21,17 @@ export const testConfig = config({
     prismaPreviewFeatures: ['fullTextSearch'],
   },
   lists,
+  storage: {
+    local_images: {
+      kind: 'local',
+      type: 'image',
+      generateUrl: (path: string) => `localhost:3001/images${path}`,
+      serverRoute: {
+        path: '/images',
+      },
+      storagePath: 'public/images',
+    },
+  },
   extendGraphqlSchema,
 })
 
