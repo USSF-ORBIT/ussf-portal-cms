@@ -106,4 +106,5 @@ COPY --from=build-env  ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca
 COPY --from=build-env /bin/sh  /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
-CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+# removing prisma migrate deploy command so keystone can start
+CMD ["/nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
