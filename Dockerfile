@@ -107,4 +107,4 @@ COPY --from=build-env /bin/sh  /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
 # rollback stuck migration
-CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate resolve --rolled-back '20221129224332_add_hero_image_article' && /app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate resolve --rolled-back '20221129224332_add_hero_image_article && /nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
