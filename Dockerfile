@@ -106,5 +106,5 @@ COPY --from=build-env  ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca
 COPY --from=build-env /bin/sh  /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
-# removing prisma migrate deploy command so keystone can start
-CMD ["/nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+# rollback stuck migration
+CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate resolve --rolled-back '20221129224332_add_hero_image_article' && /app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
