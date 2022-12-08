@@ -21,7 +21,7 @@ import {
   articleStatusView,
 } from '../util/access'
 import { slugify } from '../util/formatting'
-import { isProduction } from '../util/getNodeEnv'
+import { isLocalStorage } from '../util/getStorage'
 
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
@@ -173,7 +173,7 @@ const Article: Lists.Article = list(
         },
       }),
       hero: image({
-        storage: isProduction() ? 'cms_images' : 'local_images',
+        storage: isLocalStorage() ? 'local_images' : 'cms_images',
       }),
       body: document({
         formatting: true,

@@ -15,7 +15,6 @@ const requireVars = [
   'S3_SECRET_ACCESS_KEY',
   'S3_ACCESS_KEY_ID',
   'ASSET_BASE_URL',
-  'USE_S3_STORAGE',
 ]
 
 function startup() {
