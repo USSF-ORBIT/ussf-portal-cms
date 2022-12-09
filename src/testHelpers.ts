@@ -31,6 +31,18 @@ export const testConfig = config({
       },
       storagePath: 'public/images',
     },
+    // Because cms_images is a possibility, it needs to be passed
+    // to test config. Replicating local config since we don't wan't
+    // to test against s3
+    cms_images: {
+      kind: 'local',
+      type: 'image',
+      generateUrl: (path: string) => `localhost:3001/images${path}`,
+      serverRoute: {
+        path: '/images',
+      },
+      storagePath: 'public/images',
+    },
   },
   extendGraphqlSchema,
 })
