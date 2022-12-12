@@ -29,3 +29,6 @@ tsconfig.tsbuildinfo
 
 # Playwright artifacts
 e2e/test-results
+
+# Local assets
+public/*

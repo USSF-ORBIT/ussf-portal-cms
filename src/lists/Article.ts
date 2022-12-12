@@ -1,5 +1,11 @@
 import { list } from '@keystone-6/core'
-import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
+import {
+  image,
+  relationship,
+  select,
+  text,
+  timestamp,
+} from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 
 import type { Lists } from '.keystone/types'
@@ -15,6 +21,7 @@ import {
   articleStatusView,
 } from '../util/access'
 import { slugify } from '../util/formatting'
+import { isLocalStorage } from '../util/getStorage'
 
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
@@ -164,6 +171,9 @@ const Article: Lists.Article = list(
         ui: {
           displayMode: 'textarea',
         },
+      }),
+      hero: image({
+        storage: isLocalStorage() ? 'local_images' : 'cms_images',
       }),
       body: document({
         formatting: true,
