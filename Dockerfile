@@ -41,6 +41,8 @@ COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
 
 ENV NODE_ENV production
 
+RUN mkdir -p public/images
+
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
