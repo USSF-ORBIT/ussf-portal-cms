@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.7...1.5.0) (2022-12-13)
+
+
+### Features
+
+* Add local and s3 uploads to Article list ([#98](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/98)) ([c923a85](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/c923a854bca7aed02042bc7b8972054668457546))
+
+
+### Security Improvements
+
+* **deps:** update node.js to v14.21.1 ([#208](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/208)) ([8b9b5e8](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/8b9b5e8b13f3fbfaae24c55abebd3169e177e4df))
+
 ### [1.4.8](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.7...1.4.8) (2022-11-30)
 
 ### [1.4.7](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.4.6...1.4.7) (2022-11-17)
