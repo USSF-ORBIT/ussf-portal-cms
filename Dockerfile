@@ -27,6 +27,7 @@ FROM gcr.io/distroless/nodejs:14 AS e2e
 WORKDIR /app
 
 COPY --from=builder /app /app
+RUN mkdir -p /app/public/images
 
 COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
@@ -41,7 +42,6 @@ COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
 
 ENV NODE_ENV production
 
-RUN mkdir -p public/images
 
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
