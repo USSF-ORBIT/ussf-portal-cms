@@ -1,6 +1,8 @@
 -- AlterTable
-ALTER TABLE "Article" ADD COLUMN     "hero_extension" TEXT,
-ADD COLUMN     "hero_filesize" INTEGER,
-ADD COLUMN     "hero_height" INTEGER,
-ADD COLUMN     "hero_id" TEXT,
-ADD COLUMN     "hero_width" INTEGER;
+ALTER TABLE "Article" 
+
+ADD COLUMN IF NOT EXISTS     "hero_extension" TEXT,
+ADD COLUMN IF NOT EXISTS     "hero_filesize" INTEGER,
+ADD COLUMN IF NOT EXISTS     "hero_height" INTEGER,
+ADD COLUMN IF NOT EXISTS     "hero_id" TEXT,
+ADD COLUMN IF NOT EXISTS     "hero_width" INTEGER;
