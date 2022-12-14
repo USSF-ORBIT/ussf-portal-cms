@@ -37,6 +37,16 @@ describe('Byline schema', () => {
       })
     })
 
+    it('cannot create a byline with more than 50 characters', () => {
+      // Try to create a byline with 51 characters
+      expect(
+        adminContext.query.Byline.createOne({
+          data: { name: 'Lorem ipsum dolor sit amet, consectetuer adipiscing' },
+          query: 'id name createdAt updatedAt',
+        })
+      ).rejects.toThrow(/You provided invalid data for this operation./)
+    })
+
     it('can update a byline', async () => {
       const existingByline = await adminContext.query.Byline.findMany({
         query: 'id',

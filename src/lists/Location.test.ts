@@ -37,6 +37,16 @@ describe('Location schema', () => {
       })
     })
 
+    it('cannot create a location more than 50 characters', () => {
+      // Try to create a location with 51 characters
+      expect(
+        adminContext.query.Location.createOne({
+          data: { name: 'Lorem ipsum dolor sit amet, consectetuer adipiscing' },
+          query: 'id name createdAt updatedAt',
+        })
+      ).rejects.toThrow(/You provided invalid data for this operation./)
+    })
+
     it('can update a location', async () => {
       const existingLocations = await adminContext.query.Location.findMany({
         query: 'id',

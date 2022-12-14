@@ -3,7 +3,7 @@ import { text } from '@keystone-6/core/fields'
 
 import type { Lists } from '.keystone/types'
 
-import { isAdmin, editReadAdminUI, canCreateArticle } from '../util/access'
+import { isAdmin, editReadAdminUI } from '../util/access'
 import { withTracking } from '../util/tracking'
 
 const Location: Lists.Location = list(
@@ -29,6 +29,9 @@ const Location: Lists.Location = list(
       name: text({
         validation: {
           isRequired: true,
+          length: {
+            max: 50,
+          },
         },
         isIndexed: 'unique',
       }),
