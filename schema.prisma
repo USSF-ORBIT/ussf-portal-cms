@@ -165,29 +165,34 @@ model Tag {
 }
 
 model Article {
-  id            String              @id @default(cuid())
-  category      ArticleCategoryType
-  status        ArticleStatusType   @default(Draft)
-  slug          String              @unique @default("")
-  title         String              @default("")
-  preview       String              @default("")
-  body          Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  searchBody    String              @default("")
-  keywords      String              @default("")
-  publishedDate DateTime?
-  archivedDate  DateTime?
-  byline        Byline?             @relation("Article_byline", fields: [bylineId], references: [id])
-  bylineId      String?             @map("byline")
-  location      Location?           @relation("Article_location", fields: [locationId], references: [id])
-  locationId    String?             @map("location")
-  labels        Label[]             @relation("Article_labels")
-  tags          Tag[]               @relation("Article_tags")
-  updatedBy     User?               @relation("Article_updatedBy", fields: [updatedById], references: [id])
-  updatedById   String?             @map("updatedBy")
-  createdBy     User?               @relation("Article_createdBy", fields: [createdById], references: [id])
-  createdById   String?             @map("createdBy")
-  updatedAt     DateTime?           @updatedAt
-  createdAt     DateTime?           @default(now())
+  id             String              @id @default(cuid())
+  category       ArticleCategoryType
+  status         ArticleStatusType   @default(Draft)
+  slug           String              @unique @default("")
+  title          String              @default("")
+  preview        String              @default("")
+  hero_filesize  Int?
+  hero_extension String?
+  hero_width     Int?
+  hero_height    Int?
+  hero_id        String?
+  body           Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  searchBody     String              @default("")
+  keywords       String              @default("")
+  publishedDate  DateTime?
+  archivedDate   DateTime?
+  byline         Byline?             @relation("Article_byline", fields: [bylineId], references: [id])
+  bylineId       String?             @map("byline")
+  location       Location?           @relation("Article_location", fields: [locationId], references: [id])
+  locationId     String?             @map("location")
+  labels         Label[]             @relation("Article_labels")
+  tags           Tag[]               @relation("Article_tags")
+  updatedBy      User?               @relation("Article_updatedBy", fields: [updatedById], references: [id])
+  updatedById    String?             @map("updatedBy")
+  createdBy      User?               @relation("Article_createdBy", fields: [createdById], references: [id])
+  createdById    String?             @map("createdBy")
+  updatedAt      DateTime?           @updatedAt
+  createdAt      DateTime?           @default(now())
 
   @@index([bylineId])
   @@index([locationId])

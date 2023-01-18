@@ -27,6 +27,9 @@ const Byline = list(
       name: text({
         validation: {
           isRequired: true,
+          length: {
+            max: 50,
+          },
         },
         isIndexed: 'unique',
       }),

@@ -8,6 +8,14 @@ import { extendGraphqlSchema } from './src/lib/schema'
 import redisClient from './src/lib/redis'
 import { session } from './src/lib/session'
 
+const {
+  S3_BUCKET_NAME: bucketName,
+  S3_REGION: region,
+  S3_ACCESS_KEY_ID: accessKeyId,
+  S3_SECRET_ACCESS_KEY: secretAccessKey,
+  ASSET_BASE_URL: baseUrl,
+} = process.env
+
 export default withSharedAuth(
   config({
     extendGraphqlSchema,
@@ -20,6 +28,44 @@ export default withSharedAuth(
       prismaPreviewFeatures: ['fullTextSearch'],
       async onConnect() {
         await redisClient.connect()
+      },
+    },
+    storage: {
+      cms_images: {
+        kind: 's3',
+        type: 'image',
+        bucketName: bucketName || '',
+        region: region || '',
+        accessKeyId: accessKeyId || '',
+        secretAccessKey: secretAccessKey || '',
+        signed: { expiry: 5000 },
+      },
+      local_images: {
+        kind: 'local',
+        type: 'image',
+        generateUrl: (path: string) => `${baseUrl}/images${path}`,
+        serverRoute: {
+          path: '/images',
+        },
+        storagePath: 'public/images',
+      },
+      cms_files: {
+        kind: 's3',
+        type: 'file',
+        bucketName: bucketName || '',
+        region: region || '',
+        accessKeyId: accessKeyId || '',
+        secretAccessKey: secretAccessKey || '',
+        signed: { expiry: 5000 },
+      },
+      local_files: {
+        kind: 'local',
+        type: 'file',
+        generateUrl: (path: string) => `${baseUrl}/files${path}`,
+        serverRoute: {
+          path: '/files',
+        },
+        storagePath: 'public/files',
       },
     },
     // @ts-expect-error We use a custom SharedSessionStrategy that does not
