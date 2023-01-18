@@ -2,8 +2,8 @@
 FROM node:16.19.0-slim AS builder
 
 RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 yarn zlib1g
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl libc6 yarn zlib1g
 
 WORKDIR /app
 
@@ -54,8 +54,8 @@ CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/b
 FROM node:16.19.0-slim AS e2e-local
 
 RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
 
 WORKDIR /app
 
@@ -76,9 +76,9 @@ WORKDIR /app
 COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init zlib1g \
-    && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init zlib1g \
+  && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
 
 ##--------- Stage: runner ---------##
 # Runtime container
