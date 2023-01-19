@@ -20,13 +20,18 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM gcr.io/distroless/nodejs:18 AS e2e
+# FROM gcr.io/distroless/nodejs:18 AS e2e
+FROM node:18.13.0-slim AS e2e
 # The below image is an arm64 debug image that has helpful binaries for debugging, such as a shell, for local debugging
 # FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
 WORKDIR /app
 
 COPY --from=builder /app /app
+
+RUN apt-get update \
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl
 
 COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
@@ -47,7 +52,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY --from=builder /bin/sh  /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
-CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+# CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: e2e-local ---------##
 # E2E image for running tests (same as prod but without certs)
@@ -82,11 +88,16 @@ RUN apt-get update \
 
 ##--------- Stage: runner ---------##
 # Runtime container
-FROM gcr.io/distroless/nodejs:18 AS runner
+# FROM gcr.io/distroless/nodejs:18 AS runner
+FROM node:18.13.0-slim AS runner
 
 WORKDIR /app
 
 COPY --from=builder /app /app
+
+RUN apt-get update \
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl
 
 COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
@@ -106,4 +117,5 @@ COPY --from=build-env  ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca
 COPY --from=build-env /bin/sh  /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
-CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+# CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
