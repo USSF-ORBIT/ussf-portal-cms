@@ -227,8 +227,8 @@ model Announcement {
 model Document {
   id                            String            @id @default(cuid())
   title                         String            @default("")
-  document_filesize             Int?
-  document_filename             String?
+  file_filesize                 Int?
+  file_filename                 String?
   description                   String            @default("")
   updatedBy                     User?             @relation("Document_updatedBy", fields: [updatedById], references: [id])
   updatedById                   String?           @map("updatedBy")
@@ -261,7 +261,6 @@ model DocumentSection {
   id                          String          @id @default(cuid())
   title                       String          @default("")
   document                    Document[]      @relation("DocumentSection_document")
-  description                 String          @default("")
   updatedBy                   User?           @relation("DocumentSection_updatedBy", fields: [updatedById], references: [id])
   updatedById                 String?         @map("updatedBy")
   createdBy                   User?           @relation("DocumentSection_createdBy", fields: [createdById], references: [id])

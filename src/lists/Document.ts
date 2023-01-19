@@ -30,14 +30,10 @@ const Document = list(
           isRequired: true,
         },
       }),
-      document: file({
+      file: file({
         storage: isLocalStorage() ? 'local_files' : 'cms_files',
       }),
-      description: text({
-        validation: {
-          isRequired: false,
-        },
-      }),
+      description: text(),
     },
   })
 )

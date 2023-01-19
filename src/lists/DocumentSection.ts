@@ -35,7 +35,6 @@ const DocumentSection = list(
         ref: 'Document',
         many: true,
       }),
-      description: text(),
     },
   })
 )
