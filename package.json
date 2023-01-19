@@ -66,6 +66,9 @@
   "engines": {
     "node": "18.13.0"
   },
+  "resolutions": {
+    "qs": "6.9.7"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
       "prettier --write",
