@@ -49,7 +49,7 @@ ENV NODE_ENV production
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
-COPY --from=builder /bin/sh  /bin/sh
+# COPY --from=builder /bin/sh  /bin/sh
 
 # ENTRYPOINT [ "/bin/sh", "-c" ]
 # CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
@@ -117,8 +117,8 @@ ENV VERSION $CMS_VERSION
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
-COPY --from=build-env  ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-us-gov-bundle.pem", "/app/us-gov-west-1-bundle.pem", "./"]
-COPY --from=build-env /bin/sh  /bin/sh
+# COPY --from=build-env  ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-us-gov-bundle.pem", "/app/us-gov-west-1-bundle.pem", "./"]
+# COPY --from=build-env /bin/sh  /bin/sh
 
 # ENTRYPOINT [ "/bin/sh", "-c" ]
 # CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
