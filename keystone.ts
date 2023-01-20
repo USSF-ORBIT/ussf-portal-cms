@@ -109,6 +109,9 @@ export default withSharedAuth(
       isAccessAllowed: ({ session }) => session?.accessAllowed === true,
     },
     server: {
+      options: {
+        host: '0.0.0.0',
+      },
       cors: {
         origin: `${process.env.PORTAL_URL}`,
       },
