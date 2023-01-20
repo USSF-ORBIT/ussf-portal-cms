@@ -93,8 +93,6 @@ FROM node:18.13.0-slim AS runner
 
 WORKDIR /app
 
-COPY --from=builder /app /app
-
 COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
@@ -107,6 +105,8 @@ RUN apt-get update \
 # COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 # COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 # COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+
+COPY --from=builder /app /app
 
 ENV NODE_ENV production
 ARG BUILD
