@@ -64,10 +64,7 @@
     "standard-version": "9.5.0"
   },
   "engines": {
-    "node": "18.13.0"
-  },
-  "resolutions": {
-    "qs": "6.9.7"
+    "node": "16.19.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
