@@ -110,7 +110,7 @@ export default withSharedAuth(
     },
     server: {
       options: {
-        host: '0.0.0.0',
+        host: '',
       },
       cors: {
         origin: `${process.env.PORTAL_URL}`,
