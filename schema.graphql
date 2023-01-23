@@ -929,8 +929,8 @@ input AnnouncementCreateInput {
 
 type Document {
   id: ID!
-  title: String
   file: FileFieldOutput
+  title: String
   description: String
   updatedBy: User
   createdBy: User
@@ -970,8 +970,8 @@ input DocumentOrderByInput {
 }
 
 input DocumentUpdateInput {
-  title: String
   file: FileFieldInput
+  title: String
   description: String
 }
 
@@ -985,8 +985,8 @@ input DocumentUpdateArgs {
 }
 
 input DocumentCreateInput {
-  title: String
   file: FileFieldInput
+  title: String
   description: String
 }
 

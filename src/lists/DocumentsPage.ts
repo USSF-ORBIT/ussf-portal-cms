@@ -9,10 +9,10 @@ const DocumentsPage = list(
     access: {
       operation: {
         // to do: update permissions
-        create: () => true,
-        query: () => true,
-        update: () => true,
-        delete: () => true,
+        create: () => true, // admin
+        query: () => true, //  all
+        update: () => true, // manager, author, admin
+        delete: () => true, // admin
       },
     },
     // #TODO: After upgrade, add isSingleton: true

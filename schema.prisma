@@ -226,9 +226,9 @@ model Announcement {
 
 model Document {
   id                            String            @id @default(cuid())
-  title                         String            @default("")
   file_filesize                 Int?
   file_filename                 String?
+  title                         String            @default("")
   description                   String            @default("")
   updatedBy                     User?             @relation("Document_updatedBy", fields: [updatedById], references: [id])
   updatedById                   String?           @map("updatedBy")

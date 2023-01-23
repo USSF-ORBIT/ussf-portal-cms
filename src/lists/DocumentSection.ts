@@ -9,10 +9,10 @@ const DocumentSection = list(
     access: {
       operation: {
         // to do: update permissions
-        create: () => true,
-        query: () => true,
-        update: () => true,
-        delete: () => true,
+        create: () => true, // author, manager, admin
+        query: () => true, //  all
+        update: () => true, // manager, author, admin
+        delete: () => true, // manager, admin
       },
     },
 
