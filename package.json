@@ -29,7 +29,7 @@
     "@graphql-tools/schema": "9.0.9",
     "@k6-contrib/list-plugins": "3.0.0",
     "@keystone-6/auth": "5.0.0",
-    "@keystone-6/core": "3.0.2",
+    "@keystone-6/core": "3.1.2",
     "@keystone-6/fields-document": "5.0.1",
     "@prisma/client": "4.9.0",
     "cookie-signature": "1.2.0",
