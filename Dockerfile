@@ -1,5 +1,5 @@
 ##--------- Stage: builder ---------##
-FROM node:14.21.1-slim AS builder
+FROM node:16.19.0-slim AS builder
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
@@ -20,7 +20,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM gcr.io/distroless/nodejs:14 AS e2e
+FROM gcr.io/distroless/nodejs:16 AS e2e
 # The below image is an arm64 debug image that has helpful binaries for debugging, such as a shell, for local debugging
 # FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
@@ -51,7 +51,7 @@ CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/b
 
 ##--------- Stage: e2e-local ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM node:14.21.1-slim AS e2e-local
+FROM node:16.19.0-slim AS e2e-local
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
@@ -69,7 +69,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:14.21.1-slim AS build-env
+FROM node:16.19.0-slim AS build-env
 
 WORKDIR /app
 
@@ -82,7 +82,7 @@ RUN apt-get update \
 
 ##--------- Stage: runner ---------##
 # Runtime container
-FROM gcr.io/distroless/nodejs:14 AS runner
+FROM gcr.io/distroless/nodejs:16 AS runner
 
 WORKDIR /app
 
