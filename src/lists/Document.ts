@@ -1,18 +1,22 @@
 import { list } from '@keystone-6/core'
 import { file, text } from '@keystone-6/core/fields'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
+import {
+  isAdmin,
+  editReadAdminUI,
+  documentOperationAccess,
+} from '../util/access'
 import { withTracking } from '../util/tracking'
 import { isLocalStorage } from '../util/getStorage'
+
 const Document = list(
   withTracking({
     access: {
       operation: {
-        // to do: update permissions
-        create: () => true, // author, manager, admin
-        query: () => true, //  all
-        update: () => true, // manager, author, admin
-        delete: () => true, // manager, admin
+        create: (session) => documentOperationAccess(session),
+        query: (session) => documentOperationAccess(session),
+        update: (session) => documentOperationAccess(session),
+        delete: (session) => documentOperationAccess(session),
       },
     },
 

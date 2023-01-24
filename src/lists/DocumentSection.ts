@@ -3,16 +3,16 @@ import { relationship, text } from '@keystone-6/core/fields'
 
 import { isAdmin, editReadAdminUI } from '../util/access'
 import { withTracking } from '../util/tracking'
+import { documentOperationAccess } from '../util/access'
 
 const DocumentSection = list(
   withTracking({
     access: {
       operation: {
-        // to do: update permissions
-        create: () => true, // author, manager, admin
-        query: () => true, //  all
-        update: () => true, // manager, author, admin
-        delete: () => true, // manager, admin
+        create: (session) => documentOperationAccess(session),
+        query: (session) => documentOperationAccess(session),
+        update: (session) => documentOperationAccess(session),
+        delete: (session) => documentOperationAccess(session),
       },
     },
 

@@ -1,3 +1,4 @@
+import { list } from '@keystone-6/core'
 import type { BaseItem, KeystoneContext } from '@keystone-6/core/types'
 
 import type { ValidSession } from '../../types'
@@ -157,4 +158,37 @@ export const articleStatusView: ItemViewFn = ({ session }) => {
   if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
 
   return 'read'
+}
+
+/* Document helper */
+
+export const documentOperationAccess: OperationAccessFn = ({
+  session,
+  operation,
+}) => {
+  if (operation === 'create') {
+    return (
+      session?.isAdmin ||
+      session?.role === USER_ROLES.AUTHOR ||
+      session?.role === USER_ROLES.MANAGER
+    )
+  }
+
+  if (operation === 'query') {
+    return true
+  }
+
+  if (operation === 'update') {
+    return (
+      session?.isAdmin ||
+      session?.role === USER_ROLES.AUTHOR ||
+      session?.role === USER_ROLES.MANAGER
+    )
+  }
+
+  if (operation === 'delete') {
+    return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+  }
+
+  return false
 }

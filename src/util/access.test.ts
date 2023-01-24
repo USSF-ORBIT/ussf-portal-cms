@@ -3,6 +3,7 @@ import {
   testAdminSession,
   testAuthorSession,
   testManagerSession,
+  testUser,
 } from '../__fixtures__/testUsers'
 
 import {
@@ -18,6 +19,7 @@ import {
   articleCreateView,
   articleItemView,
   articleStatusView,
+  documentOperationAccess,
 } from './access'
 
 describe('isAdmin', () => {
@@ -275,5 +277,148 @@ describe('articleStatusView', () => {
   })
   it('returns read if there is no logged in user', () => {
     expect(articleStatusView({})).toBe('read')
+  })
+})
+
+describe.only('documentOperationAccess', () => {
+  // Admin Session
+  // Access to all operations for documents
+
+  it('returns true if operation is create and the logged in user is an admin', () => {
+    expect(
+      documentOperationAccess({
+        session: testAdminSession,
+        operation: 'create',
+      })
+    ).toBe(true)
+  })
+  it('returns true if operation is update and the logged in user is an admin', () => {
+    expect(
+      documentOperationAccess({
+        session: testAdminSession,
+        operation: 'update',
+      })
+    ).toBe(true)
+  })
+  it('returns true if operation is query and the logged in user is an admin', () => {
+    expect(
+      documentOperationAccess({ session: testAdminSession, operation: 'query' })
+    ).toBe(true)
+  })
+  it('returns true if operation is delete and the logged in user is an admin', () => {
+    expect(
+      documentOperationAccess({
+        session: testAdminSession,
+        operation: 'delete',
+      })
+    ).toBe(true)
+  })
+
+  // Manager Session
+  // Access to all operations for documents
+
+  it('returns true if operation is create and the logged in user is a manager', () => {
+    expect(
+      documentOperationAccess({
+        session: testManagerSession,
+        operation: 'create',
+      })
+    ).toBe(true)
+  })
+  it('returns true if operation is update and the logged in user is a manager', () => {
+    expect(
+      documentOperationAccess({
+        session: testManagerSession,
+        operation: 'update',
+      })
+    ).toBe(true)
+  })
+  it('returns true if operation is query and the logged in user is a manager', () => {
+    expect(
+      documentOperationAccess({
+        session: testManagerSession,
+        operation: 'query',
+      })
+    ).toBe(true)
+  })
+  it('returns true if operation is delete and the logged in user is a manager', () => {
+    expect(
+      documentOperationAccess({
+        session: testManagerSession,
+        operation: 'delete',
+      })
+    ).toBe(true)
+  })
+
+  // Author Session
+  // Access to create, query, update
+
+  it('returns true if operation is create and the logged in user is an author', () => {
+    expect(
+      documentOperationAccess({
+        session: testAuthorSession,
+        operation: 'create',
+      })
+    ).toBe(true)
+  })
+  it('returns true if operation is update and the logged in user is an author', () => {
+    expect(
+      documentOperationAccess({
+        session: testAuthorSession,
+        operation: 'update',
+      })
+    ).toBe(true)
+  })
+  it('returns true if operation is query and the logged in user is an author', () => {
+    expect(
+      documentOperationAccess({
+        session: testAuthorSession,
+        operation: 'query',
+      })
+    ).toBe(true)
+  })
+  it('returns false if operation is delete and the logged in user is an author', () => {
+    expect(
+      documentOperationAccess({
+        session: testAuthorSession,
+        operation: 'delete',
+      })
+    ).toBe(false)
+  })
+
+  // User Session
+  // Access to query
+
+  it('returns false if operation is create and the logged in user is a user', () => {
+    expect(
+      documentOperationAccess({
+        session: testUserSession,
+        operation: 'create',
+      })
+    ).toBe(false)
+  })
+  it('returns false if operation is update and the logged in user is a user', () => {
+    expect(
+      documentOperationAccess({
+        session: testUserSession,
+        operation: 'update',
+      })
+    ).toBe(false)
+  })
+  it('returns true if operation is query and the logged in user is a user', () => {
+    expect(
+      documentOperationAccess({
+        session: testUserSession,
+        operation: 'query',
+      })
+    ).toBe(true)
+  })
+  it('returns false if operation is delete and the logged in user is a user', () => {
+    expect(
+      documentOperationAccess({
+        session: testUserSession,
+        operation: 'delete',
+      })
+    ).toBe(false)
   })
 })

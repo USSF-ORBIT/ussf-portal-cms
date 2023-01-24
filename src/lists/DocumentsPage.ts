@@ -1,18 +1,21 @@
 import { list } from '@keystone-6/core'
 import { relationship, text } from '@keystone-6/core/fields'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
+import {
+  isAdmin,
+  editReadAdminUI,
+  documentOperationAccess,
+} from '../util/access'
 import { withTracking } from '../util/tracking'
 
 const DocumentsPage = list(
   withTracking({
     access: {
       operation: {
-        // to do: update permissions
-        create: () => true, // admin
-        query: () => true, //  all
-        update: () => true, // manager, author, admin
-        delete: () => true, // admin
+        create: (session) => documentOperationAccess(session),
+        query: (session) => documentOperationAccess(session),
+        update: (session) => documentOperationAccess(session),
+        delete: (session) => documentOperationAccess(session),
       },
     },
     // #TODO: After upgrade, add isSingleton: true
@@ -20,9 +23,11 @@ const DocumentsPage = list(
     // directly to the documents page to update
     ui: {
       hideCreate: ({ session }) => !isAdmin({ session }),
+      hideDelete: ({ session }) => !isAdmin({ session }),
       itemView: {
         defaultFieldMode: editReadAdminUI,
       },
+      label: 'Documents Page',
     },
 
     fields: {
