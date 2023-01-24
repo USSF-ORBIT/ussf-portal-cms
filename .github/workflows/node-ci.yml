@@ -28,8 +28,13 @@ jobs:
         with:
           node-version: ${{ steps.engines.outputs.nodeVersion }}
 
-      - name: Docker compose
-        run: docker-compose -f docker-compose.jest.yml up -d
+      - name: Start Database
+        run: |
+          docker run --rm --detach \
+            --publish '5432:5432' \
+            --env POSTGRES_PASSWORD=keystonecms \
+            --env POSTGRES_USER=keystone \
+            --env POSTGRES_DB=unit-test postgres:14.3
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -48,7 +53,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Lint code
-        run: yarn lint --ignore-pattern e2e/
+        run: yarn lint
 
       - name: Run Jest tests
         run: yarn test --coverage
