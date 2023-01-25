@@ -29,9 +29,9 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
-RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+# RUN apt-get update \
+#     && apt-get dist-upgrade -y \
+#     && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
 
 COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
