@@ -19,6 +19,17 @@ RUN yarn build
 # Install only production deps this time
 RUN yarn install --production --ignore-scripts --prefer-offline
 
+ADD https://www.openssl.org/source/openssl-3.0.7.tar.gz /usr/local/src/
+
+RUN apt-get install -y build-essential checkinstall zlib1g-dev \
+  && cd /usr/local/src/ \
+  && tar -xf openssl-3.0.7.tar.gz \
+  && cd openssl-3.0.7 \
+  && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
+  && make \
+  && make test \
+  && make install
+
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
 FROM gcr.io/distroless/nodejs:18 AS e2e
@@ -39,12 +50,16 @@ COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
 
 # The below copies are for hosts running on ARM64, such as M1 Macbooks. Uncomment the lines below and comment out the equivalent lines above.
 # COPY --from=builder /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
 # COPY --from=builder /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
 # COPY --from=builder /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
 # COPY --from=builder /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+# COPY --from=builder /usr/local/ssl/lib/*  /lib/aarch64-linux-gnu/
 
 ENV NODE_ENV production
 
@@ -88,16 +103,16 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init zlib1g \
   && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
 
-ADD https://www.openssl.org/source/openssl-3.0.7.tar.gz /usr/local/src/
+# ADD https://www.openssl.org/source/openssl-3.0.7.tar.gz /usr/local/src/
 
-RUN apt-get install -y build-essential checkinstall zlib1g-dev \
-  && cd /usr/local/src/ \
-  && tar -xf openssl-3.0.7.tar.gz \
-  && cd openssl-3.0.7 \
-  && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
-  && make \
-  && make test \
-  && make install
+# RUN apt-get install -y build-essential checkinstall zlib1g-dev \
+#   && cd /usr/local/src/ \
+#   && tar -xf openssl-3.0.7.tar.gz \
+#   && cd openssl-3.0.7 \
+#   && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
+#   && make \
+#   && make test \
+#   && make install
 
 ##--------- Stage: runner ---------##
 # Runtime container
@@ -118,15 +133,15 @@ COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
-COPY --from=build-env /usr/local/ssl/bin/openssl /usr/bin/openssl
-COPY --from=build-env /usr/local/ssl/lib/*  /lib/x86_64-linux-gnu/
+COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
 
 # COPY --from=build-env /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
 # COPY --from=build-env /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
 # COPY --from=build-env /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
 # COPY --from=build-env /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
-# COPY --from=build-env /usr/local/ssl/bin/openssl /usr/bin/openssl
-# COPY --from=build-env /usr/local/ssl/lib/*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+# COPY --from=builder /usr/local/ssl/lib/*  /lib/aarch64-linux-gnu/
 
 COPY --from=builder /app /app
 
