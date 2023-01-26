@@ -6,6 +6,17 @@ RUN apt-get update \
   && apt-get dist-upgrade -y \
   && apt-get install -y --no-install-recommends openssl libc6 yarn zlib1g
 
+ADD https://www.openssl.org/source/openssl-3.0.7.tar.gz /usr/local/src/
+
+RUN apt-get install -y build-essential checkinstall zlib1g-dev \
+  && cd /usr/local/src/ \
+  && tar -xf openssl-3.0.7.tar.gz \
+  && cd openssl-3.0.7 \
+  && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
+  && make \
+  && make test \
+  && make install
+
 WORKDIR /app
 
 COPY . .
@@ -18,17 +29,6 @@ RUN yarn build
 
 # Install only production deps this time
 RUN yarn install --production --ignore-scripts --prefer-offline
-
-ADD https://www.openssl.org/source/openssl-3.0.7.tar.gz /usr/local/src/
-
-RUN apt-get install -y build-essential checkinstall zlib1g-dev \
-  && cd /usr/local/src/ \
-  && tar -xf openssl-3.0.7.tar.gz \
-  && cd openssl-3.0.7 \
-  && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
-  && make \
-  && make test \
-  && make install
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
