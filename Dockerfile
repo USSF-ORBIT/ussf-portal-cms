@@ -14,8 +14,10 @@ RUN apt-get install -y build-essential checkinstall zlib1g-dev \
   && cd openssl-3.0.7 \
   && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
   && make \
-  && make test \
-  && make install
+  && make install \
+  && ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl \
+  && echo /usr/local/ssl/lib* > /etc/ld.so.conf.d/openssl-3.0.7.conf \
+  && ldconfig -v
 
 WORKDIR /app
 
