@@ -1,9 +1,6 @@
 import { list } from '@keystone-6/core'
 import { select, text, timestamp } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
-
-import type { Lists } from '.keystone/types'
-
 import { ANNOUNCEMENT_STATUSES } from '../util/workflows'
 import {
   canCreateArticle,
@@ -16,12 +13,14 @@ import {
 import { withTracking } from '../util/tracking'
 import { componentBlocks } from '../components/component-blocks'
 
-const Announcement: Lists.Announcement = list(
+const Announcement = list(
   withTracking({
     access: {
       operation: {
-        create: canCreateArticle,
         query: () => true,
+        create: canCreateArticle,
+        update: () => true,
+        delete: () => true,
       },
       filter: {
         update: canUpdateDeleteArticle,
@@ -60,7 +59,7 @@ const Announcement: Lists.Announcement = list(
         },
         links: true,
         ui: {
-          views: require.resolve('../components/component-blocks'),
+          views: './src/components/component-blocks',
         },
         componentBlocks,
       }),

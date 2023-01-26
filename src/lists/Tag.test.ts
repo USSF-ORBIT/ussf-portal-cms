@@ -1,10 +1,8 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Tag schema', () => {
-  let testEnv: TestEnvWithSessions
-
   let sudoContext: KeystoneContext
   let userContext: KeystoneContext
   let authorContext: KeystoneContext
@@ -20,24 +18,26 @@ describe('Tag schema', () => {
     name: 'My Test Tag',
   }
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    sudoContext = testEnv.sudoContext
-    userContext = testEnv.userContext
-    authorContext = testEnv.authorContext
-    managerContext = testEnv.managerContext
-
+  const resetTags = async () => {
     testTag = await sudoContext.query.Tag.createOne({
       data: testTagData,
       query: tagQuery,
     })
-  })
+  }
 
-  afterAll(async () => {
-    await testEnv.disconnect()
+  beforeAll(async () => {
+    const context = await configTestEnv()
+    sudoContext = context.sudoContext
+    userContext = context.userContext
+    authorContext = context.authorContext
+    managerContext = context.managerContext
+
+    await resetTags()
   })
 
   describe('as a non-admin user with User role', () => {
+    beforeAll(async () => resetTags)
+
     it('can query all tags', async () => {
       const data = await userContext.query.Tag.findMany({
         query: tagQuery,
@@ -54,9 +54,7 @@ describe('Tag schema', () => {
           },
           query: tagQuery,
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Tag'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that Tag')
     })
 
     it('cannot update a tag', async () => {
@@ -71,7 +69,7 @@ describe('Tag schema', () => {
           query: tagQuery,
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Tag'./
+        'Access denied: You cannot update that Tag - it may not exist'
       )
     })
 
@@ -83,12 +81,14 @@ describe('Tag schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Tag'./
+        'Access denied: You cannot delete that Tag - it may not exist'
       )
     })
   })
 
   describe('as a non-admin user with Author role', () => {
+    beforeAll(async () => resetTags)
+
     it('can create a tag', async () => {
       const testAuthorTag = {
         name: 'Author Tag',
@@ -153,7 +153,7 @@ describe('Tag schema', () => {
           query: tagQuery,
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the item./
+        'Access denied: You cannot update that Tag - it may not exist'
       )
     })
 
@@ -165,12 +165,14 @@ describe('Tag schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the item./
+        'Access denied: You cannot delete that Tag - it may not exist'
       )
     })
   })
 
   describe('as a non-admin user with Manager role', () => {
+    beforeAll(async () => resetTags)
+
     it('can create a tag', async () => {
       const testManagerTag = {
         name: 'Manager Tag',

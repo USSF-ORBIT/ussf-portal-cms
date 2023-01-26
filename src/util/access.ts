@@ -88,7 +88,9 @@ export const userQueryFilter: OperationFilterFn = ({ session }) => {
   // if the user is an Admin, they can access all the users
   if (session?.isAdmin) return true
 
-  if (!session) return false
+  if (!session) {
+    return false
+  }
 
   // CMS roles can view other users
   if (

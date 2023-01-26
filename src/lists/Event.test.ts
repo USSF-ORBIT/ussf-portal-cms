@@ -1,26 +1,17 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 import type { EventCreateInput } from '.keystone/types'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Event schema', () => {
-  let testEnv: TestEnvWithSessions
-  let context: KeystoneContext
-
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
+  let sudoContext: KeystoneContext
 
   let testEvent: EventCreateInput
   let testEventId: string
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    context = testEnv.testArgs.context
-
-    const sudoContext = testEnv.sudoContext
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-
+  const resetEvents = async () => {
     // Seed events
     const adminUser = await sudoContext.query.User.findOne({
       where: {
@@ -48,16 +39,21 @@ describe('Event schema', () => {
       },
     }
 
-    const createdEvent = await context.sudo().query.Event.createOne({
+    const createdEvent = await sudoContext.query.Event.createOne({
       data: testEvent,
       query: 'id',
     })
 
     testEventId = createdEvent.id
-  })
+  }
 
-  afterAll(async () => {
-    await testEnv.disconnect()
+  beforeAll(async () => {
+    const context = await configTestEnv()
+    adminContext = context.adminContext
+    userContext = context.userContext
+    sudoContext = context.sudoContext
+
+    await resetEvents()
   })
 
   describe('as an admin user', () => {
@@ -82,9 +78,7 @@ describe('Event schema', () => {
         adminContext.query.Event.createOne({
           data: testEvent,
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Event'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that Event')
     })
 
     it('cannot modify an event', async () => {
@@ -98,7 +92,7 @@ describe('Event schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Event'./
+        'Access denied: You cannot update that Event - it may not exist'
       )
     })
 
@@ -110,7 +104,7 @@ describe('Event schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Event'./
+        'Access denied: You cannot delete that Event - it may not exist'
       )
     })
   })
@@ -130,9 +124,7 @@ describe('Event schema', () => {
         userContext.query.Event.createOne({
           data: testEvent,
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Event'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that Event')
     })
 
     it('cannot modify an event', async () => {
@@ -146,7 +138,7 @@ describe('Event schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Event'./
+        'Access denied: You cannot update that Event - it may not exist'
       )
     })
 
@@ -158,7 +150,7 @@ describe('Event schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Event'./
+        'Access denied: You cannot delete that Event - it may not exist'
       )
     })
   })

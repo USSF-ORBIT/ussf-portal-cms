@@ -31,4 +31,4 @@ tsconfig.tsbuildinfo
 e2e/test-results
 
 # Local assets
-public/*
+public/

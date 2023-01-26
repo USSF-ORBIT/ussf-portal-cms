@@ -14,11 +14,9 @@ const redisSessionStore = ({
   client: typeof redisClient
 }): SessionStoreFunction => {
   return ({ maxAge }) => ({
-    async connect() {
-      await client.connect()
-    },
     async get(key) {
       const result = await client.get(key)
+
       if (typeof result === 'string') {
         return JSON.parse(result)
       }
@@ -28,9 +26,6 @@ const redisSessionStore = ({
     },
     async delete(key) {
       await client.del(key)
-    },
-    async disconnect() {
-      await client.quit()
     },
   })
 }
@@ -61,9 +56,10 @@ export const sharedRedisSession = ({
 }): SharedSessionStrategy<SessionData> => {
   const store =
     typeof storeOption === 'function' ? storeOption({ maxAge }) : storeOption
-  let isConnected = false
 
   return {
+    // #TODO Try to add generic start funciton and see if sessions still function as expected w/ redirect
+
     // Get session out of Redis store
     async get({ req }) {
       const cookies = cookie.parse(req.headers.cookie || '')
@@ -71,11 +67,6 @@ export const sharedRedisSession = ({
 
       // No matching cookie
       if (!token) return
-
-      if (!isConnected) {
-        await store.connect?.()
-        isConnected = true
-      }
 
       const unsigned = unsign(token, SESSION_SECRET)
 
@@ -92,11 +83,6 @@ export const sharedRedisSession = ({
       const token = cookies[`${TOKEN_NAME}`]
 
       if (!token) return
-
-      if (!isConnected) {
-        await store.connect?.()
-        isConnected = true
-      }
 
       await store.delete(`sess:${token}`)
 

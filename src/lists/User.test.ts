@@ -1,22 +1,13 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 
-import { configTestEnv, TestEnvWithSessions, testUsers } from '../testHelpers'
+import { configTestEnv, testUsers } from '../testHelpers'
 
 describe('User schema', () => {
-  let testEnv: TestEnvWithSessions
-
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-  })
-
-  afterAll(async () => {
-    await testEnv.disconnect()
-  })
+  // Set up test environment, seed data, and return contexts
+  beforeAll(async () => ({ adminContext, userContext } = await configTestEnv()))
 
   describe('as an admin user', () => {
     it('can view all users', async () => {
@@ -92,7 +83,7 @@ describe('User schema', () => {
           query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["userId"].`
+        'Access denied: You cannot update that User - you cannot update the fields ["userId"]'
       )
     })
 
@@ -106,7 +97,7 @@ describe('User schema', () => {
           query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isAdmin"].`
+        'Access denied: You cannot update that User - you cannot update the fields ["isAdmin"]'
       )
     })
 
@@ -120,7 +111,7 @@ describe('User schema', () => {
           query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isEnabled"].`
+        'Access denied: You cannot update that User - you cannot update the fields ["isEnabled"]'
       )
     })
 
@@ -134,9 +125,7 @@ describe('User schema', () => {
             isEnabled: true,
           },
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'User'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that User')
     })
 
     it('cannot delete users', async () => {
@@ -147,7 +136,7 @@ describe('User schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'User'./
+        'Access denied: You cannot delete that User - it may not exist'
       )
     })
   })
@@ -214,7 +203,7 @@ describe('User schema', () => {
           query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"admin@example.com"}'. It may not exist.`
+        'Access denied: You cannot update that User - it may not exist'
       )
     })
 
@@ -228,7 +217,7 @@ describe('User schema', () => {
           query: 'id name role userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["role"].`
+        'Access denied: You cannot update that User - you cannot update the fields ["role"]'
       )
     })
 
@@ -242,7 +231,7 @@ describe('User schema', () => {
           query: 'id name userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["userId"].`
+        'Access denied: You cannot update that User - you cannot update the fields ["userId"]'
       )
     })
 
@@ -256,7 +245,7 @@ describe('User schema', () => {
           query: 'id name userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isAdmin"].`
+        'Access denied: You cannot update that User - you cannot update the fields ["isAdmin"]'
       )
     })
 
@@ -270,7 +259,7 @@ describe('User schema', () => {
           query: 'id name userId isAdmin isEnabled',
         })
       ).rejects.toThrow(
-        `Access denied: You cannot perform the 'update' operation on the item '{"userId":"user1@example.com"}'. You cannot update the fields ["isEnabled"].`
+        'Access denied: You cannot update that User - you cannot update the fields ["isEnabled"]'
       )
     })
 
@@ -284,9 +273,7 @@ describe('User schema', () => {
             isEnabled: true,
           },
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'User'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that User')
     })
 
     it('cannot delete users', async () => {
@@ -297,7 +284,7 @@ describe('User schema', () => {
           },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'User'./
+        'Access denied: You cannot delete that User - it may not exist'
       )
     })
   })

@@ -1,10 +1,8 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Location schema', () => {
-  let testEnv: TestEnvWithSessions
-
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
 
@@ -12,15 +10,8 @@ describe('Location schema', () => {
     name: 'My Location',
   }
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-  })
-
-  afterAll(async () => {
-    await testEnv.disconnect()
-  })
+  // Set up test environment, seed data, and return contexts
+  beforeAll(async () => ({ adminContext, userContext } = await configTestEnv()))
 
   describe('as an admin user', () => {
     it('can create a new location', async () => {
@@ -122,9 +113,7 @@ describe('Location schema', () => {
           data: testLocation,
           query: 'id createdAt updatedAt name',
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Location'./
-      )
+      ).rejects.toThrow('Access denied: You cannot create that Location')
     })
 
     it('cannot update locations', async () => {
@@ -141,7 +130,7 @@ describe('Location schema', () => {
           query: 'id createdAt updatedAt name',
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Location'./
+        'Access denied: You cannot update that Location - it may not exist'
       )
     })
 
@@ -155,7 +144,7 @@ describe('Location schema', () => {
           where: { id: existingLocations[0].id },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Location'./
+        'Access denied: You cannot delete that Location - it may not exist'
       )
     })
   })

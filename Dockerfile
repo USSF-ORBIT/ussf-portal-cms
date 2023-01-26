@@ -2,8 +2,8 @@
 FROM node:16.19.0-slim AS builder
 
 RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 yarn zlib1g
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl libc6 yarn zlib1g
 
 WORKDIR /app
 
@@ -26,8 +26,6 @@ FROM gcr.io/distroless/nodejs:16 AS e2e
 
 WORKDIR /app
 
-COPY --from=builder /app /app
-
 COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
@@ -39,12 +37,14 @@ COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
 # COPY --from=builder /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
 # COPY --from=builder /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
 
+COPY --from=builder /app /app
+
 ENV NODE_ENV production
 
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
-COPY --from=builder /bin/sh  /bin/sh
+COPY --from=builder /bin/sh /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
@@ -54,8 +54,8 @@ CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/b
 FROM node:16.19.0-slim AS e2e-local
 
 RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
 
 WORKDIR /app
 
@@ -76,9 +76,9 @@ WORKDIR /app
 COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init zlib1g \
-    && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init zlib1g \
+  && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
 
 ##--------- Stage: runner ---------##
 # Runtime container
@@ -86,12 +86,17 @@ FROM gcr.io/distroless/nodejs:16 AS runner
 
 WORKDIR /app
 
-COPY --from=builder /app /app
+COPY scripts/add-rds-cas.sh .
 
 COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+
+COPY --from=build-env ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-us-gov-bundle.pem", "/app/us-gov-west-1-bundle.pem", "./"]
+COPY --from=build-env /bin/sh /bin/sh
+
+COPY --from=builder /app /app
 
 ENV NODE_ENV production
 ARG BUILD
@@ -101,9 +106,6 @@ ENV VERSION $CMS_VERSION
 
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
-
-COPY --from=build-env  ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-us-gov-bundle.pem", "/app/us-gov-west-1-bundle.pem", "./"]
-COPY --from=build-env /bin/sh  /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]

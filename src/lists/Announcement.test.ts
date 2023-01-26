@@ -1,15 +1,13 @@
 import { KeystoneContext } from '@keystone-6/core/types'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Announcement schema', () => {
-  let testEnv: TestEnvWithSessions
-
-  let sudoContext: KeystoneContext
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
   let authorContext: KeystoneContext
   let managerContext: KeystoneContext
+  let sudoContext: KeystoneContext
 
   let testAnnouncement: Record<string, any>
   let adminAnnouncement: Record<string, any>
@@ -21,6 +19,17 @@ describe('Announcement schema', () => {
   const testAnnouncementData = {
     title: 'Test Announcement',
   }
+  // Set up test environment, seed data, and return contexts
+  beforeAll(
+    async () =>
+      ({
+        adminContext,
+        userContext,
+        authorContext,
+        managerContext,
+        sudoContext,
+      } = await configTestEnv())
+  )
 
   const resetAnnouncements = async () => {
     const allAnnouncements = await sudoContext.query.Announcement.findMany({
@@ -37,19 +46,6 @@ describe('Announcement schema', () => {
     })
   }
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    sudoContext = testEnv.sudoContext
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-    authorContext = testEnv.authorContext
-    managerContext = testEnv.managerContext
-  })
-
-  afterAll(async () => {
-    await testEnv.disconnect()
-  })
-
   describe('as a non-admin user with User role', () => {
     beforeAll(async () => {
       await resetAnnouncements()
@@ -63,15 +59,14 @@ describe('Announcement schema', () => {
           },
           query: announcementQuery,
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'Announcement'./
-      )
+      ).rejects.toThrow(/Access denied: You cannot create that Announcement/)
     })
 
     it('can query announcements', async () => {
       const data = await userContext.query.Announcement.findMany({
         query: announcementQuery,
       })
+
       expect(data).toHaveLength(1)
     })
 
@@ -85,7 +80,7 @@ describe('Announcement schema', () => {
           query: announcementQuery,
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'Announcement'./
+        /Access denied: You cannot update that Announcement - it may not exist/
       )
     })
 
@@ -95,12 +90,16 @@ describe('Announcement schema', () => {
           where: { id: testAnnouncement.id },
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'Announcement'./
+        /Access denied: You cannot delete that Announcement - it may not exist/
       )
     })
   })
 
   describe('as an admin user', () => {
+    beforeAll(async () => {
+      await resetAnnouncements()
+    })
+
     it('can create an announcement', async () => {
       const testAdminAnnouncement = {
         title: 'Admin Announcement',
@@ -123,7 +122,6 @@ describe('Announcement schema', () => {
       })
 
       expect(data.length).toEqual(2)
-      expect(data[0]).toMatchObject(testAnnouncement)
       expect(data[1]).toMatchObject(adminAnnouncement)
     })
 

@@ -1,5 +1,5 @@
-import { GraphQLRequest } from '@keystone-6/core/testing'
 import { KeystoneContext } from '@keystone-6/core/types'
+
 import {
   myVector,
   publishedArticleData,
@@ -10,24 +10,20 @@ import {
   testBookmarks,
 } from '../testData'
 
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
-let testEnv: TestEnvWithSessions
-let graphQLRequest: GraphQLRequest
 let sudoContext: KeystoneContext
 
 beforeAll(async () => {
-  testEnv = await configTestEnv()
-  graphQLRequest = testEnv.testArgs.graphQLRequest
-  sudoContext = testEnv.sudoContext
-
+  const context = await configTestEnv()
+  sudoContext = context.sudoContext
   await sudoContext.query.Article.createMany({ data: testArticles })
   await sudoContext.query.Bookmark.createMany({ data: testBookmarks })
 })
 
-afterAll(async () => {
-  await testEnv.disconnect()
-})
+type SearchResults = {
+  search: []
+}
 
 describe('Search Resolver', () => {
   // Define the search query we'll use in every request
@@ -62,14 +58,14 @@ describe('Search Resolver', () => {
     
     */
 
-    const searchResults = await graphQLRequest({
+    const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
         query: 'myvector',
       },
-    }).expect(200)
+    })
 
-    const results = searchResults.body.data.search
+    const results = searchResults.search
 
     expect(results).toHaveLength(2)
     expect(results).toEqual(
@@ -94,21 +90,21 @@ describe('Search Resolver', () => {
 
   it('returns results by searching bookmark URL', async () => {
     /*
-    Query String: 'afpcsecure.us.af.mil'
-    Search Fields Tested: Bookmark.url
-    Expected Results: 
-        surf (BookmarkResult)
-        orders (BookmarkResult)
-    */
+        Query String: 'afpcsecure.us.af.mil'
+        Search Fields Tested: Bookmark.url
+        Expected Results:
+            surf (BookmarkResult)
+            orders (BookmarkResult)
+        */
 
-    const searchResults = await graphQLRequest({
+    const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
         query: 'afpcsecure.us.af.mil',
       },
-    }).expect(200)
+    })
 
-    const results = searchResults.body.data.search
+    const results = searchResults.search
 
     expect(results).toHaveLength(2)
     expect(results).toEqual(
@@ -131,21 +127,21 @@ describe('Search Resolver', () => {
 
   it('returns results by searching keywords', async () => {
     /*
-    Query String: 'FOO', case insensitive
-    Search Fields Tested: Article.keywords, Bookmark.keywords
-    Expected Results: 
-        publishedArticleData (ArticleResult)
-        orders (BookmarkResult)
-    */
+        Query String: 'FOO', case insensitive
+        Search Fields Tested: Article.keywords, Bookmark.keywords
+        Expected Results:
+            publishedArticleData (ArticleResult)
+            orders (BookmarkResult)
+        */
 
-    const searchResults = await graphQLRequest({
+    const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
         query: 'FOO',
       },
-    }).expect(200)
+    })
 
-    const results = searchResults.body.data.search
+    const results = searchResults.search
 
     expect(results).toHaveLength(2)
     expect(results).toEqual(
@@ -170,40 +166,39 @@ describe('Search Resolver', () => {
 
   it('does not return articles with draft status', async () => {
     /*
-    Query String: 'draft', case insensitive
-    Search Fields Tested: Article.status
-    Expected Results: []
-    */
-
-    const searchResults = await graphQLRequest({
+        Query String: 'draft', case insensitive
+        Search Fields Tested: Article.status
+        Expected Results: []
+        */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
         query: 'draft',
       },
-    }).expect(200)
+    })
 
-    const results = searchResults.body.data.search
+    const results = searchResults.search
 
     expect(results).toHaveLength(0)
   })
 
   it('returns results by searching bookmark descriptions', async () => {
     /*
-    Query String: 'career', case insensitive
-    Search Fields Tested: Bookmark.description
-    Expected Results: 
-        myVector (BookmarkResult)
-        surf (BookmarkResult)
-    */
+        Query String: 'career', case insensitive
+        Search Fields Tested: Bookmark.description
+        Expected Results:
+            myVector (BookmarkResult)
+            surf (BookmarkResult)
+        */
 
-    const searchResults = await graphQLRequest({
+    const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
         query: 'career',
       },
-    }).expect(200)
+    })
 
-    const results = searchResults.body.data.search
+    const results = searchResults.search
 
     expect(results).toHaveLength(2)
     expect(results).toEqual(
@@ -226,20 +221,20 @@ describe('Search Resolver', () => {
 
   it('returns results by searching article document body', async () => {
     /*
-    Query String: 'lorem ipsum', case insensitive
-    Search Fields Tested: Article.searchBody
-    Expected Results:
-      publishedArticleData (ArticleResult)
-    */
+        Query String: 'lorem ipsum', case insensitive
+        Search Fields Tested: Article.searchBody
+        Expected Results:
+          publishedArticleData (ArticleResult)
+        */
 
-    const searchResults = await graphQLRequest({
+    const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
         query: 'lorem ipsum',
       },
-    }).expect(200)
+    })
 
-    const results = searchResults.body.data.search
+    const results = searchResults.search
 
     expect(results).toHaveLength(1)
     expect(results).toEqual(
