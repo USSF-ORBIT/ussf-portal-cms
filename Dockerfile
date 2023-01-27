@@ -1,9 +1,22 @@
 ##--------- Stage: builder ---------##
-FROM node:16.19.0-slim AS builder
+FROM node:18.13.0-slim AS builder
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends openssl libc6 yarn zlib1g
+  && apt-get install -y --no-install-recommends libc6 yarn zlib1g
+
+ADD https://www.openssl.org/source/openssl-3.0.7.tar.gz /usr/local/src/
+
+RUN apt-get install -y build-essential checkinstall zlib1g-dev \
+  && cd /usr/local/src/ \
+  && tar -xf openssl-3.0.7.tar.gz \
+  && cd openssl-3.0.7 \
+  && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
+  && make \
+  && make install \
+  && ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl \
+  && echo /usr/local/ssl/lib* > /etc/ld.so.conf.d/openssl-3.0.7.conf \
+  && ldconfig -v
 
 WORKDIR /app
 
@@ -20,7 +33,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM gcr.io/distroless/nodejs:16 AS e2e
+FROM gcr.io/distroless/nodejs:18 AS e2e
 # The below image is an arm64 debug image that has helpful binaries for debugging, such as a shell, for local debugging
 # FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
@@ -30,6 +43,9 @@ COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
+COPY --from=builder /usr/local/ssl /usr/local/ssl
 
 # The below copies are for hosts running on ARM64, such as M1 Macbooks. Uncomment the lines below and comment out the equivalent lines above.
 # COPY --from=builder /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
@@ -51,15 +67,19 @@ CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/b
 
 ##--------- Stage: e2e-local ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM node:16.19.0-slim AS e2e-local
+FROM node:18.13.0-slim AS e2e-local
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+  && apt-get install -y --no-install-recommends libc6 yarn python dumb-init
 
 WORKDIR /app
 
 COPY --from=builder /app /app
+
+COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+COPY --from=builder /usr/local/ssl/lib/* /lib/aarch64-linux-gnu/
+COPY --from=builder /usr/local/ssl /usr/local/ssl
 
 ENV NODE_ENV production
 
@@ -69,7 +89,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:16.19.0-slim AS build-env
+FROM node:18.13.0-slim AS build-env
 
 WORKDIR /app
 
@@ -82,7 +102,7 @@ RUN apt-get update \
 
 ##--------- Stage: runner ---------##
 # Runtime container
-FROM gcr.io/distroless/nodejs:16 AS runner
+FROM gcr.io/distroless/nodejs:18 AS runner
 
 WORKDIR /app
 
@@ -92,9 +112,9 @@ COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
-
-COPY --from=build-env ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-us-gov-bundle.pem", "/app/us-gov-west-1-bundle.pem", "./"]
-COPY --from=build-env /bin/sh /bin/sh
+COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
+COPY --from=builder /usr/local/ssl /usr/local/ssl
 
 COPY --from=builder /app /app
 
@@ -106,6 +126,9 @@ ENV VERSION $CMS_VERSION
 
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
+
+COPY --from=build-env ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-us-gov-bundle.pem", "/app/us-gov-west-1-bundle.pem", "./"]
+COPY --from=build-env /bin/sh /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
