@@ -7,6 +7,8 @@ RUN apt-get update \
 
 ADD https://www.openssl.org/source/openssl-3.0.7.tar.gz /usr/local/src/
 
+RUN echo "83049d042a260e696f62406ac5c08bf706fd84383f945cf21bd61e9ed95c396e /usr/local/src/openssl-3.0.7.tar.gz" | sha256sum --check --status
+
 RUN apt-get install -y build-essential checkinstall zlib1g-dev \
   && cd /usr/local/src/ \
   && tar -xf openssl-3.0.7.tar.gz \
