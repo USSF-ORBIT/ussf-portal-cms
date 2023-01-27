@@ -1,26 +1,19 @@
 import { KeystoneContext } from '@keystone-6/core/types'
-import { configTestEnv, TestEnvWithSessions } from '../testHelpers'
+import { configTestEnv } from '../testHelpers'
 
 describe('Document Page', () => {
-  let testEnv: TestEnvWithSessions
-
   let adminContext: KeystoneContext
   let userContext: KeystoneContext
   let authorContext: KeystoneContext
   let managerContext: KeystoneContext
   let pageId: string
 
-  beforeAll(async () => {
-    testEnv = await configTestEnv()
-    adminContext = testEnv.adminContext
-    userContext = testEnv.userContext
-    authorContext = testEnv.authorContext
-    managerContext = testEnv.managerContext
-  })
-
-  afterAll(async () => {
-    await testEnv.disconnect()
-  })
+  // Set up test environment, seed data, and return contexts
+  beforeAll(
+    async () =>
+      ({ adminContext, userContext, authorContext, managerContext } =
+        await configTestEnv())
+  )
 
   describe('as an admin user with the User role', () => {
     it('can create a Document Page', async () => {
@@ -160,9 +153,7 @@ describe('Document Page', () => {
           },
           query: 'id pageTitle sections { title  document { title } }',
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'DocumentsPage'./
-      )
+      ).rejects.toThrow(/Access denied: You cannot create that DocumentsPage/)
     })
 
     it('can query a Document Page', async () => {
@@ -204,7 +195,7 @@ describe('Document Page', () => {
           query: 'id pageTitle sections { title  document { title } }',
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'DocumentsPage'./
+        /Access denied: You cannot delete that DocumentsPage - it may not exist/
       )
     })
   })
@@ -217,9 +208,7 @@ describe('Document Page', () => {
           },
           query: 'id pageTitle sections { title  document { title } }',
         })
-      ).rejects.toThrow(
-        /Access denied: You cannot perform the 'create' operation on the list 'DocumentsPage'./
-      )
+      ).rejects.toThrow(/Access denied: You cannot create that DocumentsPage/)
     })
 
     it('can query a Document Page', async () => {
@@ -247,7 +236,7 @@ describe('Document Page', () => {
           query: 'id pageTitle sections { title  document { title } }',
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'update' operation on the list 'DocumentsPage'./
+        /Access denied: You cannot update that DocumentsPage - it may not exist/
       )
     })
 
@@ -258,7 +247,7 @@ describe('Document Page', () => {
           query: 'id pageTitle sections { title  document { title } }',
         })
       ).rejects.toThrow(
-        /Access denied: You cannot perform the 'delete' operation on the list 'DocumentsPage'./
+        /Access denied: You cannot delete that DocumentsPage - it may not exist/
       )
     })
   })
