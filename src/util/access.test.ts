@@ -3,7 +3,6 @@ import {
   testAdminSession,
   testAuthorSession,
   testManagerSession,
-  testUser,
 } from '../__fixtures__/testUsers'
 
 import {
@@ -19,7 +18,14 @@ import {
   articleCreateView,
   articleItemView,
   articleStatusView,
-  documentOperationAccess,
+  canCreateOrUpdateDocument,
+  canUpdateDocument,
+  canDeleteDocument,
+  canCreateDocumentPage,
+  documentCreateView,
+  documentItemView,
+  documentPageCreateView,
+  documentPageItemView,
 } from './access'
 
 describe('isAdmin', () => {
@@ -280,145 +286,167 @@ describe('articleStatusView', () => {
   })
 })
 
-describe.only('documentOperationAccess', () => {
-  // Admin Session
-  // Access to all operations for documents
-
-  it('returns true if operation is create and the logged in user is an admin', () => {
-    expect(
-      documentOperationAccess({
-        session: testAdminSession,
-        operation: 'create',
-      })
-    ).toBe(true)
+/* Document Access */
+describe('documentItemView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(documentItemView({ session: testAdminSession })).toBe('edit')
   })
-  it('returns true if operation is update and the logged in user is an admin', () => {
+  it('returns edit if the logged in user is an author and the creator of the article', () => {
     expect(
-      documentOperationAccess({
-        session: testAdminSession,
-        operation: 'update',
-      })
-    ).toBe(true)
-  })
-  it('returns true if operation is query and the logged in user is an admin', () => {
-    expect(
-      documentOperationAccess({ session: testAdminSession, operation: 'query' })
-    ).toBe(true)
-  })
-  it('returns true if operation is delete and the logged in user is an admin', () => {
-    expect(
-      documentOperationAccess({
-        session: testAdminSession,
-        operation: 'delete',
-      })
-    ).toBe(true)
-  })
-
-  // Manager Session
-  // Access to all operations for documents
-
-  it('returns true if operation is create and the logged in user is a manager', () => {
-    expect(
-      documentOperationAccess({
-        session: testManagerSession,
-        operation: 'create',
-      })
-    ).toBe(true)
-  })
-  it('returns true if operation is update and the logged in user is a manager', () => {
-    expect(
-      documentOperationAccess({
-        session: testManagerSession,
-        operation: 'update',
-      })
-    ).toBe(true)
-  })
-  it('returns true if operation is query and the logged in user is a manager', () => {
-    expect(
-      documentOperationAccess({
-        session: testManagerSession,
-        operation: 'query',
-      })
-    ).toBe(true)
-  })
-  it('returns true if operation is delete and the logged in user is a manager', () => {
-    expect(
-      documentOperationAccess({
-        session: testManagerSession,
-        operation: 'delete',
-      })
-    ).toBe(true)
-  })
-
-  // Author Session
-  // Access to create, query, update
-
-  it('returns true if operation is create and the logged in user is an author', () => {
-    expect(
-      documentOperationAccess({
+      documentItemView({
         session: testAuthorSession,
-        operation: 'create',
+        item: { id: 'testArticleId', createdById: testAuthorSession.itemId },
       })
-    ).toBe(true)
+    ).toBe('edit')
   })
-  it('returns true if operation is update and the logged in user is an author', () => {
+  it('returns read if the logged in user is an author and NOT the creator of the article', () => {
     expect(
-      documentOperationAccess({
+      documentItemView({
         session: testAuthorSession,
-        operation: 'update',
+        item: { id: 'testArticleId', createdById: 'someOtherAuthorId' },
       })
-    ).toBe(true)
-  })
-  it('returns true if operation is query and the logged in user is an author', () => {
-    expect(
-      documentOperationAccess({
-        session: testAuthorSession,
-        operation: 'query',
-      })
-    ).toBe(true)
-  })
-  it('returns false if operation is delete and the logged in user is an author', () => {
-    expect(
-      documentOperationAccess({
-        session: testAuthorSession,
-        operation: 'delete',
-      })
-    ).toBe(false)
+    ).toBe('read')
   })
 
-  // User Session
-  // Access to query
+  it('returns edit if the logged in user is a manager', () => {
+    expect(documentItemView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns read if the logged in user is a user', () => {
+    expect(documentItemView({ session: testUserSession })).toBe('read')
+  })
+  it('returns read if there is no logged in user', () => {
+    expect(documentItemView({})).toBe('read')
+  })
+})
 
-  it('returns false if operation is create and the logged in user is a user', () => {
-    expect(
-      documentOperationAccess({
-        session: testUserSession,
-        operation: 'create',
-      })
-    ).toBe(false)
+describe('documentCreateView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(documentCreateView({ session: testAdminSession })).toBe('edit')
   })
-  it('returns false if operation is update and the logged in user is a user', () => {
-    expect(
-      documentOperationAccess({
-        session: testUserSession,
-        operation: 'update',
-      })
-    ).toBe(false)
+  it('returns edit if the logged in user is an author', () => {
+    expect(documentCreateView({ session: testAuthorSession })).toBe('edit')
   })
-  it('returns true if operation is query and the logged in user is a user', () => {
-    expect(
-      documentOperationAccess({
-        session: testUserSession,
-        operation: 'query',
-      })
-    ).toBe(true)
+  it('returns edit if the logged in user is a manager', () => {
+    expect(documentCreateView({ session: testManagerSession })).toBe('edit')
   })
-  it('returns false if operation is delete and the logged in user is a user', () => {
-    expect(
-      documentOperationAccess({
-        session: testUserSession,
-        operation: 'delete',
-      })
-    ).toBe(false)
+  it('returns hidden if the logged in user is a user', () => {
+    expect(documentCreateView({ session: testUserSession })).toBe('hidden')
+  })
+  it('returns hidden if there is no logged in user', () => {
+    expect(documentCreateView({})).toBe('hidden')
+  })
+})
+
+describe('documentPageCreateView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(documentPageCreateView({ session: testAdminSession })).toBe('edit')
+  })
+  it('returns hidden if the logged in user is an author', () => {
+    expect(documentPageCreateView({ session: testAuthorSession })).toBe(
+      'hidden'
+    )
+  })
+  it('returns edit if the logged in user is a manager', () => {
+    expect(documentPageCreateView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns hidden if the logged in user is a user', () => {
+    expect(documentPageCreateView({ session: testUserSession })).toBe('hidden')
+  })
+  it('returns hidden if there is no logged in user', () => {
+    expect(documentPageCreateView({})).toBe('hidden')
+  })
+})
+
+describe('documentPageItemView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(documentPageItemView({ session: testAdminSession })).toBe('edit')
+  })
+  it('returns read if the logged in user is an author', () => {
+    expect(documentPageItemView({ session: testAuthorSession })).toBe('read')
+  })
+  it('returns edit if the logged in user is a manager', () => {
+    expect(documentPageItemView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns read if the logged in user is a user', () => {
+    expect(documentPageItemView({ session: testUserSession })).toBe('read')
+  })
+  it('returns read if there is no logged in user', () => {
+    expect(documentPageItemView({})).toBe('read')
+  })
+})
+
+describe('canCreateOrUpdateDocument', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canCreateOrUpdateDocument({ session: testAdminSession })).toBe(true)
+  })
+  it('returns true if the logged in user is an author', () => {
+    expect(canCreateOrUpdateDocument({ session: testAuthorSession })).toBe(true)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canCreateOrUpdateDocument({ session: testManagerSession })).toBe(
+      true
+    )
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canCreateOrUpdateDocument({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canCreateOrUpdateDocument({})).toBe(false)
+  })
+})
+
+describe('canUpdateDocument filter', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canUpdateDocument({ session: testAdminSession })).toBe(true)
+  })
+  it('returns a filter on the item id if the logged in user is an author', () => {
+    expect(canUpdateDocument({ session: testAuthorSession })).toMatchObject({
+      createdBy: { id: { equals: testAuthorSession.itemId } },
+    })
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canUpdateDeleteArticle({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canUpdateDeleteArticle({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canUpdateDeleteArticle({})).toBe(false)
+  })
+})
+
+describe('canDeleteDocument', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canDeleteDocument({ session: testAdminSession })).toBe(true)
+  })
+  it('returns false if the logged in user is an author', () => {
+    expect(canDeleteDocument({ session: testAuthorSession })).toBe(false)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canDeleteDocument({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canDeleteDocument({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canDeleteDocument({})).toBe(false)
+  })
+})
+
+describe('canCreateDocumentPage', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canCreateDocumentPage({ session: testAdminSession })).toBe(true)
+  })
+  it('returns false if the logged in user is an author', () => {
+    expect(canCreateDocumentPage({ session: testAuthorSession })).toBe(false)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canCreateDocumentPage({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canCreateDocumentPage({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canCreateDocumentPage({})).toBe(false)
   })
 })

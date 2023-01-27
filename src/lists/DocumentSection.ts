@@ -1,26 +1,33 @@
 import { list } from '@keystone-6/core'
 import { relationship, text } from '@keystone-6/core/fields'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
+import {
+  canCreateDocumentPage,
+  canDeleteDocument,
+  documentPageCreateView,
+  documentPageItemView,
+} from '../util/access'
 import { withTracking } from '../util/tracking'
-import { documentOperationAccess } from '../util/access'
 
 const DocumentSection = list(
   withTracking({
     access: {
       operation: {
-        create: (session) => documentOperationAccess(session),
-        query: (session) => documentOperationAccess(session),
-        update: (session) => documentOperationAccess(session),
-        delete: (session) => documentOperationAccess(session),
+        create: (session) => canCreateDocumentPage(session),
+        query: () => true,
+        update: (session) => canCreateDocumentPage(session),
+        delete: (session) => canDeleteDocument(session),
       },
     },
 
     ui: {
-      hideCreate: ({ session }) => !isAdmin({ session }),
-      hideDelete: true,
+      hideCreate: (session) => !canCreateDocumentPage(session),
+      hideDelete: (session) => !canDeleteDocument(session),
+      createView: {
+        defaultFieldMode: documentPageCreateView,
+      },
       itemView: {
-        defaultFieldMode: editReadAdminUI,
+        defaultFieldMode: documentPageItemView,
       },
     },
 

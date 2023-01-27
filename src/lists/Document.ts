@@ -2,9 +2,11 @@ import { list } from '@keystone-6/core'
 import { file, text } from '@keystone-6/core/fields'
 
 import {
-  isAdmin,
-  editReadAdminUI,
-  documentOperationAccess,
+  canCreateOrUpdateDocument,
+  canDeleteDocument,
+  canUpdateDocument,
+  documentCreateView,
+  documentItemView,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 import { isLocalStorage } from '../util/getStorage'
@@ -13,18 +15,25 @@ const Document = list(
   withTracking({
     access: {
       operation: {
-        create: (session) => documentOperationAccess(session),
-        query: (session) => documentOperationAccess(session),
-        update: (session) => documentOperationAccess(session),
-        delete: (session) => documentOperationAccess(session),
+        create: (session) => canCreateOrUpdateDocument(session),
+        query: () => true,
+        update: (session) => canCreateOrUpdateDocument(session),
+        delete: (session) => canDeleteDocument(session),
+      },
+      filter: {
+        update: canUpdateDocument,
+        delete: canUpdateDocument,
       },
     },
 
     ui: {
-      hideCreate: ({ session }) => !isAdmin({ session }),
-
+      hideCreate: (session) => !canCreateOrUpdateDocument(session),
+      hideDelete: (session) => !canDeleteDocument(session),
+      createView: {
+        defaultFieldMode: documentCreateView,
+      },
       itemView: {
-        defaultFieldMode: editReadAdminUI,
+        defaultFieldMode: documentItemView,
       },
     },
 
@@ -32,82 +41,12 @@ const Document = list(
       file: file({
         storage: isLocalStorage() ? 'local_files' : 'cms_files',
         hooks: {
-          validateInput: ({
-            inputData,
-            resolvedData,
-            item,
-            addValidationError,
-          }) => {
-            const { file } = resolvedData
-
-            // Scenario 1: A file is not included in input data,
-            // and there is no file saved in the database
-            // Return error that a file is required
-            // resolvedData.file = {}
-            // item = null
-            if (
-              file['filesize'] === undefined &&
-              item?.file_filesize === undefined
-            ) {
-              addValidationError(
-                'A valid file is required to create or update a document.'
-              )
-              return resolvedData.file
-            }
-
-            // Scenario 2: A file is saved already, but the user
-            // tries to remove it and save the document.
-            // inputData = {"file":null}
-            if (inputData.file === null) {
-              addValidationError(
-                'A valid file is required to create or update a document.'
-              )
-              return resolvedData.file
-            }
-
-            // Scenario 3: A file is not included in input data,
-            // but there is a file saved already. Return that file.
-            // resolvedData.file === undefined
-            if (file['filesize'] === undefined && item?.file_filesize) {
-              return item
-            }
-
-            return resolvedData.file
-          },
+          validateInput: (args) => validateFile(args),
         },
       }),
       title: text({
         hooks: {
-          resolveInput: ({ inputData, resolvedData, item, fieldKey }) => {
-            const filename = item?.['file_filename'] as object
-
-            // Scenario 1:
-            // There is no title submitted, but there is an existing file.
-            // Use the file name as the title
-            // inputData.title === undefined
-            // item.file_filename.length > 0
-
-            if (
-              (inputData.title === undefined || inputData.title === '') &&
-              filename &&
-              filename.toString().length > 0
-            ) {
-              return (fieldKey = filename.toString())
-            }
-
-            // Scenario 2:
-            // A new title is submitted
-
-            if (resolvedData.title.length > 0) {
-              return (fieldKey = resolvedData.title)
-            }
-            // #TODO write tests for these scenarios
-            // Scenario 3:
-            // A new title and a new file are submitted
-            // Validation for file takes place in file hook
-
-            return resolvedData.fieldKey
-          },
+          resolveInput: (args) => resolveTitleInput(args),
         },
       }),
 
@@ -115,5 +54,79 @@ const Document = list(
     },
   })
 )
+
+export const validateFile = ({
+  inputData,
+  resolvedData,
+  item,
+  addValidationError,
+}: any) => {
+  //#todo Figure out access to keystone types for this ListHook and replace 'any'
+  const { file } = resolvedData
+
+  // Scenario 1: A file is not included in input data,
+  // and there is no file saved in the database
+  // Return error that a file is required
+  if (file['filesize'] === undefined && item?.file_filesize === undefined) {
+    // mock to make sure this is called correctly w the string
+    addValidationError(
+      'A valid file is required to create or update a document.'
+    )
+    return resolvedData.file
+  }
+
+  // Scenario 2: A file is saved already, but the user
+  // tries to remove it and save the document.
+  if (inputData.file === null) {
+    addValidationError(
+      'A valid file is required to create or update a document.'
+    )
+    return resolvedData.file
+  }
+
+  // Scenario 3: A file is not included in input data,
+  // but there is a file saved already. Return that file.
+  if (file['filesize'] === undefined && item?.file_filesize) {
+    return item
+  }
+  // By default, return resolved data
+  return resolvedData.file
+}
+
+export const resolveTitleInput = ({ inputData, resolvedData, item }: any) => {
+  //#todo Figure out access to keystone types for this ListHook and replace 'any'
+  const newFile = inputData.file?.upload
+  const updatedFile = newFile && item?.file_filename
+  const existingFile = item?.file_filename
+  const noTitleInput = inputData.title === undefined
+  const removeTitle = inputData.title === ''
+  const existingTitle = item?.title
+
+  // Scenario 1:
+  // No title input
+  // A new file is uploaded
+  if (noTitleInput && newFile) {
+    // If the document is being updated, there may be an existing title
+    if (existingTitle) return existingTitle
+
+    // If it is a new document and/or there is no existing title, use the filename
+    return resolvedData.file.filename
+  }
+
+  // Scenario 2:
+  // Title is removed and document is saved
+  // A new file may or may not be uploaded
+  // Use the filename as a new title
+  if (removeTitle && updatedFile) {
+    return resolvedData.file.filename
+  }
+
+  if (removeTitle && existingFile) {
+    return item?.file_filename.toString()
+  }
+
+  // By default, always return resolvedData
+  return resolvedData.title
+}
 
 export default Document

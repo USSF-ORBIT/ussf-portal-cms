@@ -1,4 +1,3 @@
-import { list } from '@keystone-6/core'
 import type { BaseItem, KeystoneContext } from '@keystone-6/core/types'
 
 import type { ValidSession } from '../../types'
@@ -160,35 +159,55 @@ export const articleStatusView: ItemViewFn = ({ session }) => {
   return 'read'
 }
 
-/* Document helper */
+/* Document helpers */
 
-export const documentOperationAccess: OperationAccessFn = ({
-  session,
-  operation,
-}) => {
-  if (operation === 'create') {
-    return (
-      session?.isAdmin ||
-      session?.role === USER_ROLES.AUTHOR ||
-      session?.role === USER_ROLES.MANAGER
-    )
+export const canCreateOrUpdateDocument: OperationAccessFn = ({ session }) => {
+  return (
+    session?.isAdmin ||
+    session?.role === USER_ROLES.AUTHOR ||
+    session?.role === USER_ROLES.MANAGER
+  )
+}
+
+export const canUpdateDocument: OperationFilterFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
+
+  if (session?.role === USER_ROLES.AUTHOR) {
+    return {
+      createdBy: { id: { equals: session.itemId } },
+    }
   }
-
-  if (operation === 'query') {
-    return true
-  }
-
-  if (operation === 'update') {
-    return (
-      session?.isAdmin ||
-      session?.role === USER_ROLES.AUTHOR ||
-      session?.role === USER_ROLES.MANAGER
-    )
-  }
-
-  if (operation === 'delete') {
-    return session?.isAdmin || session?.role === USER_ROLES.MANAGER
-  }
-
   return false
+}
+
+export const canDeleteDocument: OperationAccessFn = ({ session }) => {
+  return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+}
+
+export const canCreateDocumentPage: OperationAccessFn = ({ session }) => {
+  return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+}
+
+export const documentCreateView: CreateViewFn = ({ session }) =>
+  canCreateOrUpdateDocument({ session }) ? 'edit' : 'hidden'
+
+export const documentItemView: ItemViewFn = ({ session, item }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
+
+  if (
+    session?.role === USER_ROLES.AUTHOR &&
+    item?.createdById === session.itemId
+  )
+    return 'edit'
+
+  return 'read'
+}
+
+export const documentPageCreateView: CreateViewFn = ({ session }) =>
+  canCreateDocumentPage({ session }) ? 'edit' : 'hidden'
+
+export const documentPageItemView: ItemViewFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
+
+  return 'read'
 }
