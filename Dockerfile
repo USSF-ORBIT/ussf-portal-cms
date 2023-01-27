@@ -1,4 +1,5 @@
 ##--------- Stage: builder ---------##
+# Node image variant name explanations: "bullseye" is the codeword for Debian 11, and "slim" only contains the minimal packages needed to run Node
 FROM node:18.13.0-bullseye-slim AS builder
 
 RUN apt-get update \
@@ -37,7 +38,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 # E2E image for running tests (same as prod but without certs)
 FROM gcr.io/distroless/nodejs18-debian11 AS e2e
 # The below image is an arm64 debug image that has helpful binaries for debugging, such as a shell, for local debugging
-# FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
+# FROM gcr.io/distroless/nodejs18-debian11:debug-arm64 AS e2e
 
 WORKDIR /app
 
