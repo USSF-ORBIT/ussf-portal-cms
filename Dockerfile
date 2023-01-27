@@ -17,8 +17,6 @@ RUN apt-get install -y build-essential checkinstall zlib1g-dev \
   && ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl \
   && cp -v -r --preserve=links /usr/local/ssl/lib*/* /lib/*-linux-*/ \
   && ldconfig -v
-  # && echo /usr/local/ssl/lib* > /etc/ld.so.conf.d/openssl-3.0.7.conf \
-  # && ldconfig -v
 
 WORKDIR /app
 
@@ -35,28 +33,20 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 
 ##--------- Stage: e2e ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM gcr.io/distroless/nodejs:18 AS e2e
+FROM gcr.io/distroless/nodejs:18-debug AS e2e
 # The below image is an arm64 debug image that has helpful binaries for debugging, such as a shell, for local debugging
 # FROM gcr.io/distroless/nodejs:16-debug-arm64 AS e2e
 
 WORKDIR /app
 
-COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
-COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
-COPY --from=builder /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
-COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+COPY --from=builder /app /app
+
+COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
+# The below COPY are for hosts running on ARM64, such as M1 Macbooks. Uncomment the lines below and comment out the equivalent line above.
+# COPY --from=builder /lib/aarch64-linux-gnu/ /lib/aarch64-linux-gnu/
 
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
-COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/local/ssl /usr/local/ssl
-
-# The below copies are for hosts running on ARM64, such as M1 Macbooks. Uncomment the lines below and comment out the equivalent lines above.
-# COPY --from=builder /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
-# COPY --from=builder /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
-# COPY --from=builder /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
-# COPY --from=builder /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
-
-COPY --from=builder /app /app
 
 ENV NODE_ENV production
 
@@ -111,13 +101,8 @@ WORKDIR /app
 
 COPY scripts/add-rds-cas.sh .
 
-COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
-COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
-COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
-COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
-
+COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
-COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/local/ssl /usr/local/ssl
 
 COPY --from=builder /app /app
