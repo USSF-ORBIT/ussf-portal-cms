@@ -80,11 +80,19 @@ FROM node:18.13.0-slim AS e2e-local
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends openssl libc6 yarn python dumb-init
+  && apt-get install -y --no-install-recommends libc6 yarn python dumb-init
 
 WORKDIR /app
 
 COPY --from=builder /app /app
+
+# COPY --from=builder /lib/aarch64-linux-gnu/libz*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /lib/aarch64-linux-gnu/libexpat*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /lib/aarch64-linux-gnu/libhistory*  /lib/aarch64-linux-gnu/
+# COPY --from=builder /lib/aarch64-linux-gnu/libreadline*  /lib/aarch64-linux-gnu/
+COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
+COPY --from=builder /usr/local/ssl/lib/*  /lib/aarch64-linux-gnu/
+COPY --from=builder /usr/local/ssl /usr/local/ssl
 
 ENV NODE_ENV production
 
