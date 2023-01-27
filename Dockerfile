@@ -1,5 +1,5 @@
 ##--------- Stage: builder ---------##
-FROM node:18.13.0-slim AS builder
+FROM node:18.13.0-bullseye-slim AS builder
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
@@ -15,8 +15,10 @@ RUN apt-get install -y build-essential checkinstall zlib1g-dev \
   && make \
   && make install \
   && ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl \
-  && echo /usr/local/ssl/lib* > /etc/ld.so.conf.d/openssl-3.0.7.conf \
+  && cp -v -r --preserve=links /usr/local/ssl/lib*/* /lib/*-linux-*/ \
   && ldconfig -v
+  # && echo /usr/local/ssl/lib* > /etc/ld.so.conf.d/openssl-3.0.7.conf \
+  # && ldconfig -v
 
 WORKDIR /app
 
@@ -43,6 +45,7 @@ COPY --from=builder /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=builder /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
 COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/local/ssl /usr/local/ssl
@@ -77,8 +80,8 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
+COPY --from=builder /lib/aarch64-linux-gnu/ /lib/aarch64-linux-gnu/
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
-COPY --from=builder /usr/local/ssl/lib/* /lib/aarch64-linux-gnu/
 COPY --from=builder /usr/local/ssl /usr/local/ssl
 
 ENV NODE_ENV production
@@ -112,6 +115,7 @@ COPY --from=build-env /lib/x86_64-linux-gnu/libz*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libexpat*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libhistory*  /lib/x86_64-linux-gnu/
 COPY --from=build-env /lib/x86_64-linux-gnu/libreadline*  /lib/x86_64-linux-gnu/
+
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
 COPY --from=builder /usr/local/ssl/lib64/*  /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/local/ssl /usr/local/ssl
