@@ -68,7 +68,6 @@ export const validateFile = ({
   // and there is no file saved in the database
   // Return error that a file is required
   if (file['filesize'] === undefined && item?.file_filesize === undefined) {
-    // mock to make sure this is called correctly w the string
     addValidationError(
       'A valid file is required to create or update a document.'
     )
