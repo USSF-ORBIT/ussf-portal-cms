@@ -8,6 +8,9 @@ import Label from './lists/Label'
 import Tag from './lists/Tag'
 import Article from './lists/Article'
 import Announcement from './lists/Announcement'
+import Document from './lists/Document'
+import DocumentSection from './lists/DocumentSection'
+import DocumentsPage from './lists/DocumentsPage'
 
 export const lists = {
   Event,
@@ -20,4 +23,7 @@ export const lists = {
   Tag,
   Article,
   Announcement,
+  Document,
+  DocumentSection,
+  DocumentsPage,
 }
