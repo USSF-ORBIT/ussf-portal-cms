@@ -73,8 +73,4 @@ jobs:
       #   make release
 
       - name: Perform CodeQL Analysis
-<<<<<<< HEAD
-        uses: github/codeql-action/analyze@959cbb7472c4d4ad70cdfe6f4976053fe48ab394 # v2
-=======
         uses: github/codeql-action/analyze@3ebbd71c74ef574dbc558c82f70e52732c8b44fe # v2
->>>>>>> 3737d5f (chore(deps): update github/codeql-action digest to 3ebbd71 (#252))
