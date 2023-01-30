@@ -35,6 +35,9 @@ const Document = list(
       itemView: {
         defaultFieldMode: documentItemView,
       },
+      listView: {
+        initialColumns: ['title', 'file'],
+      },
     },
 
     fields: {
