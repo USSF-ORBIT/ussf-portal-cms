@@ -20,9 +20,6 @@ const DocumentsPage = list(
         delete: (session) => canDeleteDocument(session),
       },
     },
-    // #TODO: After upgrade, add isSingleton: true
-    // This will skip displaying a list and take the user
-    // directly to the documents page to update
     ui: {
       hideCreate: (session) => !canCreateDocumentPage(session),
       hideDelete: (session) => !canDeleteDocument(session),

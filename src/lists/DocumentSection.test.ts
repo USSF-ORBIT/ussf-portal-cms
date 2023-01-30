@@ -169,7 +169,9 @@ describe('Document Section', () => {
           query: 'id title document { title }',
         })
 
-      expect(documentSection).not.toBeNull()
+      // No document sections exist at this point,
+      // so we should expect 0
+      expect(documentSection.length).toBe(0)
     })
 
     it('cannot update a Document Section', async () => {
@@ -214,7 +216,9 @@ describe('Document Section', () => {
             query: 'id title document { title }',
           })
 
-        expect(documentSection).not.toBeNull()
+        // No document sections exist at this point,
+        // so we should expect 0
+        expect(documentSection.length).toBe(0)
       })
 
       it('cannot update a Document Section', async () => {

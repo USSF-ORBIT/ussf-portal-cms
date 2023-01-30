@@ -145,6 +145,16 @@ describe('Document Page', () => {
   })
 
   describe('as an author user with the Author role', () => {
+    beforeAll(async () => {
+      // Create a page as an admin
+      const documentPage = await adminContext.query.DocumentsPage.createOne({
+        data: {
+          pageTitle: 'USSF Documentation',
+        },
+        query: 'id',
+      })
+      pageId = documentPage.id
+    })
     it('cannot create a Document Page', async () => {
       expect(
         authorContext.query.DocumentsPage.createOne({
@@ -161,18 +171,10 @@ describe('Document Page', () => {
         query: 'id pageTitle sections { title  document { title } }',
       })
 
-      expect(documentPage).not.toBeNull()
+      expect(documentPage.length).toBe(1)
     })
 
     it('can update a Document Page', async () => {
-      // Create a page as an admin
-      const documentPage = await adminContext.query.DocumentsPage.createOne({
-        data: {
-          pageTitle: 'USSF Documentation',
-        },
-        query: 'id',
-      })
-      pageId = documentPage.id
       // Update a page as an author
       const updatedPage = await authorContext.query.DocumentsPage.updateOne({
         where: { id: pageId.toString() },
@@ -216,7 +218,7 @@ describe('Document Page', () => {
         query: 'id pageTitle sections { title  document { title } }',
       })
 
-      expect(documentPage).not.toBeNull()
+      expect(documentPage.length).toBe(1)
     })
 
     it('cannot update a Document Page', async () => {
