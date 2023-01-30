@@ -66,10 +66,10 @@ model User {
   from_Announcement_createdBy    Announcement[]    @relation("Announcement_createdBy")
   from_Document_updatedBy        Document[]        @relation("Document_updatedBy")
   from_Document_createdBy        Document[]        @relation("Document_createdBy")
-  from_DocumentsPage_updatedBy   DocumentsPage[]   @relation("DocumentsPage_updatedBy")
-  from_DocumentsPage_createdBy   DocumentsPage[]   @relation("DocumentsPage_createdBy")
   from_DocumentSection_updatedBy DocumentSection[] @relation("DocumentSection_updatedBy")
   from_DocumentSection_createdBy DocumentSection[] @relation("DocumentSection_createdBy")
+  from_DocumentsPage_updatedBy   DocumentsPage[]   @relation("DocumentsPage_updatedBy")
+  from_DocumentsPage_createdBy   DocumentsPage[]   @relation("DocumentsPage_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -242,21 +242,6 @@ model Document {
   @@index([createdById])
 }
 
-model DocumentsPage {
-  id          String            @id @default(cuid())
-  pageTitle   String            @default("")
-  sections    DocumentSection[] @relation("DocumentsPage_sections")
-  updatedBy   User?             @relation("DocumentsPage_updatedBy", fields: [updatedById], references: [id])
-  updatedById String?           @map("updatedBy")
-  createdBy   User?             @relation("DocumentsPage_createdBy", fields: [createdById], references: [id])
-  createdById String?           @map("createdBy")
-  updatedAt   DateTime?         @updatedAt
-  createdAt   DateTime?         @default(now())
-
-  @@index([updatedById])
-  @@index([createdById])
-}
-
 model DocumentSection {
   id                          String          @id @default(cuid())
   title                       String          @default("")
@@ -268,6 +253,21 @@ model DocumentSection {
   updatedAt                   DateTime?       @updatedAt
   createdAt                   DateTime?       @default(now())
   from_DocumentsPage_sections DocumentsPage[] @relation("DocumentsPage_sections")
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model DocumentsPage {
+  id          String            @id @default(cuid())
+  pageTitle   String            @default("")
+  sections    DocumentSection[] @relation("DocumentsPage_sections")
+  updatedBy   User?             @relation("DocumentsPage_updatedBy", fields: [updatedById], references: [id])
+  updatedById String?           @map("updatedBy")
+  createdBy   User?             @relation("DocumentsPage_createdBy", fields: [createdById], references: [id])
+  createdById String?           @map("createdBy")
+  updatedAt   DateTime?         @updatedAt
+  createdAt   DateTime?         @default(now())
 
   @@index([updatedById])
   @@index([createdById])
