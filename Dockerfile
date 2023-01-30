@@ -67,15 +67,15 @@ FROM node:18.13.0-bullseye-slim AS e2e-local
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends libc6 yarn python dumb-init
+  && apt-get install -y --no-install-recommends libc6 yarn zlib1g
 
 WORKDIR /app
 
 COPY --from=builder /app /app
 
-COPY --from=builder /lib/aarch64-linux-gnu/ /lib/aarch64-linux-gnu/
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
 COPY --from=builder /usr/local/ssl /usr/local/ssl
+RUN cp -v -r --preserve=links /usr/local/ssl/lib*/* /lib/*-linux-*/
 
 ENV NODE_ENV production
 
