@@ -250,4 +250,23 @@ describe('Search Resolver', () => {
       ])
     )
   })
+
+  test.only('does not return scheduled articles, ie with a published date in the future', async () => {
+    /*
+        Query String: 'lorem ipsum', case insensitive
+        Search Fields Tested: Article.searchBody
+        Expected Results: []
+        */
+
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'Scheduled',
+      },
+    })
+
+    const results = searchResults.search
+
+    expect(results).toHaveLength(0)
+  })
 })
