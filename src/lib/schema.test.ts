@@ -251,7 +251,7 @@ describe('Search Resolver', () => {
     )
   })
 
-  test.only('does not return scheduled articles, ie with a published date in the future', async () => {
+  test('does not return scheduled articles, ie with a published date in the future', async () => {
     /*
         Query String: 'lorem ipsum', case insensitive
         Search Fields Tested: Article.searchBody

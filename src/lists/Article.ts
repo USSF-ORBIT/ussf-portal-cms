@@ -7,6 +7,7 @@ import {
   timestamp,
 } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
+import { DateTime } from 'luxon'
 
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
@@ -86,7 +87,11 @@ const Article = list(
             keyof typeof ARTICLE_CATEGORIES
           >
         ).map((r) => ({
+          // false positive as r is limited to the keys availble in the constant ARTICLE_CATEGORIES
+          // eslint-disable-next-line security/detect-object-injection
           label: ARTICLE_CATEGORIES[r],
+          // false positive as r is limited to the keys availble in the constant ARTICLE_CATEGORIES
+          // eslint-disable-next-line security/detect-object-injection
           value: ARTICLE_CATEGORIES[r],
         })),
         validation: {
@@ -98,7 +103,11 @@ const Article = list(
         options: (
           Object.keys(ARTICLE_STATUSES) as Array<keyof typeof ARTICLE_STATUSES>
         ).map((s) => ({
+          // false positive as s is limited to the keys availble in the constant ARTICLE_STATUSES
+          // eslint-disable-next-line security/detect-object-injection
           label: ARTICLE_STATUSES[s],
+          // false positive as s is limited to the keys availble in the constant ARTICLE_STATUSES
+          // eslint-disable-next-line security/detect-object-injection
           value: ARTICLE_STATUSES[s],
         })),
         defaultValue: ARTICLE_STATUSES.DRAFT,
@@ -119,6 +128,81 @@ const Article = list(
           },
         },
       }),
+      publishedDate: timestamp({
+        access: {
+          create: () => false,
+          update: canPublishArchiveArticle,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: articleStatusView,
+          },
+        },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.status === ARTICLE_STATUSES.PUBLISHED &&
+              item?.status !== ARTICLE_STATUSES.PUBLISHED
+            ) {
+              // Set publishedDate if status is being changed to "Published"
+              // only set publishedDate if they didn't set one
+              if (!inputData.publishedDate) {
+                return DateTime.now().toJSDate()
+              }
+            }
+            return resolvedData.publishedDate
+          },
+          /*
+          validateInput: async ({
+            inputData,
+            resolvedData,
+            addValidationError,
+          }) => {
+            // TODO: look up how to check a key is present
+            if (inputData.publishedDate) {
+              const publishedDate = DateTime.fromISO(resolvedData.publishedDate)
+              // if the selected publish date is in the past it is invalid
+              // but if it's recent then allow it since they could have been
+              // editing the page for this amount of time after setting
+              // date and saving
+              if (publishedDate < publishedDate.minus({hours: 4})) {
+                addValidationError('Published date cannot be in the past')
+              }
+            }
+          }
+          */
+        },
+      }),
+      archivedDate: timestamp({
+        access: {
+          create: () => false,
+          update: () => false,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+        },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.status === ARTICLE_STATUSES.ARCHIVED &&
+              item?.status !== ARTICLE_STATUSES.ARCHIVED
+            ) {
+              // Set archivedDate if status is being changed to "Archived"
+              return DateTime.now().toJSDate()
+            }
+            return resolvedData.archivedDate
+          },
+        },
+      }),
+
       slug: text({
         isIndexed: 'unique',
         validation: {
@@ -208,35 +292,6 @@ const Article = list(
         },
         isFilterable: true,
       }),
-      publishedDate: timestamp({
-        access: {
-          create: () => false,
-          update: () => false,
-        },
-        ui: {
-          createView: {
-            fieldMode: 'hidden',
-          },
-          itemView: {
-            fieldMode: () => 'read',
-          },
-        },
-      }),
-      archivedDate: timestamp({
-        access: {
-          create: () => false,
-          update: () => false,
-        },
-        ui: {
-          createView: {
-            fieldMode: 'hidden',
-          },
-          itemView: {
-            fieldMode: () => 'read',
-          },
-        },
-      }),
-
       byline: relationship({
         ref: 'Byline',
         ui: {
@@ -260,27 +315,6 @@ const Article = list(
         ref: 'Tag',
         many: true,
       }),
-    },
-
-    hooks: {
-      resolveInput: async ({ inputData, item, resolvedData }) => {
-        // Workflow side effects
-        if (
-          inputData.status === ARTICLE_STATUSES.ARCHIVED &&
-          item?.status !== ARTICLE_STATUSES.ARCHIVED
-        ) {
-          // Set archivedDate if status is being changed to "Archived"
-          resolvedData.archivedDate = new Date()
-        } else if (
-          inputData.status === ARTICLE_STATUSES.PUBLISHED &&
-          item?.status !== ARTICLE_STATUSES.PUBLISHED
-        ) {
-          // Set publishedDate if status is being changed to "Published"
-          resolvedData.publishedDate = new Date()
-        }
-
-        return resolvedData
-      },
     },
   })
 )

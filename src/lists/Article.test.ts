@@ -1,4 +1,5 @@
 import { KeystoneContext } from '@keystone-6/core/types'
+import { DateTime } from 'luxon'
 
 import { configTestEnv } from '../testHelpers'
 
@@ -566,6 +567,80 @@ describe('Article schema', () => {
           },
         })
       ).rejects.toThrow(/Slug is a required value/)
+    })
+  })
+
+  describe('setting publishedDate', () => {
+    beforeAll(async () => {
+      await resetArticles()
+    })
+
+    describe('as a non-admin user with the Manager role', () => {
+      test('can set publishedDate in the future', async () => {
+        const testManagerArticle = {
+          slug: 'manager-article',
+          title: 'Manager Article',
+          preview: 'This article is written by a manager',
+          category: 'ORBITBlog',
+        }
+
+        // Create an article
+        const managerArticle = await managerContext.query.Article.createOne({
+          data: testManagerArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await managerContext.query.Article.updateOne({
+          where: { id: managerArticle.id },
+          data: {
+            status: 'Published',
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
+    })
+
+    describe('as an admin user', () => {
+      test('can set publishedDate in the future', async () => {
+        const testAdminArticle = {
+          slug: 'admin-article',
+          title: 'Admin Article',
+          preview: 'This article is written by an admin',
+          category: 'InternalNews',
+        }
+
+        // Create an article
+        const adminArticle = await adminContext.query.Article.createOne({
+          data: testAdminArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await adminContext.query.Article.updateOne({
+          where: { id: adminArticle.id },
+          data: {
+            status: 'Published',
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
     })
   })
 })

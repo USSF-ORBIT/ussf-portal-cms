@@ -153,7 +153,7 @@ export const extendGraphqlSchema = (schema: any) =>
                 ],
                 status: 'Published',
                 publishedDate: {
-                  lte: new Date(),
+                  lte: DateTime.now().toJSDate(),
                 },
                 category: 'InternalNews',
               },
