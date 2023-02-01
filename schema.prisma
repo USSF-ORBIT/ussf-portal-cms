@@ -174,6 +174,8 @@ model Article {
   id             String              @id @default(cuid())
   category       ArticleCategoryType
   status         ArticleStatusType   @default(Draft)
+  publishedDate  DateTime?
+  archivedDate   DateTime?
   slug           String              @unique @default("")
   title          String              @default("")
   preview        String              @default("")
@@ -185,8 +187,6 @@ model Article {
   body           Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   searchBody     String              @default("")
   keywords       String              @default("")
-  publishedDate  DateTime?
-  archivedDate   DateTime?
   byline         Byline?             @relation("Article_byline", fields: [bylineId], references: [id])
   bylineId       String?             @map("byline")
   location       Location?           @relation("Article_location", fields: [locationId], references: [id])
