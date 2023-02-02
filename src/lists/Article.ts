@@ -131,6 +131,19 @@ const Article = list(
             fieldMode: articleStatusView,
           },
         },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.publishedDate &&
+              (inputData.status !== ARTICLE_STATUSES.PUBLISHED ||
+                item?.status !== ARTICLE_STATUSES.PUBLISHED)
+            ) {
+              // Set status if publishedDate is being changed and status is not changed or not already Published
+              return ARTICLE_STATUSES.PUBLISHED
+            }
+            return resolvedData.status
+          },
+        },
       }),
       publishedDate: timestamp({
         access: {
@@ -166,10 +179,6 @@ const Article = list(
             addValidationError,
           }) => {
             if (operation === 'update' && inputData.publishedDate) {
-              if (inputData.status !== ARTICLE_STATUSES.PUBLISHED) {
-                addValidationError('Status must be set to Published')
-              }
-
               const publishedDate = DateTime.fromJSDate(
                 resolvedData.publishedDate
               )
