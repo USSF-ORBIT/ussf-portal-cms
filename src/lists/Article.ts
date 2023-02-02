@@ -155,25 +155,25 @@ const Article = list(
             }
             return resolvedData.publishedDate
           },
-          /*
           validateInput: async ({
+            operation,
             inputData,
             resolvedData,
             addValidationError,
           }) => {
-            // TODO: look up how to check a key is present
-            if (inputData.publishedDate) {
-              const publishedDate = DateTime.fromISO(resolvedData.publishedDate)
+            if (operation === 'update' && inputData.publishedDate) {
+              const publishedDate = DateTime.fromJSDate(
+                resolvedData.publishedDate
+              )
               // if the selected publish date is in the past it is invalid
               // but if it's recent then allow it since they could have been
               // editing the page for this amount of time after setting
               // date and saving
-              if (publishedDate < publishedDate.minus({hours: 4})) {
+              if (publishedDate < DateTime.now().minus({ hours: 4 })) {
                 addValidationError('Published date cannot be in the past')
               }
             }
-          }
-          */
+          },
         },
       }),
       archivedDate: timestamp({
