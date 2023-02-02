@@ -585,6 +585,68 @@ describe('Article schema', () => {
           },
         })
       ).rejects.toThrow(/Slug is a required value/)
+
+      test('cannot set publishedDate in the past', async () => {
+        const testManagerArticle = {
+          slug: 'manager-article',
+          title: 'Manager Article',
+          preview: 'This article is written by a manager',
+          category: 'ORBITBlog',
+        }
+
+        // Create an article
+        const managerArticle = await managerContext.query.Article.createOne({
+          data: testManagerArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const invalidPastDate = DateTime.now().minus({ days: 1 })
+        await expect(
+          managerContext.query.Article.updateOne({
+            where: { id: managerArticle.id },
+            data: {
+              status: 'Published',
+              publishedDate: invalidPastDate.toISO(),
+            },
+            query,
+          })
+        ).rejects.toThrow(/Published date cannot be in the past/)
+      })
+
+      test('generates publishedDate if setting status Published but not publishDate', async () => {
+        const testManagerArticle = {
+          slug: 'manager-article-auto-date',
+          title: 'Manager Article',
+          preview: 'This article is written by a manager',
+          category: 'ORBITBlog',
+        }
+
+        // Create an article
+        const managerArticle = await managerContext.query.Article.createOne({
+          data: testManagerArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const publishedArticle = await managerContext.query.Article.updateOne({
+          where: { id: managerArticle.id },
+          data: {
+            status: 'Published',
+          },
+          query,
+        })
+
+        const actualPublishedDate = DateTime.fromISO(
+          publishedArticle.publishedDate
+        )
+        const now = DateTime.now()
+        expect(actualPublishedDate.isValid).toBe(true)
+        // check that the date is recent, currently not more than one minute old
+        expect(actualPublishedDate > now.minus({ minute: 1 })).toBe(true)
+        // check that date is before right now
+        expect(actualPublishedDate < now).toBe(true)
+      })
     })
   })
 
