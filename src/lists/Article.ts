@@ -22,6 +22,10 @@ import {
 import { slugify } from '../util/formatting'
 import { isLocalStorage } from '../util/getStorage'
 
+// Disable the warning, this regex is only run after checking the max length
+// and only failed with a catastrophic backtrace in testing with very very
+// large data sets well beyond the current max or anything a url would accept
+// eslint-disable-next-line security/detect-unsafe-regex
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
 
@@ -211,14 +215,14 @@ const Article = list(
           },
         },
         hooks: {
-          resolveInput: async ({ fieldKey, resolvedData, operation }) => {
+          resolveInput: async ({ resolvedData, operation }) => {
             if (operation === 'create' && !resolvedData.slug) {
               // Default slug to the slugified title
               // This can still cause validation errors bc titles don't have to be unique
               return slugify(resolvedData.title)
             }
 
-            return resolvedData[fieldKey]
+            return resolvedData.slug
           },
           validateInput: async ({
             operation,
@@ -230,16 +234,16 @@ const Article = list(
             // eslint-disable-next-line no-prototype-builtins
             if (operation === 'create' || inputData.hasOwnProperty(fieldKey)) {
               // Validate slug - this has to be done in a hook to allow creating an article with no slug
-              const slug = resolvedData[fieldKey]
+              const slug = resolvedData.slug
               if (!slug) {
                 addValidationError('Slug is a required value')
-              } else if (!SLUG_REGEX.test(slug)) {
-                addValidationError(
-                  'Slug must be a valid slug (only alphanumeric characters and dashes allowed)'
-                )
               } else if (slug.length > SLUG_MAX) {
                 addValidationError(
                   `Slug is too long (maximum of ${SLUG_MAX} characters)`
+                )
+              } else if (!SLUG_REGEX.test(slug)) {
+                addValidationError(
+                  'Slug must be a valid slug (only alphanumeric characters and dashes allowed)'
                 )
               }
             }
