@@ -20,6 +20,7 @@ import {
 } from '../util/access'
 import { slugify } from '../util/formatting'
 import { isLocalStorage } from '../util/getStorage'
+import { componentBlocks } from '../components/embedVideo'
 
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
@@ -179,6 +180,10 @@ const Article = list(
         formatting: true,
         dividers: true,
         links: true,
+        ui: {
+          views: './src/components/embedVideo',
+        },
+        componentBlocks,
       }),
       searchBody: text({
         ui: {
