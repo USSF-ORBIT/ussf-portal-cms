@@ -587,6 +587,33 @@ describe('Article schema', () => {
       ).rejects.toThrow(/Slug is a required value/)
     })
 
+    test('cannot set publishedDate without also setting status', async () => {
+      const testManagerArticle = {
+        slug: 'manager-article-published-date-no-status',
+        title: 'Manager Article',
+        preview: 'This article is written by a manager',
+        category: 'ORBITBlog',
+      }
+
+      // Create an article
+      const managerArticle = await managerContext.query.Article.createOne({
+        data: testManagerArticle,
+        query: articleQuery,
+      })
+
+      const query = `${articleQuery} publishedDate archivedDate`
+      const expectedFutureDate = DateTime.now().plus({ days: 1 })
+      await expect(
+        managerContext.query.Article.updateOne({
+          where: { id: managerArticle.id },
+          data: {
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+      ).rejects.toThrow(/Status must be set to Published/)
+    })
+
     test('cannot set publishedDate in the past', async () => {
       const testManagerArticle = {
         slug: 'manager-article',
