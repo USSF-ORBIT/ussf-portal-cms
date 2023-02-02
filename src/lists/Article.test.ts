@@ -587,33 +587,6 @@ describe('Article schema', () => {
       ).rejects.toThrow(/Slug is a required value/)
     })
 
-    test('cannot set publishedDate without also setting status', async () => {
-      const testManagerArticle = {
-        slug: 'manager-article-published-date-no-status',
-        title: 'Manager Article',
-        preview: 'This article is written by a manager',
-        category: 'ORBITBlog',
-      }
-
-      // Create an article
-      const managerArticle = await managerContext.query.Article.createOne({
-        data: testManagerArticle,
-        query: articleQuery,
-      })
-
-      const query = `${articleQuery} publishedDate archivedDate`
-      const expectedFutureDate = DateTime.now().plus({ days: 1 })
-      await expect(
-        managerContext.query.Article.updateOne({
-          where: { id: managerArticle.id },
-          data: {
-            publishedDate: expectedFutureDate.toISO(),
-          },
-          query,
-        })
-      ).rejects.toThrow(/Status must be set to Published/)
-    })
-
     test('cannot set publishedDate in the past', async () => {
       const testManagerArticle = {
         slug: 'manager-article',
@@ -678,11 +651,42 @@ describe('Article schema', () => {
   })
 
   describe('setting publishedDate', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       await resetArticles()
     })
 
     describe('as a non-admin user with the Manager role', () => {
+      test('can set publishedDate in the future without setting status, status is changed for you', async () => {
+        const testManagerArticle = {
+          slug: 'manager-article',
+          title: 'Manager Article',
+          preview: 'This article is written by a manager',
+          category: 'ORBITBlog',
+        }
+
+        // Create an article
+        const managerArticle = await managerContext.query.Article.createOne({
+          data: testManagerArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await managerContext.query.Article.updateOne({
+          where: { id: managerArticle.id },
+          data: {
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
+
       test('can set publishedDate in the future', async () => {
         const testManagerArticle = {
           slug: 'manager-article',
@@ -717,6 +721,37 @@ describe('Article schema', () => {
     })
 
     describe('as an admin user', () => {
+      test('can set publishedDate in the future without status, status is set for you', async () => {
+        const testAdminArticle = {
+          slug: 'admin-article',
+          title: 'Admin Article',
+          preview: 'This article is written by an admin',
+          category: 'InternalNews',
+        }
+
+        // Create an article
+        const adminArticle = await adminContext.query.Article.createOne({
+          data: testAdminArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await adminContext.query.Article.updateOne({
+          where: { id: adminArticle.id },
+          data: {
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
+
       test('can set publishedDate in the future', async () => {
         const testAdminArticle = {
           slug: 'admin-article',
