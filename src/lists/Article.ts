@@ -166,6 +166,10 @@ const Article = list(
             addValidationError,
           }) => {
             if (operation === 'update' && inputData.publishedDate) {
+              if (inputData.status !== ARTICLE_STATUSES.PUBLISHED) {
+                addValidationError('Status must be set to Published')
+              }
+
               const publishedDate = DateTime.fromJSDate(
                 resolvedData.publishedDate
               )
