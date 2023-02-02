@@ -22,8 +22,9 @@ import {
 import { slugify } from '../util/formatting'
 import { isLocalStorage } from '../util/getStorage'
 
+// NOTE:
 // Disable the warning, this regex is only run after checking the max length
-// and only failed with a catastrophic backtrace in testing with very very
+// and only failed with a catastrophic backtrace in testing with extremely
 // large data sets well beyond the current max or anything a url would accept
 // eslint-disable-next-line security/detect-unsafe-regex
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -86,17 +87,9 @@ const Article = list(
     fields: {
       category: select({
         type: 'enum',
-        options: (
-          Object.keys(ARTICLE_CATEGORIES) as Array<
-            keyof typeof ARTICLE_CATEGORIES
-          >
-        ).map((r) => ({
-          // false positive as r is limited to the keys availble in the constant ARTICLE_CATEGORIES
-          // eslint-disable-next-line security/detect-object-injection
-          label: ARTICLE_CATEGORIES[r],
-          // false positive as r is limited to the keys availble in the constant ARTICLE_CATEGORIES
-          // eslint-disable-next-line security/detect-object-injection
-          value: ARTICLE_CATEGORIES[r],
+        options: Object.entries(ARTICLE_CATEGORIES).map(([, v]) => ({
+          label: v,
+          value: v,
         })),
         validation: {
           isRequired: true,
@@ -104,15 +97,9 @@ const Article = list(
       }),
       status: select({
         type: 'enum',
-        options: (
-          Object.keys(ARTICLE_STATUSES) as Array<keyof typeof ARTICLE_STATUSES>
-        ).map((s) => ({
-          // false positive as s is limited to the keys availble in the constant ARTICLE_STATUSES
-          // eslint-disable-next-line security/detect-object-injection
-          label: ARTICLE_STATUSES[s],
-          // false positive as s is limited to the keys availble in the constant ARTICLE_STATUSES
-          // eslint-disable-next-line security/detect-object-injection
-          value: ARTICLE_STATUSES[s],
+        options: Object.entries(ARTICLE_STATUSES).map(([, v]) => ({
+          label: v,
+          value: v,
         })),
         defaultValue: ARTICLE_STATUSES.DRAFT,
         validation: {
@@ -247,6 +234,7 @@ const Article = list(
             // eslint-disable-next-line no-prototype-builtins
             if (operation === 'create' || inputData.hasOwnProperty(fieldKey)) {
               // Validate slug - this has to be done in a hook to allow creating an article with no slug
+              // NOTE: Need to check SLUG_MAX frist to avoid a DOS attack based on the regex see note above.
               const slug = resolvedData.slug
               if (!slug) {
                 addValidationError('Slug is a required value')
