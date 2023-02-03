@@ -11,10 +11,10 @@ export const componentBlocks = {
       return (
         <NotEditable>
           <iframe
-            title={props.videoTitle}
+            title={props.fields.videoTitle.value}
             width="420"
             height="315"
-            src={`https://youtube.com/embed/${props.link}`}></iframe>
+            src={`https://youtube.com/embed/${props.fields.link.value}`}></iframe>
         </NotEditable>
       )
     },
