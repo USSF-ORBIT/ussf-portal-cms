@@ -827,24 +827,24 @@ input TagRelateToManyForCreateInput {
 type Announcement {
   id: ID!
   title: String
-  body: Announcement_body_Document
   status: AnnouncementStatusType
   publishedDate: DateTime
   archivedDate: DateTime
+  body: Announcement_body_Document
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
 }
 
-type Announcement_body_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
 enum AnnouncementStatusType {
   Draft
   Published
   Archived
+}
+
+type Announcement_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 input AnnouncementWhereUniqueInput {
@@ -885,10 +885,10 @@ input AnnouncementOrderByInput {
 
 input AnnouncementUpdateInput {
   title: String
-  body: JSON
   status: AnnouncementStatusType
   publishedDate: DateTime
   archivedDate: DateTime
+  body: JSON
 }
 
 input AnnouncementUpdateArgs {
@@ -898,10 +898,10 @@ input AnnouncementUpdateArgs {
 
 input AnnouncementCreateInput {
   title: String
-  body: JSON
   status: AnnouncementStatusType
   publishedDate: DateTime
   archivedDate: DateTime
+  body: JSON
 }
 
 type Document {

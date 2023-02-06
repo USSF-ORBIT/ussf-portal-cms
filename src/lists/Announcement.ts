@@ -48,21 +48,6 @@ const Announcement = list(
           },
         },
       }),
-      body: document({
-        formatting: {
-          inlineMarks: {
-            bold: true,
-            italic: true,
-            underline: true,
-            strikethrough: true,
-          },
-        },
-        links: true,
-        ui: {
-          views: './src/components/component-blocks',
-        },
-        componentBlocks,
-      }),
       status: select({
         type: 'enum',
         options: Object.entries(ANNOUNCEMENT_STATUSES).map(([, s]) => ({
@@ -114,6 +99,21 @@ const Announcement = list(
             fieldMode: () => 'read',
           },
         },
+      }),
+      body: document({
+        formatting: {
+          inlineMarks: {
+            bold: true,
+            italic: true,
+            underline: true,
+            strikethrough: true,
+          },
+        },
+        links: true,
+        ui: {
+          views: './src/components/component-blocks',
+        },
+        componentBlocks,
       }),
     },
 
