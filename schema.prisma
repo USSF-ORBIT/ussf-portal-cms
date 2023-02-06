@@ -32,38 +32,44 @@ model Event {
 }
 
 model User {
-  id                          String         @id @default(cuid())
-  userId                      String         @unique @default("")
-  name                        String         @default("")
-  isAdmin                     Boolean        @default(false)
-  isEnabled                   Boolean        @default(false)
-  role                        UserRoleType   @default(User)
-  syncedAt                    DateTime       @default(now())
-  updatedBy                   User?          @relation("User_updatedBy", fields: [updatedById], references: [id])
-  updatedById                 String?        @map("updatedBy")
-  createdBy                   User?          @relation("User_createdBy", fields: [createdById], references: [id])
-  createdById                 String?        @map("createdBy")
-  updatedAt                   DateTime?      @updatedAt
-  createdAt                   DateTime?      @default(now())
-  from_Event_actor            Event[]        @relation("Event_actor")
-  from_User_updatedBy         User[]         @relation("User_updatedBy")
-  from_User_createdBy         User[]         @relation("User_createdBy")
-  from_Bookmark_updatedBy     Bookmark[]     @relation("Bookmark_updatedBy")
-  from_Bookmark_createdBy     Bookmark[]     @relation("Bookmark_createdBy")
-  from_Collection_updatedBy   Collection[]   @relation("Collection_updatedBy")
-  from_Collection_createdBy   Collection[]   @relation("Collection_createdBy")
-  from_Byline_updatedBy       Byline[]       @relation("Byline_updatedBy")
-  from_Byline_createdBy       Byline[]       @relation("Byline_createdBy")
-  from_Location_updatedBy     Location[]     @relation("Location_updatedBy")
-  from_Location_createdBy     Location[]     @relation("Location_createdBy")
-  from_Label_updatedBy        Label[]        @relation("Label_updatedBy")
-  from_Label_createdBy        Label[]        @relation("Label_createdBy")
-  from_Tag_updatedBy          Tag[]          @relation("Tag_updatedBy")
-  from_Tag_createdBy          Tag[]          @relation("Tag_createdBy")
-  from_Article_updatedBy      Article[]      @relation("Article_updatedBy")
-  from_Article_createdBy      Article[]      @relation("Article_createdBy")
-  from_Announcement_updatedBy Announcement[] @relation("Announcement_updatedBy")
-  from_Announcement_createdBy Announcement[] @relation("Announcement_createdBy")
+  id                             String            @id @default(cuid())
+  userId                         String            @unique @default("")
+  name                           String            @default("")
+  isAdmin                        Boolean           @default(false)
+  isEnabled                      Boolean           @default(false)
+  role                           UserRoleType      @default(User)
+  syncedAt                       DateTime          @default(now())
+  updatedBy                      User?             @relation("User_updatedBy", fields: [updatedById], references: [id])
+  updatedById                    String?           @map("updatedBy")
+  createdBy                      User?             @relation("User_createdBy", fields: [createdById], references: [id])
+  createdById                    String?           @map("createdBy")
+  updatedAt                      DateTime?         @updatedAt
+  createdAt                      DateTime?         @default(now())
+  from_Event_actor               Event[]           @relation("Event_actor")
+  from_User_updatedBy            User[]            @relation("User_updatedBy")
+  from_User_createdBy            User[]            @relation("User_createdBy")
+  from_Bookmark_updatedBy        Bookmark[]        @relation("Bookmark_updatedBy")
+  from_Bookmark_createdBy        Bookmark[]        @relation("Bookmark_createdBy")
+  from_Collection_updatedBy      Collection[]      @relation("Collection_updatedBy")
+  from_Collection_createdBy      Collection[]      @relation("Collection_createdBy")
+  from_Byline_updatedBy          Byline[]          @relation("Byline_updatedBy")
+  from_Byline_createdBy          Byline[]          @relation("Byline_createdBy")
+  from_Location_updatedBy        Location[]        @relation("Location_updatedBy")
+  from_Location_createdBy        Location[]        @relation("Location_createdBy")
+  from_Label_updatedBy           Label[]           @relation("Label_updatedBy")
+  from_Label_createdBy           Label[]           @relation("Label_createdBy")
+  from_Tag_updatedBy             Tag[]             @relation("Tag_updatedBy")
+  from_Tag_createdBy             Tag[]             @relation("Tag_createdBy")
+  from_Article_updatedBy         Article[]         @relation("Article_updatedBy")
+  from_Article_createdBy         Article[]         @relation("Article_createdBy")
+  from_Announcement_updatedBy    Announcement[]    @relation("Announcement_updatedBy")
+  from_Announcement_createdBy    Announcement[]    @relation("Announcement_createdBy")
+  from_Document_updatedBy        Document[]        @relation("Document_updatedBy")
+  from_Document_createdBy        Document[]        @relation("Document_createdBy")
+  from_DocumentSection_updatedBy DocumentSection[] @relation("DocumentSection_updatedBy")
+  from_DocumentSection_createdBy DocumentSection[] @relation("DocumentSection_createdBy")
+  from_DocumentsPage_updatedBy   DocumentsPage[]   @relation("DocumentsPage_updatedBy")
+  from_DocumentsPage_createdBy   DocumentsPage[]   @relation("DocumentsPage_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -213,6 +219,55 @@ model Announcement {
   createdById   String?                @map("createdBy")
   updatedAt     DateTime?              @updatedAt
   createdAt     DateTime?              @default(now())
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model Document {
+  id                            String            @id @default(cuid())
+  file_filesize                 Int?
+  file_filename                 String?
+  title                         String            @default("")
+  description                   String            @default("")
+  updatedBy                     User?             @relation("Document_updatedBy", fields: [updatedById], references: [id])
+  updatedById                   String?           @map("updatedBy")
+  createdBy                     User?             @relation("Document_createdBy", fields: [createdById], references: [id])
+  createdById                   String?           @map("createdBy")
+  updatedAt                     DateTime?         @updatedAt
+  createdAt                     DateTime?         @default(now())
+  from_DocumentSection_document DocumentSection[] @relation("DocumentSection_document")
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model DocumentSection {
+  id                          String          @id @default(cuid())
+  title                       String          @default("")
+  document                    Document[]      @relation("DocumentSection_document")
+  updatedBy                   User?           @relation("DocumentSection_updatedBy", fields: [updatedById], references: [id])
+  updatedById                 String?         @map("updatedBy")
+  createdBy                   User?           @relation("DocumentSection_createdBy", fields: [createdById], references: [id])
+  createdById                 String?         @map("createdBy")
+  updatedAt                   DateTime?       @updatedAt
+  createdAt                   DateTime?       @default(now())
+  from_DocumentsPage_sections DocumentsPage[] @relation("DocumentsPage_sections")
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model DocumentsPage {
+  id          String            @id @default(cuid())
+  pageTitle   String            @default("")
+  sections    DocumentSection[] @relation("DocumentsPage_sections")
+  updatedBy   User?             @relation("DocumentsPage_updatedBy", fields: [updatedById], references: [id])
+  updatedById String?           @map("updatedBy")
+  createdBy   User?             @relation("DocumentsPage_createdBy", fields: [createdById], references: [id])
+  createdById String?           @map("createdBy")
+  updatedAt   DateTime?         @updatedAt
+  createdAt   DateTime?         @default(now())
 
   @@index([updatedById])
   @@index([createdById])

@@ -904,6 +904,205 @@ input AnnouncementCreateInput {
   archivedDate: DateTime
 }
 
+type Document {
+  id: ID!
+  file: FileFieldOutput
+  title: String
+  description: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type FileFieldOutput {
+  filename: String!
+  filesize: Int!
+  url: String!
+}
+
+input DocumentWhereUniqueInput {
+  id: ID
+}
+
+input DocumentWhereInput {
+  AND: [DocumentWhereInput!]
+  OR: [DocumentWhereInput!]
+  NOT: [DocumentWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  description: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input DocumentOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input DocumentUpdateInput {
+  file: FileFieldInput
+  title: String
+  description: String
+}
+
+input FileFieldInput {
+  upload: Upload!
+}
+
+input DocumentUpdateArgs {
+  where: DocumentWhereUniqueInput!
+  data: DocumentUpdateInput!
+}
+
+input DocumentCreateInput {
+  file: FileFieldInput
+  title: String
+  description: String
+}
+
+type DocumentSection {
+  id: ID!
+  title: String
+  document(where: DocumentWhereInput! = {}, orderBy: [DocumentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Document!]
+  documentCount(where: DocumentWhereInput! = {}): Int
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input DocumentSectionWhereUniqueInput {
+  id: ID
+}
+
+input DocumentSectionWhereInput {
+  AND: [DocumentSectionWhereInput!]
+  OR: [DocumentSectionWhereInput!]
+  NOT: [DocumentSectionWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  document: DocumentManyRelationFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input DocumentManyRelationFilter {
+  every: DocumentWhereInput
+  some: DocumentWhereInput
+  none: DocumentWhereInput
+}
+
+input DocumentSectionOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input DocumentSectionUpdateInput {
+  title: String
+  document: DocumentRelateToManyForUpdateInput
+}
+
+input DocumentRelateToManyForUpdateInput {
+  disconnect: [DocumentWhereUniqueInput!]
+  set: [DocumentWhereUniqueInput!]
+  create: [DocumentCreateInput!]
+  connect: [DocumentWhereUniqueInput!]
+}
+
+input DocumentSectionUpdateArgs {
+  where: DocumentSectionWhereUniqueInput!
+  data: DocumentSectionUpdateInput!
+}
+
+input DocumentSectionCreateInput {
+  title: String
+  document: DocumentRelateToManyForCreateInput
+}
+
+input DocumentRelateToManyForCreateInput {
+  create: [DocumentCreateInput!]
+  connect: [DocumentWhereUniqueInput!]
+}
+
+type DocumentsPage {
+  id: ID!
+  pageTitle: String
+  sections(where: DocumentSectionWhereInput! = {}, orderBy: [DocumentSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentSection!]
+  sectionsCount(where: DocumentSectionWhereInput! = {}): Int
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input DocumentsPageWhereUniqueInput {
+  id: ID
+}
+
+input DocumentsPageWhereInput {
+  AND: [DocumentsPageWhereInput!]
+  OR: [DocumentsPageWhereInput!]
+  NOT: [DocumentsPageWhereInput!]
+  id: IDFilter
+  pageTitle: StringFilter
+  sections: DocumentSectionManyRelationFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input DocumentSectionManyRelationFilter {
+  every: DocumentSectionWhereInput
+  some: DocumentSectionWhereInput
+  none: DocumentSectionWhereInput
+}
+
+input DocumentsPageOrderByInput {
+  id: OrderDirection
+  pageTitle: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input DocumentsPageUpdateInput {
+  pageTitle: String
+  sections: DocumentSectionRelateToManyForUpdateInput
+}
+
+input DocumentSectionRelateToManyForUpdateInput {
+  disconnect: [DocumentSectionWhereUniqueInput!]
+  set: [DocumentSectionWhereUniqueInput!]
+  create: [DocumentSectionCreateInput!]
+  connect: [DocumentSectionWhereUniqueInput!]
+}
+
+input DocumentsPageUpdateArgs {
+  where: DocumentsPageWhereUniqueInput!
+  data: DocumentsPageUpdateInput!
+}
+
+input DocumentsPageCreateInput {
+  pageTitle: String
+  sections: DocumentSectionRelateToManyForCreateInput
+}
+
+input DocumentSectionRelateToManyForCreateInput {
+  create: [DocumentSectionCreateInput!]
+  connect: [DocumentSectionWhereUniqueInput!]
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -970,6 +1169,24 @@ type Mutation {
   updateAnnouncements(data: [AnnouncementUpdateArgs!]!): [Announcement]
   deleteAnnouncement(where: AnnouncementWhereUniqueInput!): Announcement
   deleteAnnouncements(where: [AnnouncementWhereUniqueInput!]!): [Announcement]
+  createDocument(data: DocumentCreateInput!): Document
+  createDocuments(data: [DocumentCreateInput!]!): [Document]
+  updateDocument(where: DocumentWhereUniqueInput!, data: DocumentUpdateInput!): Document
+  updateDocuments(data: [DocumentUpdateArgs!]!): [Document]
+  deleteDocument(where: DocumentWhereUniqueInput!): Document
+  deleteDocuments(where: [DocumentWhereUniqueInput!]!): [Document]
+  createDocumentSection(data: DocumentSectionCreateInput!): DocumentSection
+  createDocumentSections(data: [DocumentSectionCreateInput!]!): [DocumentSection]
+  updateDocumentSection(where: DocumentSectionWhereUniqueInput!, data: DocumentSectionUpdateInput!): DocumentSection
+  updateDocumentSections(data: [DocumentSectionUpdateArgs!]!): [DocumentSection]
+  deleteDocumentSection(where: DocumentSectionWhereUniqueInput!): DocumentSection
+  deleteDocumentSections(where: [DocumentSectionWhereUniqueInput!]!): [DocumentSection]
+  createDocumentsPage(data: DocumentsPageCreateInput!): DocumentsPage
+  createDocumentsPages(data: [DocumentsPageCreateInput!]!): [DocumentsPage]
+  updateDocumentsPage(where: DocumentsPageWhereUniqueInput!, data: DocumentsPageUpdateInput!): DocumentsPage
+  updateDocumentsPages(data: [DocumentsPageUpdateArgs!]!): [DocumentsPage]
+  deleteDocumentsPage(where: DocumentsPageWhereUniqueInput!): DocumentsPage
+  deleteDocumentsPages(where: [DocumentsPageWhereUniqueInput!]!): [DocumentsPage]
   endSession: Boolean!
 }
 
@@ -1004,6 +1221,15 @@ type Query {
   announcements(where: AnnouncementWhereInput! = {}, orderBy: [AnnouncementOrderByInput!]! = [], take: Int, skip: Int! = 0): [Announcement!]
   announcement(where: AnnouncementWhereUniqueInput!): Announcement
   announcementsCount(where: AnnouncementWhereInput! = {}): Int
+  documents(where: DocumentWhereInput! = {}, orderBy: [DocumentOrderByInput!]! = [], take: Int, skip: Int! = 0): [Document!]
+  document(where: DocumentWhereUniqueInput!): Document
+  documentsCount(where: DocumentWhereInput! = {}): Int
+  documentSections(where: DocumentSectionWhereInput! = {}, orderBy: [DocumentSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentSection!]
+  documentSection(where: DocumentSectionWhereUniqueInput!): DocumentSection
+  documentSectionsCount(where: DocumentSectionWhereInput! = {}): Int
+  documentsPages(where: DocumentsPageWhereInput! = {}, orderBy: [DocumentsPageOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentsPage!]
+  documentsPage(where: DocumentsPageWhereUniqueInput!): DocumentsPage
+  documentsPagesCount(where: DocumentsPageWhereInput! = {}): Int
   keystone: KeystoneMeta!
   search(query: String!): [SearchResultItem]
   authenticatedItem: AuthenticatedItem
