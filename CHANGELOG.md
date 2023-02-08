@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.5.3...1.6.0) (2023-02-08)
+
+
+### Features
+
+* Add Documents Page, Document Section, and Document types to cms ([#253](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/253)) ([959b43b](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/959b43b7cdfbb868ca76ebe2f74c918c8499f84a))
+
 ### [1.5.3](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.5.2...1.5.3) (2023-01-25)
 
 ### [1.5.2](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.5.1...1.5.2) (2023-01-11)
