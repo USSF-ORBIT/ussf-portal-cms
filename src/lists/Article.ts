@@ -7,6 +7,7 @@ import {
   timestamp,
 } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
+import { DateTime } from 'luxon'
 
 import { withTracking } from '../util/tracking'
 import { ARTICLE_STATUSES } from '../util/workflows'
@@ -21,6 +22,12 @@ import {
 import { slugify } from '../util/formatting'
 import { isLocalStorage } from '../util/getStorage'
 
+// NOTE:
+// Disable the warning, this regex is only run after checking the max length
+// and only failed with a catastrophic backtrace in testing with extremely
+// large data sets well beyond the current max or anything a url would accept
+// For details see https://github.com/USSF-ORBIT/ussf-portal/blob/main/docs/adr/0017-disable-unsafe-regex-in-cms-slug-code.md
+// eslint-disable-next-line security/detect-unsafe-regex
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
 
@@ -81,13 +88,9 @@ const Article = list(
     fields: {
       category: select({
         type: 'enum',
-        options: (
-          Object.keys(ARTICLE_CATEGORIES) as Array<
-            keyof typeof ARTICLE_CATEGORIES
-          >
-        ).map((r) => ({
-          label: ARTICLE_CATEGORIES[r],
-          value: ARTICLE_CATEGORIES[r],
+        options: Object.entries(ARTICLE_CATEGORIES).map(([, v]) => ({
+          label: v,
+          value: v,
         })),
         validation: {
           isRequired: true,
@@ -95,11 +98,9 @@ const Article = list(
       }),
       status: select({
         type: 'enum',
-        options: (
-          Object.keys(ARTICLE_STATUSES) as Array<keyof typeof ARTICLE_STATUSES>
-        ).map((s) => ({
-          label: ARTICLE_STATUSES[s],
-          value: ARTICLE_STATUSES[s],
+        options: Object.entries(ARTICLE_STATUSES).map(([, v]) => ({
+          label: v,
+          value: v,
         })),
         defaultValue: ARTICLE_STATUSES.DRAFT,
         validation: {
@@ -118,7 +119,95 @@ const Article = list(
             fieldMode: articleStatusView,
           },
         },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.publishedDate &&
+              (inputData.status !== ARTICLE_STATUSES.PUBLISHED ||
+                item?.status !== ARTICLE_STATUSES.PUBLISHED)
+            ) {
+              // Set status if publishedDate is being changed and status is not changed or not already Published
+              return ARTICLE_STATUSES.PUBLISHED
+            }
+            return resolvedData.status
+          },
+        },
       }),
+      publishedDate: timestamp({
+        access: {
+          create: () => false,
+          update: canPublishArchiveArticle,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: articleStatusView,
+          },
+        },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.status === ARTICLE_STATUSES.PUBLISHED &&
+              item?.status !== ARTICLE_STATUSES.PUBLISHED
+            ) {
+              // Set publishedDate if status is being changed to "Published"
+              // only set publishedDate if they didn't set one
+              if (!inputData.publishedDate) {
+                return DateTime.now().toJSDate()
+              }
+            }
+            return resolvedData.publishedDate
+          },
+          validateInput: async ({
+            operation,
+            inputData,
+            resolvedData,
+            addValidationError,
+          }) => {
+            if (operation === 'update' && inputData.publishedDate) {
+              const publishedDate = DateTime.fromJSDate(
+                resolvedData.publishedDate
+              )
+              // if the selected publish date is in the past it is invalid
+              // but if it's recent then allow it since they could have been
+              // editing the page for this amount of time after setting
+              // date and saving
+              if (publishedDate < DateTime.now().minus({ hours: 4 })) {
+                addValidationError('Published date cannot be in the past')
+              }
+            }
+          },
+        },
+      }),
+      archivedDate: timestamp({
+        access: {
+          create: () => false,
+          update: () => false,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+        },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.status === ARTICLE_STATUSES.ARCHIVED &&
+              item?.status !== ARTICLE_STATUSES.ARCHIVED
+            ) {
+              // Set archivedDate if status is being changed to "Archived"
+              return DateTime.now().toJSDate()
+            }
+            return resolvedData.archivedDate
+          },
+        },
+      }),
+
       slug: text({
         isIndexed: 'unique',
         validation: {
@@ -127,14 +216,14 @@ const Article = list(
           },
         },
         hooks: {
-          resolveInput: async ({ fieldKey, resolvedData, operation }) => {
+          resolveInput: async ({ resolvedData, operation }) => {
             if (operation === 'create' && !resolvedData.slug) {
               // Default slug to the slugified title
               // This can still cause validation errors bc titles don't have to be unique
               return slugify(resolvedData.title)
             }
 
-            return resolvedData[fieldKey]
+            return resolvedData.slug
           },
           validateInput: async ({
             operation,
@@ -146,16 +235,17 @@ const Article = list(
             // eslint-disable-next-line no-prototype-builtins
             if (operation === 'create' || inputData.hasOwnProperty(fieldKey)) {
               // Validate slug - this has to be done in a hook to allow creating an article with no slug
-              const slug = resolvedData[fieldKey]
+              // NOTE: Need to check SLUG_MAX frist to avoid a DOS attack based on the regex see note above.
+              const slug = resolvedData.slug
               if (!slug) {
                 addValidationError('Slug is a required value')
-              } else if (!SLUG_REGEX.test(slug)) {
-                addValidationError(
-                  'Slug must be a valid slug (only alphanumeric characters and dashes allowed)'
-                )
               } else if (slug.length > SLUG_MAX) {
                 addValidationError(
                   `Slug is too long (maximum of ${SLUG_MAX} characters)`
+                )
+              } else if (!SLUG_REGEX.test(slug)) {
+                addValidationError(
+                  'Slug must be a valid slug (only alphanumeric characters and dashes allowed)'
                 )
               }
             }
@@ -208,35 +298,6 @@ const Article = list(
         },
         isFilterable: true,
       }),
-      publishedDate: timestamp({
-        access: {
-          create: () => false,
-          update: () => false,
-        },
-        ui: {
-          createView: {
-            fieldMode: 'hidden',
-          },
-          itemView: {
-            fieldMode: () => 'read',
-          },
-        },
-      }),
-      archivedDate: timestamp({
-        access: {
-          create: () => false,
-          update: () => false,
-        },
-        ui: {
-          createView: {
-            fieldMode: 'hidden',
-          },
-          itemView: {
-            fieldMode: () => 'read',
-          },
-        },
-      }),
-
       byline: relationship({
         ref: 'Byline',
         ui: {
@@ -260,27 +321,6 @@ const Article = list(
         ref: 'Tag',
         many: true,
       }),
-    },
-
-    hooks: {
-      resolveInput: async ({ inputData, item, resolvedData }) => {
-        // Workflow side effects
-        if (
-          inputData.status === ARTICLE_STATUSES.ARCHIVED &&
-          item?.status !== ARTICLE_STATUSES.ARCHIVED
-        ) {
-          // Set archivedDate if status is being changed to "Archived"
-          resolvedData.archivedDate = new Date()
-        } else if (
-          inputData.status === ARTICLE_STATUSES.PUBLISHED &&
-          item?.status !== ARTICLE_STATUSES.PUBLISHED
-        ) {
-          // Set publishedDate if status is being changed to "Published"
-          resolvedData.publishedDate = new Date()
-        }
-
-        return resolvedData
-      },
     },
   })
 )

@@ -65,13 +65,9 @@ const Announcement = list(
       }),
       status: select({
         type: 'enum',
-        options: (
-          Object.keys(ANNOUNCEMENT_STATUSES) as Array<
-            keyof typeof ANNOUNCEMENT_STATUSES
-          >
-        ).map((s) => ({
-          label: ANNOUNCEMENT_STATUSES[s],
-          value: ANNOUNCEMENT_STATUSES[s],
+        options: Object.entries(ANNOUNCEMENT_STATUSES).map(([, s]) => ({
+          label: s,
+          value: s,
         })),
         defaultValue: ANNOUNCEMENT_STATUSES.DRAFT,
         validation: {
