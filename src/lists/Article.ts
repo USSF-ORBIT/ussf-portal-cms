@@ -150,12 +150,13 @@ const Article = list(
           resolveInput: async ({ inputData, item, resolvedData }) => {
             if (
               inputData.status === ARTICLE_STATUSES.PUBLISHED &&
-              item?.status !== ARTICLE_STATUSES.PUBLISHED &&
-              !inputData.publishedDate
+              item?.status !== ARTICLE_STATUSES.PUBLISHED
             ) {
               // Set publishedDate if status is being changed to "Published"
               // only set publishedDate if they didn't set one
-              return DateTime.now().toJSDate()
+              if (!inputData.publishedDate) {
+                return DateTime.now().toJSDate()
+              }
             }
             return resolvedData.publishedDate
           },
@@ -206,7 +207,6 @@ const Article = list(
           },
         },
       }),
-
       slug: text({
         isIndexed: 'unique',
         validation: {

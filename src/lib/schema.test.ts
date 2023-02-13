@@ -253,7 +253,8 @@ describe('Search Resolver', () => {
 
   test('does not return scheduled articles, ie with a published date in the future', async () => {
     /*
-        Query String: 'lorem ipsum', case insensitive
+        Query String: 'in the future', case insensitive
+        The sample data in src/testData.ts has the above terms in the article body with a publishedDate in the future.
         Search Fields Tested: Article.searchBody
         Expected Results: []
         */
@@ -261,7 +262,7 @@ describe('Search Resolver', () => {
     const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
-        query: 'Scheduled',
+        query: 'in the future',
       },
     })
 

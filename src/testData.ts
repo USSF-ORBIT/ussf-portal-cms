@@ -46,7 +46,7 @@ export const scheduledArticleData = {
   keywords: 'foo',
   publishedDate: DateTime.now().plus({ weeks: 2 }).toISO(),
   body: JSON.parse(
-    `[{"type":"paragraph","children":[{"text":"Scheduled articles don't show in results"}]}]`
+    `[{"type":"paragraph","children":[{"text":"Published in the future articles don't show in results"}]}]`
   ),
 }
 
