@@ -1,4 +1,5 @@
 import { KeystoneContext } from '@keystone-6/core/types'
+import { DateTime } from 'luxon'
 
 import { configTestEnv } from '../testHelpers'
 
@@ -57,7 +58,7 @@ describe('Article schema', () => {
         await resetArticles()
       })
 
-      it('can query all Articles', async () => {
+      test('can query all Articles', async () => {
         const data = await userContext.query.Article.findMany({
           query: articleQuery,
         })
@@ -65,8 +66,8 @@ describe('Article schema', () => {
         expect(data[0]).toMatchObject(testArticle)
       })
 
-      it('cannot create an article', async () => {
-        expect(
+      test('cannot create an article', async () => {
+        await expect(
           userContext.query.Article.createOne({
             data: {
               title: 'User Collection',
@@ -77,8 +78,8 @@ describe('Article schema', () => {
         ).rejects.toThrow('Access denied: You cannot create that Article')
       })
 
-      it('cannot update an article', async () => {
-        expect(
+      test('cannot update an article', async () => {
+        await expect(
           userContext.query.Article.updateOne({
             where: {
               id: testArticle.id,
@@ -93,8 +94,8 @@ describe('Article schema', () => {
         )
       })
 
-      it('cannot delete an article', async () => {
-        expect(
+      test('cannot delete an article', async () => {
+        await expect(
           userContext.query.Article.deleteOne({
             where: {
               id: testArticle.id,
@@ -111,7 +112,7 @@ describe('Article schema', () => {
         await resetArticles()
       })
 
-      it('can create an article', async () => {
+      test('can create an article', async () => {
         const testAuthorArticle = {
           slug: 'author-article',
           title: 'Author Article',
@@ -127,7 +128,7 @@ describe('Article schema', () => {
         expect(authorArticle).toMatchObject(testAuthorArticle)
       })
 
-      it('can query all articles', async () => {
+      test('can query all articles', async () => {
         const data = await authorContext.query.Article.findMany({
           query: articleQuery,
         })
@@ -137,7 +138,7 @@ describe('Article schema', () => {
         expect(data[1]).toMatchObject(authorArticle)
       })
 
-      it('can update an article it created', async () => {
+      test('can update an article it created', async () => {
         const data = await authorContext.query.Article.updateOne({
           where: { id: authorArticle.id },
           data: {
@@ -152,8 +153,8 @@ describe('Article schema', () => {
         })
       })
 
-      it('cannot update an article’s status', async () => {
-        expect(
+      test('cannot update an article’s status', async () => {
+        await expect(
           authorContext.query.Article.updateOne({
             where: { id: authorArticle.id },
             data: {
@@ -166,7 +167,7 @@ describe('Article schema', () => {
         )
       })
 
-      it('can delete an article it created', async () => {
+      test('can delete an article it created', async () => {
         await authorContext.query.Article.deleteOne({
           where: { id: authorArticle.id },
         })
@@ -179,8 +180,8 @@ describe('Article schema', () => {
         expect(data).toEqual(null)
       })
 
-      it('cannot update an article it did not create', async () => {
-        expect(
+      test('cannot update an article it did not create', async () => {
+        await expect(
           authorContext.query.Article.updateOne({
             where: {
               id: testArticle.id,
@@ -195,8 +196,8 @@ describe('Article schema', () => {
         )
       })
 
-      it('cannot delete an article it did not create', async () => {
-        expect(
+      test('cannot delete an article it did not create', async () => {
+        await expect(
           authorContext.query.Article.deleteOne({
             where: {
               id: testArticle.id,
@@ -213,7 +214,7 @@ describe('Article schema', () => {
         await resetArticles()
       })
 
-      it('can create an article', async () => {
+      test('can create an article', async () => {
         const testManagerArticle = {
           slug: 'manager-article',
           title: 'Manager Article',
@@ -229,7 +230,7 @@ describe('Article schema', () => {
         expect(managerArticle).toMatchObject(testManagerArticle)
       })
 
-      it('can query all articles', async () => {
+      test('can query all articles', async () => {
         const data = await managerContext.query.Article.findMany({
           query: articleQuery,
         })
@@ -239,7 +240,7 @@ describe('Article schema', () => {
         expect(data[1]).toMatchObject(managerArticle)
       })
 
-      it('can update an article it created', async () => {
+      test('can update an article it created', async () => {
         const data = await managerContext.query.Article.updateOne({
           where: { id: managerArticle.id },
           data: {
@@ -254,7 +255,7 @@ describe('Article schema', () => {
         })
       })
 
-      it('can update an article’s status', async () => {
+      test('can update an article’s status', async () => {
         const statusQuery = `${articleQuery} publishedDate archivedDate`
 
         const originalArticle = await managerContext.query.Article.findOne({
@@ -299,7 +300,7 @@ describe('Article schema', () => {
         })
       })
 
-      it('can delete an article it created', async () => {
+      test('can delete an article it created', async () => {
         await managerContext.query.Article.deleteOne({
           where: { id: managerArticle.id },
         })
@@ -312,7 +313,7 @@ describe('Article schema', () => {
         expect(data).toEqual(null)
       })
 
-      it('can update an article it did not create', async () => {
+      test('can update an article it did not create', async () => {
         const data = await managerContext.query.Article.updateOne({
           where: {
             id: testArticle.id,
@@ -331,7 +332,7 @@ describe('Article schema', () => {
         })
       })
 
-      it('can delete an article it did not create', async () => {
+      test('can delete an article it did not create', async () => {
         await managerContext.query.Article.deleteOne({
           where: { id: testArticle.id },
         })
@@ -350,7 +351,7 @@ describe('Article schema', () => {
         await resetArticles()
       })
 
-      it('can create an article', async () => {
+      test('can create an article', async () => {
         const testAdminArticle = {
           slug: 'admin-article',
           title: 'Admin Article',
@@ -366,7 +367,7 @@ describe('Article schema', () => {
         expect(adminArticle).toMatchObject(testAdminArticle)
       })
 
-      it('can query all articles', async () => {
+      test('can query all articles', async () => {
         const data = await adminContext.query.Article.findMany({
           query: articleQuery,
         })
@@ -376,7 +377,7 @@ describe('Article schema', () => {
         expect(data[1]).toMatchObject(adminArticle)
       })
 
-      it('can update an article it created', async () => {
+      test('can update an article it created', async () => {
         const data = await adminContext.query.Article.updateOne({
           where: { id: adminArticle.id },
           data: {
@@ -391,7 +392,7 @@ describe('Article schema', () => {
         })
       })
 
-      it('can update an article’s status', async () => {
+      test('can update an article’s status', async () => {
         const statusQuery = `${articleQuery} publishedDate archivedDate`
 
         const originalArticle = await adminContext.query.Article.findOne({
@@ -436,7 +437,7 @@ describe('Article schema', () => {
         })
       })
 
-      it('can delete an article it created', async () => {
+      test('can delete an article it created', async () => {
         await adminContext.query.Article.deleteOne({
           where: { id: adminArticle.id },
         })
@@ -449,7 +450,7 @@ describe('Article schema', () => {
         expect(data).toEqual(null)
       })
 
-      it('can update an article it did not create', async () => {
+      test('can update an article it did not create', async () => {
         const data = await adminContext.query.Article.updateOne({
           where: {
             id: testArticle.id,
@@ -468,7 +469,7 @@ describe('Article schema', () => {
         })
       })
 
-      it('can delete an article it did not create', async () => {
+      test('can delete an article it did not create', async () => {
         await adminContext.query.Article.deleteOne({
           where: { id: testArticle.id },
         })
@@ -488,12 +489,12 @@ describe('Article schema', () => {
       await resetArticles()
     })
 
-    it('category is required', async () => {
+    test('category is required', async () => {
       const testAuthorArticle = {
         title: 'Author Article',
       }
 
-      expect(
+      await expect(
         authorContext.query.Article.createOne({
           data: testAuthorArticle,
           query: articleQuery,
@@ -501,7 +502,7 @@ describe('Article schema', () => {
       ).rejects.toThrow(/You provided invalid data for this operation./)
     })
 
-    it('must enter a valid slug', async () => {
+    test('must enter a valid slug', async () => {
       const testAuthorArticle = {
         slug: 'Invalid slug',
         title: 'Author Article',
@@ -509,15 +510,33 @@ describe('Article schema', () => {
         category: 'InternalNews',
       }
 
-      expect(
+      await expect(
         authorContext.query.Article.createOne({
           data: testAuthorArticle,
           query: articleQuery,
         })
-      ).rejects.toThrow(/You provided invalid data for this operation./)
+      ).rejects.toThrow(
+        /Slug must be a valid slug \(only alphanumeric characters and dashes allowed\)/
+      )
     })
 
-    it('slugs must be unique', async () => {
+    test('must enter a slug less than 1000 characters', async () => {
+      const testAuthorArticle = {
+        slug: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-2-aaaaa',
+        title: 'Author Article',
+        preview: 'This article is written by an author',
+        category: 'InternalNews',
+      }
+
+      await expect(
+        authorContext.query.Article.createOne({
+          data: testAuthorArticle,
+          query: articleQuery,
+        })
+      ).rejects.toThrow(/Slug is too long \(maximum of 1000 characters\)/)
+    })
+
+    test('slugs must be unique', async () => {
       await authorContext.query.Article.createOne({
         data: {
           slug: 'article-1',
@@ -526,7 +545,7 @@ describe('Article schema', () => {
         },
       })
 
-      expect(
+      await expect(
         authorContext.query.Article.createOne({
           data: {
             slug: 'article-1',
@@ -537,7 +556,7 @@ describe('Article schema', () => {
       ).rejects.toThrow(/Unique constraint failed/)
     })
 
-    it('generates a slug from the title if no value is passed', async () => {
+    test('generates a slug from the title if no value is passed', async () => {
       const data = await authorContext.query.Article.createOne({
         data: {
           title: 'My Article With No Slug',
@@ -549,7 +568,7 @@ describe('Article schema', () => {
       expect(data.slug).toEqual('my-article-with-no-slug')
     })
 
-    it('cannot set the slug to an empty value', async () => {
+    test('cannot set the slug to an empty value', async () => {
       const article = await authorContext.query.Article.createOne({
         data: {
           title: 'An article needs a slug',
@@ -558,7 +577,7 @@ describe('Article schema', () => {
         query: articleQuery,
       })
 
-      expect(
+      await expect(
         authorContext.query.Article.updateOne({
           where: { id: article.id },
           data: {
@@ -566,6 +585,204 @@ describe('Article schema', () => {
           },
         })
       ).rejects.toThrow(/Slug is a required value/)
+    })
+
+    test('cannot set publishedDate in the past', async () => {
+      const testManagerArticle = {
+        slug: 'manager-article',
+        title: 'Manager Article',
+        preview: 'This article is written by a manager',
+        category: 'ORBITBlog',
+      }
+
+      // Create an article
+      const managerArticle = await managerContext.query.Article.createOne({
+        data: testManagerArticle,
+        query: articleQuery,
+      })
+
+      const query = `${articleQuery} publishedDate archivedDate`
+      const invalidPastDate = DateTime.now().minus({ days: 1 })
+      await expect(
+        managerContext.query.Article.updateOne({
+          where: { id: managerArticle.id },
+          data: {
+            status: 'Published',
+            publishedDate: invalidPastDate.toISO(),
+          },
+          query,
+        })
+      ).rejects.toThrow(/Published date cannot be in the past/)
+    })
+
+    test('generates publishedDate if setting status Published but not publishDate', async () => {
+      const testManagerArticle = {
+        slug: 'manager-article-auto-date',
+        title: 'Manager Article',
+        preview: 'This article is written by a manager',
+        category: 'ORBITBlog',
+      }
+
+      // Create an article
+      const managerArticle = await managerContext.query.Article.createOne({
+        data: testManagerArticle,
+        query: articleQuery,
+      })
+
+      const query = `${articleQuery} publishedDate archivedDate`
+      const publishedArticle = await managerContext.query.Article.updateOne({
+        where: { id: managerArticle.id },
+        data: {
+          status: 'Published',
+        },
+        query,
+      })
+
+      const actualPublishedDate = DateTime.fromISO(
+        publishedArticle.publishedDate
+      )
+      const now = DateTime.now()
+      expect(actualPublishedDate.isValid).toBe(true)
+      // check that the date is recent, currently not more than one minute old
+      expect(actualPublishedDate > now.minus({ minute: 1 })).toBe(true)
+      // check that date is before right now
+      expect(actualPublishedDate < now).toBe(true)
+    })
+  })
+
+  describe('setting publishedDate', () => {
+    beforeEach(async () => {
+      await resetArticles()
+    })
+
+    describe('as a non-admin user with the Manager role', () => {
+      test('can set publishedDate in the future without setting status, status is changed for you', async () => {
+        const testManagerArticle = {
+          slug: 'manager-article',
+          title: 'Manager Article',
+          preview: 'This article is written by a manager',
+          category: 'ORBITBlog',
+        }
+
+        // Create an article
+        const managerArticle = await managerContext.query.Article.createOne({
+          data: testManagerArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await managerContext.query.Article.updateOne({
+          where: { id: managerArticle.id },
+          data: {
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
+
+      test('can set publishedDate in the future', async () => {
+        const testManagerArticle = {
+          slug: 'manager-article',
+          title: 'Manager Article',
+          preview: 'This article is written by a manager',
+          category: 'ORBITBlog',
+        }
+
+        // Create an article
+        const managerArticle = await managerContext.query.Article.createOne({
+          data: testManagerArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await managerContext.query.Article.updateOne({
+          where: { id: managerArticle.id },
+          data: {
+            status: 'Published',
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
+    })
+
+    describe('as an admin user', () => {
+      test('can set publishedDate in the future without status, status is set for you', async () => {
+        const testAdminArticle = {
+          slug: 'admin-article',
+          title: 'Admin Article',
+          preview: 'This article is written by an admin',
+          category: 'InternalNews',
+        }
+
+        // Create an article
+        const adminArticle = await adminContext.query.Article.createOne({
+          data: testAdminArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await adminContext.query.Article.updateOne({
+          where: { id: adminArticle.id },
+          data: {
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
+
+      test('can set publishedDate in the future', async () => {
+        const testAdminArticle = {
+          slug: 'admin-article',
+          title: 'Admin Article',
+          preview: 'This article is written by an admin',
+          category: 'InternalNews',
+        }
+
+        // Create an article
+        const adminArticle = await adminContext.query.Article.createOne({
+          data: testAdminArticle,
+          query: articleQuery,
+        })
+
+        const query = `${articleQuery} publishedDate archivedDate`
+        const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
+        const publishedArticle = await adminContext.query.Article.updateOne({
+          where: { id: adminArticle.id },
+          data: {
+            status: 'Published',
+            publishedDate: expectedFutureDate.toISO(),
+          },
+          query,
+        })
+
+        expect(publishedArticle.status).toEqual('Published')
+        expect(publishedArticle.publishedDate).toBe(
+          expectedFutureDate.toJSDate().toISOString()
+        )
+        expect(publishedArticle.archivedDate).toBe(null)
+      })
     })
   })
 })

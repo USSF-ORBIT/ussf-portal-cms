@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 // Bookmarks
 export const myVector = {
   label: 'MyVector',
@@ -28,11 +30,24 @@ export const publishedArticleData = {
   status: 'Published',
   preview: 'A test article that is published.',
   keywords: 'foo',
-  publishedDate: new Date().toISOString(),
+  publishedDate: DateTime.now().toISO(),
   body: JSON.parse(
     `[{"type":"paragraph","children":[{"text":"Lorem ipsum"}]}]`
   ),
   labels: { create: { name: 'All Guardians', type: 'Audience' } },
+}
+
+export const scheduledArticleData = {
+  title: 'Test Scheduled Article',
+  slug: 'test-scheduled-article',
+  category: 'InternalNews',
+  status: 'Published',
+  preview: 'A test scheduled article that is published in the future.',
+  keywords: 'foo',
+  publishedDate: DateTime.now().plus({ weeks: 2 }).toISO(),
+  body: JSON.parse(
+    `[{"type":"paragraph","children":[{"text":"Published in the future articles don't show in results"}]}]`
+  ),
 }
 
 export const draftArticleData = {
@@ -49,12 +64,13 @@ export const searchTermArticleData = {
   slug: 'new-my-vector',
   category: 'InternalNews',
   status: 'Published',
-  publishedDate: new Date().toISOString(),
+  publishedDate: DateTime.now().toISO(),
   preview: 'This will match on the search term MyVector.',
 }
 
 export const testArticles = [
   publishedArticleData,
+  scheduledArticleData,
   draftArticleData,
   searchTermArticleData,
 ]

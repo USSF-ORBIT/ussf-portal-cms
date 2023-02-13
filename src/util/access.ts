@@ -160,3 +160,56 @@ export const articleStatusView: ItemViewFn = ({ session }) => {
 
   return 'read'
 }
+
+/* Document helpers */
+
+export const canCreateOrUpdateDocument: OperationAccessFn = ({ session }) => {
+  return (
+    session?.isAdmin ||
+    session?.role === USER_ROLES.AUTHOR ||
+    session?.role === USER_ROLES.MANAGER
+  )
+}
+
+export const canUpdateDocument: OperationFilterFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
+
+  if (session?.role === USER_ROLES.AUTHOR) {
+    return {
+      createdBy: { id: { equals: session.itemId } },
+    }
+  }
+  return false
+}
+
+export const canDeleteDocument: OperationAccessFn = ({ session }) => {
+  return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+}
+
+export const canCreateDocumentPage: OperationAccessFn = ({ session }) => {
+  return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+}
+
+export const documentCreateView: CreateViewFn = ({ session }) =>
+  canCreateOrUpdateDocument({ session }) ? 'edit' : 'hidden'
+
+export const documentItemView: ItemViewFn = ({ session, item }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
+
+  if (
+    session?.role === USER_ROLES.AUTHOR &&
+    item?.createdById === session.itemId
+  )
+    return 'edit'
+
+  return 'read'
+}
+
+export const documentPageCreateView: CreateViewFn = ({ session }) =>
+  canCreateDocumentPage({ session }) ? 'edit' : 'hidden'
+
+export const documentPageItemView: ItemViewFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
+
+  return 'read'
+}

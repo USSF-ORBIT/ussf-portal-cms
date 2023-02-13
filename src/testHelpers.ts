@@ -35,6 +35,7 @@ export const testConfig = config({
       serverRoute: {
         path: '/images',
       },
+
       storagePath: 'public/images',
     },
     // Because cms_images is a possibility, it needs to be passed
@@ -48,6 +49,24 @@ export const testConfig = config({
         path: '/images',
       },
       storagePath: 'public/images',
+    },
+    local_files: {
+      kind: 'local',
+      type: 'file',
+      generateUrl: (path: string) => `localhost:3001/files${path}`,
+      serverRoute: {
+        path: '/files',
+      },
+      storagePath: 'public/files',
+    },
+    cms_files: {
+      kind: 'local',
+      type: 'file',
+      generateUrl: (path: string) => `$localhost:3001/files${path}`,
+      serverRoute: {
+        path: '/files',
+      },
+      storagePath: 'public/files',
     },
   },
 })
