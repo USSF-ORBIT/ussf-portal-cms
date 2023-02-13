@@ -52,7 +52,7 @@ describe('Announcement schema', () => {
       await resetAnnouncements()
     })
 
-    it('cannot create an announcement', async () => {
+    test('cannot create an announcement', async () => {
       expect(
         userContext.query.Announcement.createOne({
           data: {
@@ -63,7 +63,7 @@ describe('Announcement schema', () => {
       ).rejects.toThrow(/Access denied: You cannot create that Announcement/)
     })
 
-    it('can query announcements', async () => {
+    test('can query announcements', async () => {
       const data = await userContext.query.Announcement.findMany({
         query: announcementQuery,
       })
@@ -71,7 +71,7 @@ describe('Announcement schema', () => {
       expect(data).toHaveLength(1)
     })
 
-    it('cannot update an announcement', async () => {
+    test('cannot update an announcement', async () => {
       expect(
         userContext.query.Announcement.updateOne({
           where: { id: testAnnouncement.id },
@@ -85,7 +85,7 @@ describe('Announcement schema', () => {
       )
     })
 
-    it('cannot delete an announcement', async () => {
+    test('cannot delete an announcement', async () => {
       expect(
         userContext.query.Announcement.deleteOne({
           where: { id: testAnnouncement.id },
@@ -101,7 +101,7 @@ describe('Announcement schema', () => {
       await resetAnnouncements()
     })
 
-    it('can create an announcement', async () => {
+    test('can create an announcement', async () => {
       const testAdminAnnouncement = {
         title: 'Admin Announcement',
       }
@@ -117,7 +117,7 @@ describe('Announcement schema', () => {
       })
     })
 
-    it('can query announcements', async () => {
+    test('can query announcements', async () => {
       const data = await adminContext.query.Announcement.findMany({
         query: announcementQuery,
       })
@@ -126,7 +126,7 @@ describe('Announcement schema', () => {
       expect(data[1]).toMatchObject(adminAnnouncement)
     })
 
-    it('can update an announcement', async () => {
+    test('can update an announcement', async () => {
       const data = await adminContext.query.Announcement.updateOne({
         where: { id: adminAnnouncement.id },
         data: {
@@ -141,7 +141,7 @@ describe('Announcement schema', () => {
       })
     })
 
-    it('can delete an announcement', async () => {
+    test('can delete an announcement', async () => {
       await adminContext.query.Announcement.deleteOne({
         where: { id: adminAnnouncement.id },
       })
@@ -160,7 +160,7 @@ describe('Announcement schema', () => {
       await resetAnnouncements()
     })
 
-    it('can create an announcement', async () => {
+    test('can create an announcement', async () => {
       const testAuthorAnnouncement = {
         title: 'Author Announcement',
         status: 'Draft',
@@ -175,7 +175,7 @@ describe('Announcement schema', () => {
       expect(authorAnnouncement).toMatchObject(testAuthorAnnouncement)
     })
 
-    it('can query announcements', async () => {
+    test('can query announcements', async () => {
       const data = await authorContext.query.Announcement.findMany({
         query: announcementQuery,
       })
@@ -183,7 +183,7 @@ describe('Announcement schema', () => {
       expect(data).toHaveLength(2)
     })
 
-    it('can update an announcement', async () => {
+    test('can update an announcement', async () => {
       const data = await authorContext.query.Announcement.updateOne({
         where: { id: authorAnnouncement.id },
         data: {
@@ -198,7 +198,7 @@ describe('Announcement schema', () => {
       })
     })
 
-    it('can delete an announcement it created', async () => {
+    test('can delete an announcement it created', async () => {
       await authorContext.query.Announcement.deleteOne({
         where: { id: authorAnnouncement.id },
       })
@@ -217,7 +217,7 @@ describe('Announcement schema', () => {
       await resetAnnouncements()
     })
 
-    it('can create an announcement', async () => {
+    test('can create an announcement', async () => {
       const testManagerAnnouncement = {
         title: 'Manager Announcement',
       }
@@ -229,7 +229,7 @@ describe('Announcement schema', () => {
       expect(managerAnnouncement).toMatchObject(testManagerAnnouncement)
     })
 
-    it('can query announcements', async () => {
+    test('can query announcements', async () => {
       const data = await managerContext.query.Announcement.findMany({
         query: announcementQuery,
       })
@@ -237,7 +237,7 @@ describe('Announcement schema', () => {
       expect(data).toHaveLength(2)
     })
 
-    it('can update an announcement', async () => {
+    test('can update an announcement', async () => {
       const data = await managerContext.query.Announcement.updateOne({
         where: { id: managerAnnouncement.id },
         data: {
@@ -252,7 +252,7 @@ describe('Announcement schema', () => {
       })
     })
 
-    it('can delete an announcement', async () => {
+    test('can delete an announcement', async () => {
       await managerContext.query.Announcement.deleteOne({
         where: { id: managerAnnouncement.id },
       })
