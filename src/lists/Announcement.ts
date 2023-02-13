@@ -72,6 +72,19 @@ const Announcement = list(
             fieldMode: articleStatusView,
           },
         },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.publishedDate &&
+              (inputData.status !== ANNOUNCEMENT_STATUSES.PUBLISHED ||
+                item?.status !== ANNOUNCEMENT_STATUSES.PUBLISHED)
+            ) {
+              // Set status if publishedDate is being changed and status is not changed or not already Published
+              return ANNOUNCEMENT_STATUSES.PUBLISHED
+            }
+            return resolvedData.status
+          },
+        },
       }),
       publishedDate: timestamp({
         access: {
