@@ -2,13 +2,16 @@
 # Node image variant name explanations: "bullseye" is the codeword for Debian 11, and "slim" only contains the minimal packages needed to run Node
 FROM node:18.13.0-bullseye-slim AS builder
 
-WORKDIR /app
-
-RUN \
-  --mount=type=cache,target=/var/cache/apt \
-  apt-get update \
+RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends libc6 yarn zlib1g build-essential checkinstall zlib1g-dev curl ca-certificates
+  && apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    curl \
+    libc6 \
+    yarn \
+    zlib1g \
+    zlib1g-dev
 
 RUN \
   cd /usr/local/src/ \
@@ -22,6 +25,8 @@ RUN \
   && ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl \
   && cp -v -r --preserve=links /usr/local/ssl/lib*/* /lib/*-linux-*/ \
   && ldconfig -v
+
+WORKDIR /app
 
 COPY . .
 
