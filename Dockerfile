@@ -24,7 +24,8 @@ RUN \
   && make install \
   && ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl \
   && cp -v -r --preserve=links /usr/local/ssl/lib*/* /lib/*-linux-*/ \
-  && ldconfig -v
+  && ldconfig -v \
+  && rm -r /usr/local/src/openssl-3.0.7 /usr/local/src/openssl-3.0.7.tar.gz
 
 WORKDIR /app
 
