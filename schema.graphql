@@ -608,6 +608,7 @@ type Article {
   id: ID!
   category: ArticleCategoryType
   status: ArticleStatusType
+  articlePreviewUrl: JSON
   publishedDate: DateTime
   archivedDate: DateTime
   slug: String
