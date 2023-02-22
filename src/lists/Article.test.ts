@@ -41,6 +41,9 @@ describe('Article schema', () => {
     })
   }
 
+  // mock out the PORTAL_URL for unit tests
+  process.env.PORTAL_URL = 'http://example.com'
+
   // Set up test environment, seed data, and return contexts
   beforeAll(
     async () =>
@@ -268,7 +271,7 @@ describe('Article schema', () => {
         expect(originalArticle.publishedDate).toBe(null)
         expect(originalArticle.archivedDate).toBe(null)
         expect(JSON.parse(originalArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://localhost:3000/articles/${originalArticle.slug}`,
+          articlePreviewUrl: `http://example.com/articles/${originalArticle.slug}`,
           label: 'Preview Article',
           isPublished: false,
         })
@@ -290,7 +293,7 @@ describe('Article schema', () => {
         })
 
         expect(JSON.parse(publishedArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://localhost:3000/articles/${publishedArticle.slug}`,
+          articlePreviewUrl: `http://example.com/articles/${publishedArticle.slug}`,
           label: 'View Article',
           isPublished: true,
         })
@@ -312,7 +315,7 @@ describe('Article schema', () => {
         })
 
         expect(JSON.parse(archivedArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://localhost:3000/articles/${archivedArticle.slug}`,
+          articlePreviewUrl: `http://example.com/articles/${archivedArticle.slug}`,
           label: 'Preview Article',
           isPublished: false,
         })
@@ -704,7 +707,7 @@ describe('Article schema', () => {
         expect(publishedArticle.archivedDate).toBe(null)
 
         expect(JSON.parse(publishedArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://localhost:3000/articles/${testManagerArticle.slug}`,
+          articlePreviewUrl: `http://example.com/articles/${testManagerArticle.slug}`,
           label: 'Preview Article',
           isPublished: false,
         })
