@@ -70,7 +70,7 @@
     "undici": "5.20.0"
   },
   "engines": {
-    "node": "18.13.0"
+    "node": "18.14.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
