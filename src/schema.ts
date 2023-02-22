@@ -11,6 +11,8 @@ import Announcement from './lists/Announcement'
 import Document from './lists/Document'
 import DocumentSection from './lists/DocumentSection'
 import DocumentsPage from './lists/DocumentsPage'
+import SecondaryNav from './lists/SecondaryNav'
+import NavLink from './lists/NavLink'
 
 export const lists = {
   Event,
@@ -26,4 +28,6 @@ export const lists = {
   Document,
   DocumentSection,
   DocumentsPage,
+  SecondaryNav,
+  NavLink,
 }

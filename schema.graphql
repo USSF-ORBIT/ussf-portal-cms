@@ -1103,6 +1103,119 @@ input DocumentSectionRelateToManyForCreateInput {
   connect: [DocumentSectionWhereUniqueInput!]
 }
 
+type SecondaryNav {
+  id: ID!
+  links(where: NavLinkWhereInput! = {}, orderBy: [NavLinkOrderByInput!]! = [], take: Int, skip: Int! = 0): [NavLink!]
+  linksCount(where: NavLinkWhereInput! = {}): Int
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input SecondaryNavWhereUniqueInput {
+  id: ID
+}
+
+input SecondaryNavWhereInput {
+  AND: [SecondaryNavWhereInput!]
+  OR: [SecondaryNavWhereInput!]
+  NOT: [SecondaryNavWhereInput!]
+  id: IDFilter
+  links: NavLinkManyRelationFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input NavLinkManyRelationFilter {
+  every: NavLinkWhereInput
+  some: NavLinkWhereInput
+  none: NavLinkWhereInput
+}
+
+input SecondaryNavOrderByInput {
+  id: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input SecondaryNavUpdateInput {
+  links: NavLinkRelateToManyForUpdateInput
+}
+
+input NavLinkRelateToManyForUpdateInput {
+  disconnect: [NavLinkWhereUniqueInput!]
+  set: [NavLinkWhereUniqueInput!]
+  create: [NavLinkCreateInput!]
+  connect: [NavLinkWhereUniqueInput!]
+}
+
+input SecondaryNavUpdateArgs {
+  where: SecondaryNavWhereUniqueInput! = {id: 1}
+  data: SecondaryNavUpdateInput!
+}
+
+input SecondaryNavCreateInput {
+  links: NavLinkRelateToManyForCreateInput
+}
+
+input NavLinkRelateToManyForCreateInput {
+  create: [NavLinkCreateInput!]
+  connect: [NavLinkWhereUniqueInput!]
+}
+
+type NavLink {
+  id: ID!
+  url: String
+  label: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input NavLinkWhereUniqueInput {
+  id: ID
+}
+
+input NavLinkWhereInput {
+  AND: [NavLinkWhereInput!]
+  OR: [NavLinkWhereInput!]
+  NOT: [NavLinkWhereInput!]
+  id: IDFilter
+  url: StringFilter
+  label: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input NavLinkOrderByInput {
+  id: OrderDirection
+  url: OrderDirection
+  label: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input NavLinkUpdateInput {
+  url: String
+  label: String
+}
+
+input NavLinkUpdateArgs {
+  where: NavLinkWhereUniqueInput!
+  data: NavLinkUpdateInput!
+}
+
+input NavLinkCreateInput {
+  url: String
+  label: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1187,6 +1300,18 @@ type Mutation {
   updateDocumentsPages(data: [DocumentsPageUpdateArgs!]!): [DocumentsPage]
   deleteDocumentsPage(where: DocumentsPageWhereUniqueInput!): DocumentsPage
   deleteDocumentsPages(where: [DocumentsPageWhereUniqueInput!]!): [DocumentsPage]
+  createSecondaryNav(data: SecondaryNavCreateInput!): SecondaryNav
+  createSecondaryNavs(data: [SecondaryNavCreateInput!]!): [SecondaryNav]
+  updateSecondaryNav(where: SecondaryNavWhereUniqueInput! = {id: 1}, data: SecondaryNavUpdateInput!): SecondaryNav
+  updateSecondaryNavs(data: [SecondaryNavUpdateArgs!]!): [SecondaryNav]
+  deleteSecondaryNav(where: SecondaryNavWhereUniqueInput! = {id: 1}): SecondaryNav
+  deleteSecondaryNavs(where: [SecondaryNavWhereUniqueInput!]!): [SecondaryNav]
+  createNavLink(data: NavLinkCreateInput!): NavLink
+  createNavLinks(data: [NavLinkCreateInput!]!): [NavLink]
+  updateNavLink(where: NavLinkWhereUniqueInput!, data: NavLinkUpdateInput!): NavLink
+  updateNavLinks(data: [NavLinkUpdateArgs!]!): [NavLink]
+  deleteNavLink(where: NavLinkWhereUniqueInput!): NavLink
+  deleteNavLinks(where: [NavLinkWhereUniqueInput!]!): [NavLink]
   endSession: Boolean!
 }
 
@@ -1230,6 +1355,12 @@ type Query {
   documentsPages(where: DocumentsPageWhereInput! = {}, orderBy: [DocumentsPageOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentsPage!]
   documentsPage(where: DocumentsPageWhereUniqueInput!): DocumentsPage
   documentsPagesCount(where: DocumentsPageWhereInput! = {}): Int
+  secondaryNavs(where: SecondaryNavWhereInput! = {id: {equals: 1}}, orderBy: [SecondaryNavOrderByInput!]! = [], take: Int, skip: Int! = 0): [SecondaryNav!]
+  secondaryNav(where: SecondaryNavWhereUniqueInput! = {id: 1}): SecondaryNav
+  secondaryNavsCount(where: SecondaryNavWhereInput! = {id: {equals: 1}}): Int
+  navLinks(where: NavLinkWhereInput! = {}, orderBy: [NavLinkOrderByInput!]! = [], take: Int, skip: Int! = 0): [NavLink!]
+  navLink(where: NavLinkWhereUniqueInput!): NavLink
+  navLinksCount(where: NavLinkWhereInput! = {}): Int
   keystone: KeystoneMeta!
   search(query: String!): [SearchResultItem]
   authenticatedItem: AuthenticatedItem

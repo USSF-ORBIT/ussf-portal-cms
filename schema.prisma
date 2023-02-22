@@ -70,6 +70,10 @@ model User {
   from_DocumentSection_createdBy DocumentSection[] @relation("DocumentSection_createdBy")
   from_DocumentsPage_updatedBy   DocumentsPage[]   @relation("DocumentsPage_updatedBy")
   from_DocumentsPage_createdBy   DocumentsPage[]   @relation("DocumentsPage_createdBy")
+  from_SecondaryNav_updatedBy    SecondaryNav[]    @relation("SecondaryNav_updatedBy")
+  from_SecondaryNav_createdBy    SecondaryNav[]    @relation("SecondaryNav_createdBy")
+  from_NavLink_updatedBy         NavLink[]         @relation("NavLink_updatedBy")
+  from_NavLink_createdBy         NavLink[]         @relation("NavLink_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -268,6 +272,36 @@ model DocumentsPage {
   createdById String?           @map("createdBy")
   updatedAt   DateTime?         @updatedAt
   createdAt   DateTime?         @default(now())
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model SecondaryNav {
+  id          Int       @id
+  links       NavLink[] @relation("SecondaryNav_links")
+  updatedBy   User?     @relation("SecondaryNav_updatedBy", fields: [updatedById], references: [id])
+  updatedById String?   @map("updatedBy")
+  createdBy   User?     @relation("SecondaryNav_createdBy", fields: [createdById], references: [id])
+  createdById String?   @map("createdBy")
+  updatedAt   DateTime? @updatedAt
+  createdAt   DateTime? @default(now())
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model NavLink {
+  id                      String         @id @default(cuid())
+  url                     String         @default("")
+  label                   String         @default("")
+  updatedBy               User?          @relation("NavLink_updatedBy", fields: [updatedById], references: [id])
+  updatedById             String?        @map("updatedBy")
+  createdBy               User?          @relation("NavLink_createdBy", fields: [createdById], references: [id])
+  createdById             String?        @map("createdBy")
+  updatedAt               DateTime?      @updatedAt
+  createdAt               DateTime?      @default(now())
+  from_SecondaryNav_links SecondaryNav[] @relation("SecondaryNav_links")
 
   @@index([updatedById])
   @@index([createdById])
