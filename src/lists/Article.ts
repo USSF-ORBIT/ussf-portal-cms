@@ -159,7 +159,7 @@ const Article = list(
           itemView: {
             fieldMode: () => 'read',
           },
-          views: './src/article-preview-button/view.tsx',
+          views: './src/article-preview-button/views.tsx',
         },
       }),
       publishedDate: timestamp({

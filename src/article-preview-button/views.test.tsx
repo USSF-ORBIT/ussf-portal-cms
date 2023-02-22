@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react'
 
 import { FieldProps } from '@keystone-6/core/types'
 
-import { Field, controller } from './view'
+import { Field, controller } from './views'
 
 test('returns nothing if there is no data', async () => {
   // I'm only testing my custom view, I don't see a need to create
