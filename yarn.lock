@@ -3848,17 +3848,17 @@
     "@babel/core" "^7.16.0"
     "@babel/runtime" "^7.16.3"
 
-"@keystone-6/auth@5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@keystone-6/auth/-/auth-5.0.0.tgz#379a0c1bcab705a4ac19e9b33991b2b56866ea65"
-  integrity sha512-1yh3BN88ceuvXG2jt8kZ4yvLoIQD556kU+Hl8wWvHDhUnZwbnfXtUODVXqOYLxB/pt+4nQEDEqdcZ0s5hdbOiw==
+"@keystone-6/auth@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@keystone-6/auth/-/auth-6.0.0.tgz#b3cf9c8eaa6ebf8167e1460839b9aaa3371c9d42"
+  integrity sha512-88oWAQfTZok4vHQgB0lGG94yu3nhMBRR4hzvBYwEUev8hZJZfKFdTacSeS0130u3lSpmJqJOeUJhaCeeYOgOLQ==
   dependencies:
     "@babel/runtime" "^7.16.3"
-    "@keystone-ui/button" "^7.0.1"
-    "@keystone-ui/core" "^5.0.1"
-    "@keystone-ui/fields" "^7.1.1"
-    "@keystone-ui/loading" "^6.0.1"
-    "@keystone-ui/notice" "^6.0.1"
+    "@keystone-ui/button" "^7.0.2"
+    "@keystone-ui/core" "^5.0.2"
+    "@keystone-ui/fields" "^7.1.2"
+    "@keystone-ui/loading" "^6.0.2"
+    "@keystone-ui/notice" "^6.0.2"
     cross-fetch "^3.1.4"
     fast-deep-equal "^3.1.3"
     graphql "^16.6.0"
@@ -4064,7 +4064,7 @@
     react-remove-scroll "^2.4.3"
     react-transition-group "^4.4.2"
 
-"@keystone-ui/notice@^6.0.1":
+"@keystone-ui/notice@^6.0.1", "@keystone-ui/notice@^6.0.2":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@keystone-ui/notice/-/notice-6.0.2.tgz#e094b0f26c3695d35eb89447b96ee2e2fbc8c69a"
   integrity sha512-SodZehvF0a5GmMx3LGXJW4i3QtNDTD9tnrOV+5EUb21f352z6kUVL+UxS9439ZnGvgyWETPYw/ZsGu19lD/2Ag==
