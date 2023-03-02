@@ -1,10 +1,11 @@
-import { list } from '@keystone-6/core'
+import { list, graphql } from '@keystone-6/core'
 import {
   image,
   relationship,
   select,
   text,
   timestamp,
+  virtual,
 } from '@keystone-6/core/fields'
 import { document } from '@keystone-6/fields-document'
 import { DateTime } from 'luxon'
@@ -133,6 +134,34 @@ const Article = list(
           },
         },
       }),
+      articlePreviewUrl: virtual({
+        // This field is a bit of a work around it uses the resolve function of a virtual
+        // field to create a JSON payload used by the custom view defined to display a
+        // Preview button that opens a new tab to the article being modified.
+        field: graphql.field({
+          type: graphql.JSON,
+          resolve(item) {
+            const isPublished =
+              item.status === ARTICLE_STATUSES.PUBLISHED &&
+              (item.publishedDate as DateTime) <= DateTime.now()
+            const label = isPublished ? 'View Article' : 'Preview Article'
+            return JSON.stringify({
+              articlePreviewUrl: `${process.env.PORTAL_URL}/articles/${item.slug}`,
+              label,
+              isPublished,
+            })
+          },
+        }),
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+          views: './src/article-preview-button/views.tsx',
+        },
+      }),
       publishedDate: timestamp({
         access: {
           create: () => false,
@@ -150,13 +179,12 @@ const Article = list(
           resolveInput: async ({ inputData, item, resolvedData }) => {
             if (
               inputData.status === ARTICLE_STATUSES.PUBLISHED &&
-              item?.status !== ARTICLE_STATUSES.PUBLISHED
+              item?.status !== ARTICLE_STATUSES.PUBLISHED &&
+              !inputData.publishedDate
             ) {
               // Set publishedDate if status is being changed to "Published"
               // only set publishedDate if they didn't set one
-              if (!inputData.publishedDate) {
-                return DateTime.now().toJSDate()
-              }
+              return DateTime.now().toJSDate()
             }
             return resolvedData.publishedDate
           },
@@ -207,7 +235,6 @@ const Article = list(
           },
         },
       }),
-
       slug: text({
         isIndexed: 'unique',
         validation: {

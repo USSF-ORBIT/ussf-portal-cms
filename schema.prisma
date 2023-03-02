@@ -209,10 +209,10 @@ model Article {
 model Announcement {
   id            String                 @id @default(cuid())
   title         String                 @default("")
-  body          Json                   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   status        AnnouncementStatusType @default(Draft)
   publishedDate DateTime?
   archivedDate  DateTime?
+  body          Json                   @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   updatedBy     User?                  @relation("Announcement_updatedBy", fields: [updatedById], references: [id])
   updatedById   String?                @map("updatedBy")
   createdBy     User?                  @relation("Announcement_createdBy", fields: [createdById], references: [id])

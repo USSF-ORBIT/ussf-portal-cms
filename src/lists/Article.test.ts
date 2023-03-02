@@ -16,6 +16,7 @@ describe('Article schema', () => {
   let adminArticle: Record<string, any>
 
   const articleQuery = `id slug title preview status category`
+  const articleQueryWithDates = `${articleQuery} publishedDate archivedDate`
 
   const testArticleData = {
     slug: 'test-article',
@@ -39,6 +40,9 @@ describe('Article schema', () => {
       query: articleQuery,
     })
   }
+
+  // mock out the PORTAL_URL for unit tests
+  process.env.PORTAL_URL = 'http://example.com'
 
   // Set up test environment, seed data, and return contexts
   beforeAll(
@@ -256,7 +260,7 @@ describe('Article schema', () => {
       })
 
       test('can update an article’s status', async () => {
-        const statusQuery = `${articleQuery} publishedDate archivedDate`
+        const statusQuery = `${articleQueryWithDates} articlePreviewUrl`
 
         const originalArticle = await managerContext.query.Article.findOne({
           where: { id: managerArticle.id },
@@ -266,6 +270,11 @@ describe('Article schema', () => {
         expect(originalArticle.status).toEqual('Draft')
         expect(originalArticle.publishedDate).toBe(null)
         expect(originalArticle.archivedDate).toBe(null)
+        expect(JSON.parse(originalArticle.articlePreviewUrl)).toMatchObject({
+          articlePreviewUrl: `http://example.com/articles/${originalArticle.slug}`,
+          label: 'Preview Article',
+          isPublished: false,
+        })
 
         const publishedArticle = await managerContext.query.Article.updateOne({
           where: { id: managerArticle.id },
@@ -283,6 +292,12 @@ describe('Article schema', () => {
           archivedDate: null,
         })
 
+        expect(JSON.parse(publishedArticle.articlePreviewUrl)).toMatchObject({
+          articlePreviewUrl: `http://example.com/articles/${publishedArticle.slug}`,
+          label: 'View Article',
+          isPublished: true,
+        })
+
         const archivedArticle = await managerContext.query.Article.updateOne({
           where: { id: managerArticle.id },
           data: {
@@ -297,6 +312,12 @@ describe('Article schema', () => {
           status: 'Archived',
           publishedDate: expect.any(String),
           archivedDate: expect.any(String),
+        })
+
+        expect(JSON.parse(archivedArticle.articlePreviewUrl)).toMatchObject({
+          articlePreviewUrl: `http://example.com/articles/${archivedArticle.slug}`,
+          label: 'Preview Article',
+          isPublished: false,
         })
       })
 
@@ -601,7 +622,6 @@ describe('Article schema', () => {
         query: articleQuery,
       })
 
-      const query = `${articleQuery} publishedDate archivedDate`
       const invalidPastDate = DateTime.now().minus({ days: 1 })
       await expect(
         managerContext.query.Article.updateOne({
@@ -610,7 +630,7 @@ describe('Article schema', () => {
             status: 'Published',
             publishedDate: invalidPastDate.toISO(),
           },
-          query,
+          query: articleQueryWithDates,
         })
       ).rejects.toThrow(/Published date cannot be in the past/)
     })
@@ -629,13 +649,12 @@ describe('Article schema', () => {
         query: articleQuery,
       })
 
-      const query = `${articleQuery} publishedDate archivedDate`
       const publishedArticle = await managerContext.query.Article.updateOne({
         where: { id: managerArticle.id },
         data: {
           status: 'Published',
         },
-        query,
+        query: articleQueryWithDates,
       })
 
       const actualPublishedDate = DateTime.fromISO(
@@ -664,13 +683,14 @@ describe('Article schema', () => {
           category: 'ORBITBlog',
         }
 
+        const query = `${articleQueryWithDates} articlePreviewUrl`
+
         // Create an article
         const managerArticle = await managerContext.query.Article.createOne({
           data: testManagerArticle,
-          query: articleQuery,
+          query,
         })
 
-        const query = `${articleQuery} publishedDate archivedDate`
         const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
         const publishedArticle = await managerContext.query.Article.updateOne({
           where: { id: managerArticle.id },
@@ -685,6 +705,12 @@ describe('Article schema', () => {
           expectedFutureDate.toJSDate().toISOString()
         )
         expect(publishedArticle.archivedDate).toBe(null)
+
+        expect(JSON.parse(publishedArticle.articlePreviewUrl)).toMatchObject({
+          articlePreviewUrl: `http://example.com/articles/${testManagerArticle.slug}`,
+          label: 'Preview Article',
+          isPublished: false,
+        })
       })
 
       test('can set publishedDate in the future', async () => {
@@ -701,7 +727,6 @@ describe('Article schema', () => {
           query: articleQuery,
         })
 
-        const query = `${articleQuery} publishedDate archivedDate`
         const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
         const publishedArticle = await managerContext.query.Article.updateOne({
           where: { id: managerArticle.id },
@@ -709,7 +734,7 @@ describe('Article schema', () => {
             status: 'Published',
             publishedDate: expectedFutureDate.toISO(),
           },
-          query,
+          query: articleQueryWithDates,
         })
 
         expect(publishedArticle.status).toEqual('Published')
@@ -735,14 +760,13 @@ describe('Article schema', () => {
           query: articleQuery,
         })
 
-        const query = `${articleQuery} publishedDate archivedDate`
         const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
         const publishedArticle = await adminContext.query.Article.updateOne({
           where: { id: adminArticle.id },
           data: {
             publishedDate: expectedFutureDate.toISO(),
           },
-          query,
+          query: articleQueryWithDates,
         })
 
         expect(publishedArticle.status).toEqual('Published')
@@ -766,7 +790,6 @@ describe('Article schema', () => {
           query: articleQuery,
         })
 
-        const query = `${articleQuery} publishedDate archivedDate`
         const expectedFutureDate = DateTime.now().plus({ weeks: 3 })
         const publishedArticle = await adminContext.query.Article.updateOne({
           where: { id: adminArticle.id },
@@ -774,7 +797,7 @@ describe('Article schema', () => {
             status: 'Published',
             publishedDate: expectedFutureDate.toISO(),
           },
-          query,
+          query: articleQueryWithDates,
         })
 
         expect(publishedArticle.status).toEqual('Published')
