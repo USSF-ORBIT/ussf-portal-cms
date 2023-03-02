@@ -14,5 +14,6 @@ module.exports = {
       lines: 50,
     },
   },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   reporters: ['default', 'github-actions'],
 }
