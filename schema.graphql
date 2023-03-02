@@ -608,6 +608,9 @@ type Article {
   id: ID!
   category: ArticleCategoryType
   status: ArticleStatusType
+  articlePreviewUrl: JSON
+  publishedDate: DateTime
+  archivedDate: DateTime
   slug: String
   title: String
   preview: String
@@ -615,8 +618,6 @@ type Article {
   body: Article_body_Document
   searchBody: String
   keywords: String
-  publishedDate: DateTime
-  archivedDate: DateTime
   byline: Byline
   location: Location
   labels(where: LabelWhereInput! = {}, orderBy: [LabelOrderByInput!]! = [], take: Int, skip: Int! = 0): [Label!]
@@ -672,13 +673,13 @@ input ArticleWhereInput {
   id: IDFilter
   category: ArticleCategoryTypeNullableFilter
   status: ArticleStatusTypeNullableFilter
+  publishedDate: DateTimeNullableFilter
+  archivedDate: DateTimeNullableFilter
   slug: StringFilter
   title: StringFilter
   preview: StringFilter
   searchBody: StringFilter
   keywords: StringFilter
-  publishedDate: DateTimeNullableFilter
-  archivedDate: DateTimeNullableFilter
   byline: BylineWhereInput
   location: LocationWhereInput
   labels: LabelManyRelationFilter
@@ -719,13 +720,13 @@ input ArticleOrderByInput {
   id: OrderDirection
   category: OrderDirection
   status: OrderDirection
+  publishedDate: OrderDirection
+  archivedDate: OrderDirection
   slug: OrderDirection
   title: OrderDirection
   preview: OrderDirection
   searchBody: OrderDirection
   keywords: OrderDirection
-  publishedDate: OrderDirection
-  archivedDate: OrderDirection
   updatedAt: OrderDirection
   createdAt: OrderDirection
 }
@@ -733,6 +734,8 @@ input ArticleOrderByInput {
 input ArticleUpdateInput {
   category: ArticleCategoryType
   status: ArticleStatusType
+  publishedDate: DateTime
+  archivedDate: DateTime
   slug: String
   title: String
   preview: String
@@ -740,8 +743,6 @@ input ArticleUpdateInput {
   body: JSON
   searchBody: String
   keywords: String
-  publishedDate: DateTime
-  archivedDate: DateTime
   byline: BylineRelateToOneForUpdateInput
   location: LocationRelateToOneForUpdateInput
   labels: LabelRelateToManyForUpdateInput
@@ -789,6 +790,8 @@ input ArticleUpdateArgs {
 input ArticleCreateInput {
   category: ArticleCategoryType
   status: ArticleStatusType
+  publishedDate: DateTime
+  archivedDate: DateTime
   slug: String
   title: String
   preview: String
@@ -796,8 +799,6 @@ input ArticleCreateInput {
   body: JSON
   searchBody: String
   keywords: String
-  publishedDate: DateTime
-  archivedDate: DateTime
   byline: BylineRelateToOneForCreateInput
   location: LocationRelateToOneForCreateInput
   labels: LabelRelateToManyForCreateInput
@@ -827,24 +828,24 @@ input TagRelateToManyForCreateInput {
 type Announcement {
   id: ID!
   title: String
-  body: Announcement_body_Document
   status: AnnouncementStatusType
   publishedDate: DateTime
   archivedDate: DateTime
+  body: Announcement_body_Document
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
 }
 
-type Announcement_body_Document {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
 enum AnnouncementStatusType {
   Draft
   Published
   Archived
+}
+
+type Announcement_body_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 input AnnouncementWhereUniqueInput {
@@ -885,10 +886,10 @@ input AnnouncementOrderByInput {
 
 input AnnouncementUpdateInput {
   title: String
-  body: JSON
   status: AnnouncementStatusType
   publishedDate: DateTime
   archivedDate: DateTime
+  body: JSON
 }
 
 input AnnouncementUpdateArgs {
@@ -898,10 +899,10 @@ input AnnouncementUpdateArgs {
 
 input AnnouncementCreateInput {
   title: String
-  body: JSON
   status: AnnouncementStatusType
   publishedDate: DateTime
   archivedDate: DateTime
+  body: JSON
 }
 
 type Document {

@@ -1,4 +1,5 @@
 import { mergeSchemas } from '@graphql-tools/schema'
+import { DateTime } from 'luxon'
 
 // typeDefs for custom functionality
 // Any GraphQL extensions can be added here
@@ -151,6 +152,9 @@ export const extendGraphqlSchema = (schema: any) =>
                   },
                 ],
                 status: 'Published',
+                publishedDate: {
+                  lte: DateTime.now().toJSDate(),
+                },
                 category: 'InternalNews',
               },
 

@@ -1,4 +1,4 @@
-import { validateFile, resolveTitleInput } from '../lists/Document'
+import { validateFile, resolveTitleInput } from './Document'
 
 describe('Document', () => {
   describe('validateFile', () => {
