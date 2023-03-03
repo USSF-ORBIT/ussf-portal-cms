@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.6.0...1.7.0) (2023-02-23)
+
+
+### Features
+
+* add article scheduler ([#258](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/258)) ([0c56ef9](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/0c56ef99a6a928388c7c6161a1d699d55c200d2a))
+* Announcement scheduler ([#262](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/262)) ([f1ff4b5](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/f1ff4b5e0e21e5b39eccf1bf0755e95a9b88e75d))
+* support preview of unpublished articles by keystone cms users ([#267](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/267)) ([b1d0317](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/b1d0317056f39778b8d85aa411dd6fc2d82f729d))
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#88](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/88)) ([dd24110](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/dd2411070c2103391e2074a4d2c611fff51d4fd0))
+
 ## [1.6.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.5.3...1.6.0) (2023-02-08)
 
 
