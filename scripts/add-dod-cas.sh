@@ -3,15 +3,15 @@
 
 
     # Location of bundle from DISA site
-    bundle=https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip
+    bundle=https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/unclass-certificates_pkcs7_DoD.zip
 
     # Extract the bundle
     cd /usr/local/share/ca-certificates
     wget $bundle
-    unzip certificates_pkcs7_DoD.zip
+    unzip unclass-certificates_pkcs7_DoD.zip
 
     # Convert the PKCS#7 bundle into individual PEM files
-    openssl pkcs7 -print_certs -in Certificates_PKCS7_v5.9_DoD/*.pem.p7b |
+    openssl pkcs7 -print_certs -in certificates_pkcs7_v5_11_dod/*_pem.p7b |
         awk 'BEGIN {c=0} /subject=/ {c++} {print > "cert." c ".pem"}'
 
     # Rename the files based on the CA name
@@ -25,4 +25,4 @@
     # update certificate stores
     update-ca-certificates
 
-    rm certificates_pkcs7_DoD.zip
+    rm unclass-certificates_pkcs7_DoD.zip
