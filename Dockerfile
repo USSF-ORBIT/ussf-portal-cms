@@ -15,17 +15,17 @@ RUN apt-get update \
 
 RUN \
   cd /usr/local/src/ \
-  && curl -SL https://www.openssl.org/source/openssl-3.0.7.tar.gz > openssl-3.0.7.tar.gz \
-  && echo "83049d042a260e696f62406ac5c08bf706fd84383f945cf21bd61e9ed95c396e /usr/local/src/openssl-3.0.7.tar.gz" | sha256sum --check --status \
-  && tar -xf openssl-3.0.7.tar.gz \
-  && cd openssl-3.0.7 \
+  && curl -SL https://github.com/openssl/openssl/releases/download/openssl-3.0.8/openssl-3.0.8.tar.gz > openssl-3.0.8.tar.gz \
+  && echo "6c13d2bf38fdf31eac3ce2a347073673f5d63263398f1f69d0df4a41253e4b3e /usr/local/src/openssl-3.0.8.tar.gz" | sha256sum --check --status \
+  && tar -xf openssl-3.0.8.tar.gz \
+  && cd openssl-3.0.8 \
   && ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib \
   && make \
   && make install \
   && ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl \
   && cp -v -r --preserve=links /usr/local/ssl/lib*/* /lib/*-linux-*/ \
   && ldconfig -v \
-  && rm -r /usr/local/src/openssl-3.0.7 /usr/local/src/openssl-3.0.7.tar.gz
+  && rm -r /usr/local/src/openssl-3.0.8 /usr/local/src/openssl-3.0.8.tar.gz
 
 WORKDIR /app
 
