@@ -4,17 +4,19 @@ import {
   component,
   fields,
 } from '@keystone-6/fields-document/component-blocks'
+import { getYouTubeEmbedId } from '../util/articleUtils'
 
 export const componentBlocks = {
   embedVideo: component({
     preview: (props) => {
+      const embedId = getYouTubeEmbedId(props.fields.link.value)
       return (
         <NotEditable>
           <iframe
             title={props.fields.videoTitle.value}
             width="420"
             height="315"
-            src={`https://youtube.com/embed/${props.fields.link.value}`}></iframe>
+            src={`https://youtube.com/embed/${embedId}`}></iframe>
         </NotEditable>
       )
     },
@@ -24,7 +26,7 @@ export const componentBlocks = {
         label: 'Title',
       }),
       link: fields.text({
-        label: 'Insert link',
+        label: 'YouTube Video URL',
       }),
     },
   }),
