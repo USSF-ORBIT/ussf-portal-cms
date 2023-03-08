@@ -1,6 +1,6 @@
 export const getYouTubeEmbedId = (url: string) => {
   let embedId = ''
-  const parsedUrl = (url || '')
+  const parsedUrl = url
     .replace(/(>|<)/gi, '')
     .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)
   if (parsedUrl[2] !== undefined) {

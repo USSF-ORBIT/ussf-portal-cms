@@ -4,7 +4,7 @@ import {
   component,
   fields,
 } from '@keystone-6/fields-document/component-blocks'
-import { getYouTubeEmbedId } from '../util/articleUtils'
+import { getYouTubeEmbedId } from '../util/getEmbedId'
 
 export const componentBlocks = {
   embedVideo: component({

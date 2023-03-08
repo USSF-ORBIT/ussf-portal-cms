@@ -23,7 +23,6 @@ import {
 import { slugify } from '../util/formatting'
 import { isLocalStorage } from '../util/getStorage'
 import { componentBlocks } from '../components/embedVideo'
-import { getYouTubeEmbedId } from '../util/articleUtils'
 
 // NOTE:
 // Disable the warning, this regex is only run after checking the max length
