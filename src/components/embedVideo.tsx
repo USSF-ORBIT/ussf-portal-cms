@@ -20,7 +20,7 @@ export const componentBlocks = {
         </NotEditable>
       )
     },
-    label: 'Embed Video',
+    label: 'Embed YouTube Video',
     schema: {
       videoTitle: fields.text({
         label: 'Title',
