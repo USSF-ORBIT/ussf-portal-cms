@@ -22,6 +22,7 @@ import {
 } from '../util/access'
 import { slugify } from '../util/formatting'
 import { isLocalStorage } from '../util/getStorage'
+import { componentBlocks } from '../components/embedVideo'
 
 // NOTE:
 // Disable the warning, this regex is only run after checking the max length
@@ -296,6 +297,10 @@ const Article = list(
         formatting: true,
         dividers: true,
         links: true,
+        ui: {
+          views: './src/components/embedVideo',
+        },
+        componentBlocks,
       }),
       searchBody: text({
         ui: {
@@ -314,7 +319,7 @@ const Article = list(
               parseSearchBody(resolvedData.body, results)
               return results.join(' ')
             }
-            return resolvedData.body //this doesn't make sense, temp fix
+            return resolvedData.body
           },
         },
       }),

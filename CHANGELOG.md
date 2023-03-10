@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.7.0...1.8.0) (2023-03-09)
+
+
+### Features
+
+* Add ability to embed video into an article ([#260](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/260)) ([158ca0e](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/158ca0e5ffdc3bdfebf4eecabe7e51748e0404ec))
+
 ## [1.7.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.6.0...1.7.0) (2023-02-23)
 
 
