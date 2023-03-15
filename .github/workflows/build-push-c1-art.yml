@@ -1,11 +1,8 @@
 name: Docker Build Main Push C1 Artifactory
 
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - '**.md**'
-    branches: [main]
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
