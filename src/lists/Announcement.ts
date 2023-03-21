@@ -12,7 +12,7 @@ import {
   articleStatusView,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
-import { componentBlocks } from '../components/component-blocks'
+import { componentBlocks } from '../components/callToAction'
 
 const Announcement = list(
   withTracking({
@@ -170,7 +170,7 @@ const Announcement = list(
         },
         links: true,
         ui: {
-          views: './src/components/component-blocks',
+          views: './src/components/callToAction',
         },
         componentBlocks,
       }),
