@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.8.0...1.8.1) (2023-03-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @keystone-6/fields-document to v5.0.2 ([#281](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/281)) ([aaca0a6](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/aaca0a6ede262b731a78a4bd9a117b979f8f797d))
+
 ## [1.8.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.7.0...1.8.0) (2023-03-09)
 
 
