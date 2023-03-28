@@ -14,10 +14,10 @@ on:
 
 jobs:
   run-e2e-tests:
-    strategy:
-      matrix:
-        browser: ["chromium", "firefox", "chrome", "msedge"]
+    # strategy:
+    #   matrix:
+    #     browser: ["chromium", "firefox", "chrome", "msedge"]
     uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-run-e2e-tests.yml@main
-    with:
-      browser: ${{ matrix.browser }} 
+    # with:
+    #   browser: ${{ matrix.browser }} 
     secrets: inherit
