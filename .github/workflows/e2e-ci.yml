@@ -17,7 +17,7 @@ jobs:
     # strategy:
     #   matrix:
     #     browser: ["chromium", "firefox", "chrome", "msedge"]
-    uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-run-e2e-tests.yml@main
+    uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-run-e2e-tests.yml@sc-1803/test-parallel-playwright-gh-jobs
     # with:
     #   browser: ${{ matrix.browser }} 
     secrets: inherit
