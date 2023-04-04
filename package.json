@@ -76,7 +76,7 @@
     "jsonwebtoken": "9.0.0"
   },
   "engines": {
-    "node": "18.14.2"
+    "node": "^18.14.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
