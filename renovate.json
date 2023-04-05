@@ -6,22 +6,26 @@
     "npm:unpublishSafe",
     "packages:eslint",
     "packages:jsUnitTest",
-    "group:nodeJs"
+    "group:nodeJs",
+    "group:linters"
   ],
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "description": "Group updates for Keystone into a single PR",
       "groupName": "keystone",
-      "matchPackageNames": ["node"],
       "matchUpdateTypes": ["minor", "patch"],
-      "matchPackagePrefixes": ["@keystone"]
+      "matchPackagePrefixes": ["@keystone"],
+      "labels": ["keystone"]
     },
     {
       "rebaseWhen": "behind-base-branch",
       "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
       "automerge": true,
-      "lockFileMaintenance": { "enabled": true },
-      "labels": ["dependencies"]
+      "lockFileMaintenance": { "enabled": true }
     },
     {
       "automerge": true,
@@ -39,7 +43,7 @@
       "groupName": "github-actions",
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch", "digest"],
-      "labels": ["dependencies"]
+      "labels": ["github-actions"]
     }
   ],
   "ignorePresets": [":prHourlyLimit2"]
