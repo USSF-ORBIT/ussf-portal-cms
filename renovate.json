@@ -5,9 +5,17 @@
     ":dependencyDashboard",
     "npm:unpublishSafe",
     "packages:eslint",
-    "packages:jsUnitTest"
+    "packages:jsUnitTest",
+    "group:nodeJs"
   ],
   "packageRules": [
+    {
+      "description": "Group updates for Keystone into a single PR",
+      "groupName": "keystone",
+      "matchPackageNames": ["node"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackagePrefixes": ["@keystone"]
+    },
     {
       "rebaseWhen": "behind-base-branch",
       "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
