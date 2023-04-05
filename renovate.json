@@ -38,7 +38,7 @@
     {
       "groupName": "github-actions",
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "labels": ["dependencies"]
     }
   ],
