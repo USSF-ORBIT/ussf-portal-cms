@@ -23,9 +23,7 @@
     },
     {
       "rebaseWhen": "behind-base-branch",
-      "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
-      "automerge": true,
-      "lockFileMaintenance": { "enabled": true }
+      "matchUpdateTypes": ["patch", "minor", "pin", "digest"]
     },
     {
       "automerge": true,
