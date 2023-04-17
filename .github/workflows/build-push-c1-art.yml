@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
 
       - run: |
-          sudo sh scripts/add-dod-cas.sh
+          sudo bash scripts/add-dod-cas.sh
 
       - name: Docker meta
         id: meta
