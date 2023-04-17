@@ -5,22 +5,32 @@
     ":dependencyDashboard",
     "npm:unpublishSafe",
     "packages:eslint",
-    "packages:jsUnitTest"
+    "packages:jsUnitTest",
+    "group:nodeJs",
+    "group:linters"
   ],
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "rebaseWhen": "behind-base-branch",
-      "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
-      "automerge": true,
-      "lockFileMaintenance": { "enabled": true },
-      "labels": ["dependencies"]
+      "matchUpdateTypes": ["patch", "minor", "pin", "digest"]
     },
     {
-      "automerge": true,
       "description": "Group minor and patch updates into a single PR",
       "groupName": "dependencies",
       "managers": ["npm"],
       "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Group minor and patch updates for devDependencies into a single PR",
+      "groupName": "devDependencies",
+      "managers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "labels": ["devDependencies"]
     },
     {
       "managers": ["dockerfile"],
@@ -30,8 +40,15 @@
     {
       "groupName": "github-actions",
       "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "labels": ["github-actions"]
+    },
+    {
+      "description": "Group updates for Keystone into a single PR",
+      "groupName": "keystone",
       "matchUpdateTypes": ["minor", "patch"],
-      "labels": ["dependencies"]
+      "matchPackagePrefixes": ["@keystone"],
+      "labels": ["keystone"]
     }
   ],
   "ignorePresets": [":prHourlyLimit2"]

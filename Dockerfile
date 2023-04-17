@@ -1,6 +1,6 @@
 ##--------- Stage: builder ---------##
 # Node image variant name explanations: "bullseye" is the codeword for Debian 11, and "slim" only contains the minimal packages needed to run Node
-FROM node:18.14.2-bullseye-slim AS builder
+FROM node:18.15.0-bullseye-slim AS builder
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
@@ -8,6 +8,7 @@ RUN apt-get update \
     build-essential \
     ca-certificates \
     curl \
+    dumb-init \
     libc6 \
     yarn \
     zlib1g \
@@ -56,6 +57,7 @@ COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
 COPY --from=builder /usr/local/ssl /usr/local/ssl
+COPY --from=builder /usr/bin/dumb-init /usr/bin/dumb-init
 
 ENV NODE_ENV production
 
@@ -65,15 +67,15 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY --from=builder /bin/sh /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
-CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /usr/bin/dumb-init /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: e2e-local ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM node:18.14.2-bullseye-slim AS e2e-local
+FROM node:18.15.0-bullseye-slim AS e2e-local
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends libc6 yarn zlib1g
+  && apt-get install -y --no-install-recommends dumb-init libc6 yarn zlib1g
 
 WORKDIR /app
 
@@ -88,10 +90,10 @@ ENV NODE_ENV production
 EXPOSE 3001
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && dumb-init node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:18.14.2-bullseye-slim AS build-env
+FROM node:18.15.0-bullseye-slim AS build-env
 
 WORKDIR /app
 
@@ -113,6 +115,7 @@ COPY scripts/add-rds-cas.sh .
 COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/local/ssl/bin/openssl /usr/bin/openssl
 COPY --from=builder /usr/local/ssl /usr/local/ssl
+COPY --from=builder /usr/bin/dumb-init /usr/bin/dumb-init
 
 COPY --from=builder /app /app
 
@@ -129,4 +132,4 @@ COPY --from=build-env ["/app/rds-combined-ca-bundle.pem", "/app/rds-combined-ca-
 COPY --from=build-env /bin/sh /bin/sh
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
-CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
+CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /usr/bin/dumb-init /nodejs/bin/node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
