@@ -11,7 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
 
-      - run: |
+      - name: Add DoD Certificate Bundle
+        env:
+          CERT_BUNDLE_SHA256: ${{ secrets.DOD_CA_CERT_BUNDLE_SHA256 }}
+        run: |
+          echo "$CERT_BUNDLE_SHA256" > scripts/dod_ca_cert_bundle.sha256
           sudo bash scripts/add-dod-cas.sh
 
       - name: Docker meta
