@@ -38,11 +38,9 @@ const Label = list(
       }),
       type: select({
         type: 'enum',
-        options: (
-          Object.keys(LABEL_TYPES) as Array<keyof typeof LABEL_TYPES>
-        ).map((r) => ({
-          label: LABEL_TYPES[r],
-          value: LABEL_TYPES[r],
+        options: Object.entries(LABEL_TYPES).map(([, v]) => ({
+          label: v,
+          value: v,
         })),
         validation: {
           isRequired: true,
