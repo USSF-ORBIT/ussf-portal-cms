@@ -34,7 +34,7 @@ jobs:
             --publish '5432:5432' \
             --env POSTGRES_PASSWORD=keystonecms \
             --env POSTGRES_USER=keystone \
-            --env POSTGRES_DB=unit-test postgres:14.3
+            --env POSTGRES_DB=unit-test postgres:14.7
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
