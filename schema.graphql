@@ -1347,6 +1347,7 @@ type ArticleResult implements SearchResultItem {
   permalink: String!
   date: String!
   labels: [Label]
+  tags: [Tag]
 }
 
 union AuthenticatedItem = User
