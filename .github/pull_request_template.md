@@ -32,59 +32,32 @@
     ```
 --->
 
+### Start the system
+```sh
+yarn services:up
+yarn dev
+cd ../ussf-portal-client
+yarn dev
+```
+
+Login to the cms http://localhost:3001
+
 ---
 
 ## Code review steps
 
 ### As the original developer, I have
 
-- [ ] Met the acceptance criteria, or will meet them in subsequent PRs or stories
-  - ... <!-- link follow-up PRs/stories here -->
+- [ ] Met the acceptance criteria
 - [ ] Created new stories in Storybook if applicable
-  - [ ] Checked that all Storybook accessibility checks are passing
 - [ ] Created/modified automated unit tests in Jest
-  - [ ] Including jest-axe checks when UI changes
-- [ ] Created/modified automated E2E tests in Playwright
-  - [ ] Including [axe-playwright](https://github.com/abhinaba-ghosh/axe-playwright) checks when UI changes
-  - [ ] Checked that the E2E test build is not failing
-- Performed [a11y testing](https://github.com/trussworks/accessibility/blob/master/sample_a11y_testing_process.md):
-  - [ ] Checked responsiveness in mobile, tablet, and desktop
-  - [ ] Checked keyboard navigability
-  - [ ] Tested with [VoiceOver](https://dequeuniversity.com/screenreaders/voiceover-keyboard-shortcuts) in Safari
-  - [ ] Checked VO's [rotor menu](https://github.com/trussworks/accessibility/blob/master/README.md#how-to-use-the-rotor-menu) for landmarks, page heading structure and links
-  - [ ] Used a browser a11y tool to check for issues (WAVE, axe, ANDI or Accessibility addon tab for Storybook)
-- [ ] Requested a design review for user-facing changes
-- For any new migrations/schema changes:
-  - [ ] Followed guidelines for zero-downtime deploys
+- [ ] Created/modified automated [E2E tests](https://github.com/USSF-ORBIT/ussf-portal)
+- [ ] Followed guidelines for zero-downtime deploys, if applicable
+- [ ] Use [ANDI](https://www.ssa.gov/accessibility/andi/help/install.html) to check for basic a11y issues
 
-### As code reviewer(s), I have
+### As a reviewer, I have
 
-- [ ] Pulled this branch locally and tested it
-- [ ] Reviewed this code and left comments
-- [ ] Checked that all code is adequately covered by tests
-  - [ ] Checked that the E2E test build is not failing
-- [ ] Made it clear which comments need to be addressed before this work is merged
-- [ ] Considered marking this as accepted even if there are small changes needed
-- Performed [a11y testing](https://github.com/trussworks/accessibility/blob/master/sample_a11y_testing_process.md):
-  - [ ] Checked responsiveness in mobile, tablet, and desktop
-  - [ ] Checked keyboard navigability
-  - [ ] Tested with [VoiceOver](https://dequeuniversity.com/screenreaders/voiceover-keyboard-shortcuts) in Safari
-  - [ ] Checked VO's [rotor menu](https://github.com/trussworks/accessibility/blob/master/README.md#how-to-use-the-rotor-menu) for landmarks, page heading structure and links
-  - [ ] Used a browser a11y tool to check for issues (WAVE, axe, ANDI or Accessibility addon tab for Storybook)
-
-### As a designer reviewer, I have
-
-- [ ] Checked in the design translated visually
-- [ ] Checked behavior
-- [ ] Checked different states (empty, one, some, error)
-- [ ] Checked for landmarks, page heading structure, and links
-- [ ] Tried to break the intended flow
-- Performed [a11y testing](https://github.com/trussworks/accessibility/blob/master/sample_a11y_testing_process.md):
-  - [ ] Checked responsiveness in mobile, tablet, and desktop
-  - [ ] Checked keyboard navigability
-  - [ ] Tested with [VoiceOver](https://dequeuniversity.com/screenreaders/voiceover-keyboard-shortcuts) in Safari
-  - [ ] Checked VO's [rotor menu](https://github.com/trussworks/accessibility/blob/master/README.md#how-to-use-the-rotor-menu) for landmarks, page heading structure and links
-  - [ ] Used a browser a11y tool to check for issues (WAVE, axe, ANDI or Accessibility addon tab for Storybook)
+Check out our [How to review a pull request](https://github.com/USSF-ORBIT/ussf-portal/blob/main/docs/how-to/review-pull-request.md) document.
 
 ---
 

@@ -1,4 +1,5 @@
 import { mergeSchemas } from '@graphql-tools/schema'
+import { PrismaClient } from '@prisma/client'
 import { DateTime } from 'luxon'
 
 // typeDefs for custom functionality
@@ -38,11 +39,21 @@ const typeDefs = `
     permalink: String!
     date: String!
     labels: [Label]
+    tags: [Tag]
   }
 
   union AuthenticatedItem = User
 `
-
+const articleResult = (article: any) => ({
+  id: article.id,
+  type: 'Article',
+  title: article.title,
+  permalink: article.slug,
+  preview: article.preview,
+  labels: article.labels,
+  tags: article.tags,
+  date: article.publishedDate?.toISOString(),
+})
 // Any custom GraphQL resolvers can be added here
 export const extendGraphqlSchema = (schema: any) =>
   mergeSchemas({
@@ -76,8 +87,34 @@ export const extendGraphqlSchema = (schema: any) =>
         },
 
         search: async (_, { query }, { prisma }) => {
-          // Split our terms and search for each one using OR to maximize results
-          const terms = query.split(' ').join('|')
+          // Organize tags, labels, and terms
+          const tags: string[] = []
+          const labels: string[] = []
+          let terms: string[] = []
+
+          // Filtering v1 - Support list pages for a single tag or label
+          // #TODO extend search to support multiple tags and labels in filtered view
+
+          const filter = query.split(':')
+
+          if (filter[0] === 'tag') {
+            tags.push(filter[1])
+          }
+          if (filter[0] === 'label') {
+            labels.push(filter[1])
+          }
+
+          if (tags.length > 0 && labels.length === 0) {
+            const tagResults = await filterArticlesByTags(tags, prisma)
+            return tagResults
+          }
+          if (labels.length > 0 && tags.length === 0) {
+            const labelResults = await filterArticlesByLabels(labels, prisma)
+            return labelResults
+          }
+
+          // If there wasn't a single filter or label, continue with search
+          terms = query.split(' ').join('|')
 
           // Search Bookmark table
           // Fields: label, url, description, keywords
@@ -163,18 +200,51 @@ export const extendGraphqlSchema = (schema: any) =>
                 tags: true,
               },
             })
-          ).map((article: any) => ({
-            id: article.id,
-            type: 'Article',
-            title: article.title,
-            permalink: article.slug,
-            preview: article.preview,
-            labels: article.labels,
-            date: article.publishedDate?.toISOString(),
-          }))
+          ).map((article: any) => articleResult(article))
 
           return [...bookmarkResults, ...articleResults]
         },
       },
     },
   })
+
+const filterArticlesByTags = async (tags: string[], prisma: PrismaClient) => {
+  const tagResults = (
+    await prisma.article.findMany({
+      where: {
+        tags: {
+          some: {
+            name: {
+              in: tags,
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+    })
+  ).map((article: any) => articleResult(article))
+
+  return tagResults
+}
+
+const filterArticlesByLabels = async (
+  labels: string[],
+  prisma: PrismaClient
+) => {
+  const labelResults = (
+    await prisma.article.findMany({
+      where: {
+        labels: {
+          some: {
+            name: {
+              in: labels,
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+    })
+  ).map((article: any) => articleResult(article))
+
+  return labelResults
+}
