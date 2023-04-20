@@ -5,10 +5,21 @@
     # Location of bundle from DISA site
     bundle=https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/unclass-certificates_pkcs7_DoD.zip
 
+    # Copy the Checksum file
+    cp ./scripts/dod_ca_cert_bundle.sha256 /usr/local/share/ca-certificates/
+
     # Extract the bundle
     cd /usr/local/share/ca-certificates
-    wget $bundle
+    wget --no-check-certificate $bundle
     unzip unclass-certificates_pkcs7_DoD.zip
+
+    # check that Checksums verify
+    output=$(cd certificates_pkcs7_v5_11_dod; sha256sum -c --strict ../dod_ca_cert_bundle.sha256)
+    echo $output
+    if [[ "$output" == *"FAILED"* ]]; then
+        echo "Checksum failed" >&2
+        exit 1
+    fi
 
     # Convert the PKCS#7 bundle into individual PEM files
     openssl pkcs7 -print_certs -in certificates_pkcs7_v5_11_dod/*_pem.p7b |
