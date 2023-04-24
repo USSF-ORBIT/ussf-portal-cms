@@ -76,6 +76,7 @@ function setUpLogging() {
    */
   const loggingProperties = ['log', 'debug', 'info', 'warn', 'error']
   for (const property of loggingProperties) {
+    // eslint-disable-next-line security/detect-object-injection
     console[property] = getLoggingFunction(property)
   }
 
