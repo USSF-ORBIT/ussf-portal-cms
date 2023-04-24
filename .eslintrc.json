@@ -33,6 +33,7 @@
   ],
   "rules": {
     "no-console": "warn",
+    "security/detect-object-injection": "error",
     "import/no-useless-path-segments": "warn",
     "import/no-cycle": "error",
     "import/no-extraneous-dependencies": "error",
