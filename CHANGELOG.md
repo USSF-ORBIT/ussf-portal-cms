@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.8.2...1.9.0) (2023-04-21)
+
+
+### Features
+
+* Filter search results by single tag or label ([#316](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/316)) ([1f5c7c8](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/1f5c7c8ce617d781431077e12559259948099d1c))
+
+
+### Bug Fixes
+
+* **deps:** update keystone ([#314](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/314)) ([4dec14a](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/4dec14a06eb67336e1728c05cbe16401e23872a9))
+* order renovate packagerules in ascending order of importance ([#311](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/311)) ([8340d13](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/8340d135a8f5e1baba2d5901fe5c256bee7096f0))
+
+
+### Documentation
+
+* update pr tempate ([#318](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/318)) ([b481356](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/b4813568310fd1aee7515e40fc55931f9dd15fa7))
+
 ### [1.8.2](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.8.1...1.8.2) (2023-04-05)
 
 ### [1.8.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.8.0...1.8.1) (2023-03-22)
