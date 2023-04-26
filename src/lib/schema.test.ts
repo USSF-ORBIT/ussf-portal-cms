@@ -46,7 +46,7 @@ describe('Search Resolver', () => {
   }
   `
 
-  it('returns results for mixed types', async () => {
+  test('returns results for mixed types', async () => {
     /*
     Query String: 'myvector', case insensitive
     Search Fields Tested: 
@@ -88,7 +88,7 @@ describe('Search Resolver', () => {
     )
   })
 
-  it('returns results by searching bookmark URL', async () => {
+  test('returns results by searching bookmark URL', async () => {
     /*
         Query String: 'afpcsecure.us.af.mil'
         Search Fields Tested: Bookmark.url
@@ -125,7 +125,7 @@ describe('Search Resolver', () => {
     )
   })
 
-  it('returns results by searching keywords', async () => {
+  test('returns results by searching keywords', async () => {
     /*
         Query String: 'FOO', case insensitive
         Search Fields Tested: Article.keywords, Bookmark.keywords
@@ -164,7 +164,7 @@ describe('Search Resolver', () => {
     )
   })
 
-  it('does not return articles with draft status', async () => {
+  test('does not return articles with draft status', async () => {
     /*
         Query String: 'draft', case insensitive
         Search Fields Tested: Article.status
@@ -182,7 +182,7 @@ describe('Search Resolver', () => {
     expect(results).toHaveLength(0)
   })
 
-  it('returns results by searching bookmark descriptions', async () => {
+  test('returns results by searching bookmark descriptions', async () => {
     /*
         Query String: 'career', case insensitive
         Search Fields Tested: Bookmark.description
@@ -219,7 +219,7 @@ describe('Search Resolver', () => {
     )
   })
 
-  it('returns results by searching article document body', async () => {
+  test('returns results by searching article document body', async () => {
     /*
         Query String: 'lorem ipsum', case insensitive
         Search Fields Tested: Article.searchBody
@@ -269,5 +269,43 @@ describe('Search Resolver', () => {
     const results = searchResults.search
 
     expect(results).toHaveLength(0)
+  })
+
+  test('returns filtered results by label', async () => {
+    /*
+        Query String: 'label:all guardians', case insensitive
+        Search Fields Tested: Article.searchBody
+        Expected Results:
+          publishedArticleData (ArticleResult)
+        */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'label:All Guardians',
+      },
+    })
+
+    const results = searchResults.search
+
+    expect(results).toHaveLength(1)
+  })
+
+  test('returns filtered results by tag', async () => {
+    /*
+        Query String: 'label:all guardians', case insensitive
+        Search Fields Tested: Article.searchBody
+        Expected Results:
+          publishedArticleData (ArticleResult)
+        */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'tag:Test Tag',
+      },
+    })
+
+    const results = searchResults.search
+
+    expect(results).toHaveLength(1)
   })
 })

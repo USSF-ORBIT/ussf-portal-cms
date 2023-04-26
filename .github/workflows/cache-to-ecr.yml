@@ -33,7 +33,8 @@ jobs:
         with:
           registry: ${{ steps.login-ecr.outputs.registry }}
 
-      - uses: docker/setup-buildx-action@4b4e9c3e2d4531116a6f8ba8e71fc6e2cb6e6c8c # v2
+      - name: Docker meta
+        uses: docker/setup-buildx-action@4b4e9c3e2d4531116a6f8ba8e71fc6e2cb6e6c8c # v2
         id: buildx
         with:
           install: true
@@ -43,7 +44,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/keystone:builder
+          tags: ${{ steps.login-ecr.outputs.registry }}/docker-build-cache:keystone-builder
           cache-to: type=inline
           target: builder
 
@@ -52,6 +53,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/keystone:e2e
+          tags: ${{ steps.login-ecr.outputs.registry }}/docker-build-cache:keystone-e2e
           cache-to: type=inline
           target: e2e

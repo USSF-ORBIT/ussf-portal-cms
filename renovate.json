@@ -49,6 +49,13 @@
       "matchUpdateTypes": ["minor", "patch"],
       "matchPackagePrefixes": ["@keystone"],
       "labels": ["keystone"]
+    },
+    {
+      "description": "Group updates for prisma into a single PR",
+      "groupName": "prisma",
+      "matchUpdateTypes": ["minor"],
+      "matchPackagePrefixes": ["@prisma"],
+      "labels": ["prisma"]
     }
   ],
   "ignorePresets": [":prHourlyLimit2"]

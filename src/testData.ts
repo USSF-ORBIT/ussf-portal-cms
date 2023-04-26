@@ -35,6 +35,7 @@ export const publishedArticleData = {
     `[{"type":"paragraph","children":[{"text":"Lorem ipsum"}]}]`
   ),
   labels: { create: { name: 'All Guardians', type: 'Audience' } },
+  tags: { create: { name: 'Test Tag' } },
 }
 
 export const scheduledArticleData = {
