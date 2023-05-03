@@ -69,7 +69,16 @@ const typeDefs = `
 
   union AuthenticatedItem = User
 `
-
+const articleResult = (article: any) => ({
+  id: article.id,
+  type: 'Article',
+  title: article.title,
+  permalink: article.slug,
+  preview: article.preview,
+  labels: article.labels,
+  tags: article.tags,
+  date: article.publishedDate?.toISOString(),
+})
 // Any custom GraphQL resolvers can be added here
 export const extendGraphqlSchema = (schema: any) =>
   mergeSchemas({
