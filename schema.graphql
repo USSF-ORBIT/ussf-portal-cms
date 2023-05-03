@@ -1321,6 +1321,7 @@ enum KeystoneAdminUISortDirection {
 enum SearchResultType {
   Article
   Bookmark
+  Documentation
 }
 
 interface SearchResultItem {
@@ -1348,6 +1349,14 @@ type ArticleResult implements SearchResultItem {
   date: String!
   labels: [Label]
   tags: [Tag]
+}
+
+type DocumentationResult implements SearchResultItem {
+  id: String!
+  title: String!
+  type: SearchResultType!
+  preview: String!
+  permalink: String!
 }
 
 union AuthenticatedItem = User
