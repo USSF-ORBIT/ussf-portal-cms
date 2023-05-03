@@ -1362,7 +1362,6 @@ type ArticleResult implements SearchResultItem {
   date: String!
   labels: [Label]
   tags: [Tag]
-<<<<<<< HEAD
 }
 
 type DocumentationResult implements SearchResultItem {
@@ -1371,8 +1370,6 @@ type DocumentationResult implements SearchResultItem {
   type: SearchResultType!
   preview: String!
   permalink: String!
-=======
->>>>>>> main
 }
 
 union AuthenticatedItem = User
