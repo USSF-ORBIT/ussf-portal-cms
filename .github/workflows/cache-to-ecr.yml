@@ -34,6 +34,12 @@ jobs:
           name: keystone-cms
           path: /tmp/keystone-cms
 
+      - name: Upload portal-client manifest
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3
+        with:
+          name: keystone-cms-index
+          path: /tmp/keystone-cms/index.json
+
       - name: ls cache dirs
         run: |
           ls -l /tmp/keystone-cms
