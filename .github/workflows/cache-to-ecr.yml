@@ -25,7 +25,7 @@ jobs:
         with:
           context: .
           tags: keystone-cms:e2e
-          cache-to: type=local,mode=max,dest=/tmp/keystone-cms,tag=e2e,compression=gzip,compression-level=9
+          cache-to: type=local,mode=max,dest=/tmp/keystone-cms,tag=e2e,compression=estargz,compression-level=9
           target: e2e
 
       - name: Upload keystone-cms cache dir
