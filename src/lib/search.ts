@@ -107,7 +107,6 @@ export const buildArticleQuery = (
   }
 
   if (terms && terms.length > 0) {
-    console.log('there are termsssss')
     query.where.AND = [termsQuery, { OR: [] }]
   } else {
     query.where.OR = []

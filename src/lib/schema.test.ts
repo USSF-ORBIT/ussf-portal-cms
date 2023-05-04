@@ -248,7 +248,7 @@ describe('Search Resolver', () => {
     const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
-        query: 'lorem ipsum',
+        query: 'dolor sit amet',
       },
     })
 
@@ -331,5 +331,83 @@ describe('Search Resolver', () => {
     const results = searchResults.search
 
     expect(results).toHaveLength(1)
+  })
+
+  test('returns all results matching label and tag', async () => {
+    /*
+        Results can contain either tag or label, or both.
+        
+        Query String: 'label:"All Guardians" tag:"Lorem Tag"', case insensitive
+        Search Fields Tested: Article.Labels, Article.Tags
+        Expected Results:
+          publishedArticleData (ArticleResult) (label:"All Guardians")
+          publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Lorem Tag")
+        */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'label:"All Guardians" tag:"Lorem Tag"',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
+  })
+
+  test('returns results matching tag, label, and query', async () => {
+    /*
+      Results must contain query, can contain either tag or label, or both.
+      Query String: 'label:"All Guardians" tag:"Lorem Tag" lorem ipsum', case insensitive
+    Expected Results:
+          publishedArticleData (ArticleResult) (label:"All Guardians" query: "lorem ipsum")
+          publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Lorem Tag", query: "lorem ipsum")
+    */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'label:"All Guardians" tag:"Lorem Tag" lorem ipsum',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
+  })
+
+  test('returns results matching multiple tags', async () => {
+    /*
+      Results can contain either tag, or both.
+      Query String: 'tag:"Lorem Tag" tag:"Test Tag"', case insensitive
+    Expected Results:
+          publishedArticleData (ArticleResult) (tag: "Test Tag")
+          publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Lorem Tag")
+    */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'tag:"Lorem Tag" tag:"Test Tag"',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
+  })
+
+  test('returns results matching multiple labels', async () => {
+    /*
+        Results can contain either label, or both.
+        Query String: 'label:"All Guardians" label: "Civilians", case insensitive
+      Expected Results:
+            publishedArticleData (ArticleResult) (label: "All Guardians")
+            publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Civilians")
+      */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'label:"All Guardians" label:Civilians',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
   })
 })
