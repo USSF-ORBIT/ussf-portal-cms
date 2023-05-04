@@ -11,6 +11,7 @@ export const surf = {
   label: 'SURF',
   url: 'https://afpcsecure.us.af.mil/',
   description: 'A one page summary of your career found on AMS',
+  keywords: 'foo',
 }
 
 export const orders = {

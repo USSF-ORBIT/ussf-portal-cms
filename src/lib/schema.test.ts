@@ -136,6 +136,7 @@ describe('Search Resolver', () => {
         Expected Results:
             publishedArticleData (ArticleResult)
             orders (BookmarkResult)
+            surf (BookmarkResult)
         */
 
     const searchResults: SearchResults = await sudoContext.graphql.run({
@@ -147,7 +148,7 @@ describe('Search Resolver', () => {
 
     const results = searchResults.search
 
-    expect(results).toHaveLength(2)
+    expect(results).toHaveLength(3)
     expect(results).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -156,6 +157,13 @@ describe('Search Resolver', () => {
           permalink: orders.url,
           preview: orders.description,
           title: orders.label,
+        }),
+        expect.objectContaining({
+          __typename: 'BookmarkResult',
+          id: expect.any(String),
+          permalink: surf.url,
+          preview: surf.description,
+          title: surf.label,
         }),
         expect.objectContaining({
           __typename: 'ArticleResult',
@@ -409,5 +417,62 @@ describe('Search Resolver', () => {
 
     const results = searchResults.search
     expect(results).toHaveLength(2)
+  })
+  test('returns results for a single category', async () => {
+    /*
+        Results must contain query and category
+        Query String: 'category:application foo', case insensitive
+      Expected Results:
+            surf (BookmarkResult) (category:application, keyword: "foo")
+            orders (BookmarkResult) (category:application, keyword: "foo")
+      */
+    // search for query 'bar' in category 'news' and get one result
+    // search for query 'bar' without category and get two results
+    let searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:application foo',
+      },
+    })
+
+    let results = searchResults.search
+
+    expect(results).toHaveLength(2)
+
+    /*
+        Results must contain query and category
+        Query String: 'category:news foo', case insensitive
+      Expected Results:
+            publishedArticleData (ArticleResult) (category:news, keyword: "foo")
+      */
+    searchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:news foo',
+      },
+    })
+
+    results = searchResults.search
+
+    expect(results).toHaveLength(1)
+
+    /*
+        Results must contain query and at least one category
+        Query String: 'category:news category:application foo', case insensitive
+      Expected Results:
+            publishedArticleData (ArticleResult) (category:news, keyword: "foo")
+            surf (BookmarkResult) (category:application, keyword: "foo")
+            orders (BookmarkResult) (category:application, keyword: "foo")
+      */
+    searchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:news category:application foo',
+      },
+    })
+
+    results = searchResults.search
+
+    expect(results).toHaveLength(3)
   })
 })
