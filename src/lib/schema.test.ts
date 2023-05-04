@@ -38,8 +38,13 @@ describe('Search Resolver', () => {
       ... on ArticleResult {
         date
         labels {
+          id
           name
           type
+        }
+        tags {
+          id
+          name
         }
       }
     }
@@ -82,7 +87,6 @@ describe('Search Resolver', () => {
           permalink: searchTermArticleData.slug,
           preview: searchTermArticleData.preview,
           date: expect.any(String),
-          labels: [],
         }),
       ])
     )
@@ -147,18 +151,32 @@ describe('Search Resolver', () => {
     expect(results).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          __typename: 'ArticleResult',
-          title: publishedArticleData.title,
-          permalink: publishedArticleData.slug,
-          preview: publishedArticleData.preview,
-          labels: [publishedArticleData.labels.create],
-          date: expect.any(String),
-        }),
-        expect.objectContaining({
           __typename: 'BookmarkResult',
-          title: orders.label,
+          id: expect.any(String),
           permalink: orders.url,
           preview: orders.description,
+          title: orders.label,
+        }),
+        expect.objectContaining({
+          __typename: 'ArticleResult',
+          date: expect.any(String),
+          id: expect.any(String),
+          labels: [
+            {
+              id: expect.any(String),
+              name: publishedArticleData.labels.create.name,
+              type: publishedArticleData.labels.create.type,
+            },
+          ],
+          permalink: publishedArticleData.slug,
+          preview: publishedArticleData.preview,
+          tags: [
+            {
+              id: expect.any(String),
+              name: publishedArticleData.tags.create.name,
+            },
+          ],
+          title: publishedArticleData.title,
         }),
       ])
     )
@@ -244,7 +262,13 @@ describe('Search Resolver', () => {
           title: publishedArticleData.title,
           permalink: publishedArticleData.slug,
           preview: publishedArticleData.preview,
-          labels: [publishedArticleData.labels.create],
+          labels: [
+            {
+              id: expect.any(String),
+              name: publishedArticleData.labels.create.name,
+              type: publishedArticleData.labels.create.type,
+            },
+          ],
           date: expect.any(String),
         }),
       ])
@@ -281,7 +305,7 @@ describe('Search Resolver', () => {
     const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
-        query: 'label:All Guardians',
+        query: 'label:"All Guardians"',
       },
     })
 
@@ -300,7 +324,7 @@ describe('Search Resolver', () => {
     const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
-        query: 'tag:Test Tag',
+        query: 'tag:"Test Tag"',
       },
     })
 

@@ -106,19 +106,24 @@ export const buildArticleQuery = (
     },
   }
 
-  if (terms) {
+  if (terms && terms.length > 0) {
+    console.log('there are termsssss')
     query.where.AND = [termsQuery, { OR: [] }]
+  } else {
+    query.where.OR = []
   }
 
   if (tags && tags.length > 0) {
     if (terms) {
       query.where.AND?.[1].OR?.push(tagsQuery)
+    } else {
+      query.where.OR?.push(tagsQuery)
     }
   }
 
   if (labels && labels.length > 0) {
     if (terms) {
-      query.where.AND?.[1].OR?.push(tagsQuery)
+      query.where.AND?.[1].OR?.push(labelsQuery)
     } else {
       query.where.OR?.push(labelsQuery)
     }
