@@ -103,13 +103,17 @@ export const extendGraphqlSchema = (schema: any) =>
         },
 
         search: async (_, { query }, { prisma }) => {
-          // Convert search query into usable data structures for our database query
+          // If an empty query is passed, return an empty array
+          if (!query) return []
 
+          // Define portal categories that map to different tables in the database
           const CATEGORIES = {
             ARTICLE: 'news',
             BOOKMARK: 'application',
             DOCUMENTATION: 'documentation',
           }
+
+          // Convert search query into usable data structures for our database query
           const { terms, tags, labels, categories } = parseSearchQuery(query)
 
           let bookmarkResults: BookmarkSearchResult[] = []
