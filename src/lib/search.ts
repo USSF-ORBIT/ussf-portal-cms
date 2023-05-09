@@ -211,19 +211,19 @@ export const parseSearchQuery = (query: string): ParsedSearchQuery => {
 
   // In order to get all matches, we need to run the regex.exec() method in a loop
   while ((result = re.exec(query)) !== null) {
-    // result[1] captures the tag or label keyword
-    // result[2] captures the value in quotations
-    // result[3] captures the value without quotations
-    // result[0] captures the search terms (if any)
+    const keyword = result[1]
+    const valueInQuotes = result[2]
+    const valueWithoutQuotes = result[3]
+    const searchTerms = result[0]
 
-    if (result[1] === 'tag') {
-      tags.push(normalizeString(result[2] || normalizeString(result[3])))
-    } else if (result[1] === 'label') {
-      labels.push(normalizeString(result[2] || normalizeString(result[3])))
-    } else if (result[1] === 'category') {
-      categories.push(normalizeString(result[2] || normalizeString(result[3])))
+    if (keyword === 'tag') {
+      tags.push(normalizeString(valueInQuotes || valueWithoutQuotes))
+    } else if (keyword === 'label') {
+      labels.push(normalizeString(valueInQuotes || valueWithoutQuotes))
+    } else if (keyword === 'category') {
+      categories.push(normalizeString(valueInQuotes || valueWithoutQuotes))
     } else {
-      q.push(normalizeString(result[0]))
+      q.push(normalizeString(searchTerms))
     }
   }
 

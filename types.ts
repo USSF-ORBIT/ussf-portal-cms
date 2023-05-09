@@ -68,7 +68,7 @@ export type ParsedSearchQuery = {
   categories: string[]
 }
 
-// Results returned from the CMS to the Client
+// Results returned from the CMS Search API to the Portal Client
 export type ArticleSearchResult = {
   id: string
   type: 'Article'
@@ -96,7 +96,7 @@ export type DocumentationSearchResult = {
   permalink: string
 }
 
-// Query sent to the database
+// Query sent to the CMS database
 export type ArticleQuery = {
   where: {
     status: string
@@ -113,7 +113,7 @@ export type ArticleQuery = {
   }
 }
 
-// Results returned from the database
+// Results returned from querying the database
 export type ArticleQueryResult = {
   id: string
   type: 'Article'

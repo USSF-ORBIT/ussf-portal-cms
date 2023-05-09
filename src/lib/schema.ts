@@ -107,7 +107,7 @@ export const extendGraphqlSchema = (schema: any) =>
           if (!query) return []
 
           // Define portal categories that map to different tables in the database
-          const CATEGORIES = {
+          const DATA_TABLES = {
             ARTICLE: 'news',
             BOOKMARK: 'application',
             DOCUMENTATION: 'documentation',
@@ -124,24 +124,24 @@ export const extendGraphqlSchema = (schema: any) =>
           const tablesToSearch = [
             {
               // If tags or labels, or category:news is specified, we want to search articles
-              [CATEGORIES.ARTICLE]:
-                categories.includes(CATEGORIES.ARTICLE) ||
+              [DATA_TABLES.ARTICLE]:
+                categories.includes(DATA_TABLES.ARTICLE) ||
                 labels.length > 0 ||
                 tags.length > 0 ||
                 categories.length === 0,
             },
             {
               // If no tags or labels, or category:application, we want to search bookmarks
-              [CATEGORIES.BOOKMARK]:
-                categories.includes(CATEGORIES.BOOKMARK) ||
+              [DATA_TABLES.BOOKMARK]:
+                categories.includes(DATA_TABLES.BOOKMARK) ||
                 (labels.length === 0 &&
                   tags.length === 0 &&
                   categories.length === 0),
             },
             {
               // If no tags or labels, or category is documentation, we want to search docs
-              [CATEGORIES.DOCUMENTATION]:
-                categories.includes(CATEGORIES.DOCUMENTATION) ||
+              [DATA_TABLES.DOCUMENTATION]:
+                categories.includes(DATA_TABLES.DOCUMENTATION) ||
                 (labels.length === 0 &&
                   tags.length === 0 &&
                   categories.length === 0),
@@ -151,7 +151,7 @@ export const extendGraphqlSchema = (schema: any) =>
           // Search all tables and add results to the appropriate array
           await Promise.all(
             tablesToSearch.map(async (c) => {
-              if (c[CATEGORIES.ARTICLE]) {
+              if (c[DATA_TABLES.ARTICLE]) {
                 const articleQuery = buildArticleQuery(terms, tags, labels)
 
                 articleResults = (
@@ -170,7 +170,7 @@ export const extendGraphqlSchema = (schema: any) =>
                 }))
               }
 
-              if (c[CATEGORIES.BOOKMARK]) {
+              if (c[DATA_TABLES.BOOKMARK]) {
                 bookmarkResults = (
                   await prisma.bookmark.findMany({
                     ...buildBookmarkQuery(terms),
@@ -184,7 +184,7 @@ export const extendGraphqlSchema = (schema: any) =>
                 }))
               }
 
-              if (c[CATEGORIES.DOCUMENTATION]) {
+              if (c[DATA_TABLES.DOCUMENTATION]) {
                 documentationPageResults =
                   // Technically there should only be one page, but there could be more in the future
                   (
