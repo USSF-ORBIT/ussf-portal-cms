@@ -45,14 +45,6 @@ type ItemViewFn = ({
   item?: BaseItem
 }) => 'edit' | 'read' | 'hidden'
 
-type ListViewFn = ({
-  session,
-  context,
-}: {
-  session?: ValidSession
-  context?: KeystoneContext
-}) => 'read' | 'hidden'
-
 /** User Roles */
 export const USER_ROLES = {
   USER: 'User',
@@ -60,7 +52,7 @@ export const USER_ROLES = {
   MANAGER: 'Manager',
 } as const
 
-export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES]
+export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES]
 
 /** Access helpers */
 export const isAdmin: OperationAccessFn = ({ session }) => !!session?.isAdmin

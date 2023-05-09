@@ -106,9 +106,10 @@ const User = list(
 
       role: select({
         type: 'enum',
-        options: (
-          Object.keys(USER_ROLES) as Array<keyof typeof USER_ROLES>
-        ).map((r) => ({ label: USER_ROLES[r], value: USER_ROLES[r] })),
+        options: Object.entries(USER_ROLES).map(([, v]) => ({
+          label: v,
+          value: v,
+        })),
         defaultValue: USER_ROLES.USER,
         validation: {
           isRequired: true,

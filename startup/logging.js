@@ -19,6 +19,9 @@ function setUpLogging() {
   // testCircular.d = testCircular
 
   function getLoggingFunction(/** @type {string} */ levelName) {
+    // levelName is passed in by this setup code when calling this function
+    // not user input
+    // eslint-disable-next-line security/detect-object-injection
     const baseLogFn = (logger[levelName] || logger.info).bind(logger)
     return function patchedLog(/** @type {any[]} */ ...parts) {
       /** @type {object | undefined} */
@@ -62,6 +65,8 @@ function setUpLogging() {
       continue
     }
 
+    // property is not a user provided value but code from nextjs
+    // eslint-disable-next-line security/detect-object-injection
     nextBuiltInLogger[property] = getLoggingFunction(property)
   }
 
@@ -71,6 +76,7 @@ function setUpLogging() {
    */
   const loggingProperties = ['log', 'debug', 'info', 'warn', 'error']
   for (const property of loggingProperties) {
+    // eslint-disable-next-line security/detect-object-injection
     console[property] = getLoggingFunction(property)
   }
 

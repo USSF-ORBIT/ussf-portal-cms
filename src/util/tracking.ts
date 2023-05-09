@@ -59,9 +59,13 @@ export const logging =
             ? Object.entries(item as BaseItem)
                 .filter(
                   ([key, value]) =>
+                    // key is from the item we are tracking
+                    // eslint-disable-next-line security/detect-object-injection
                     key === 'id' || value !== originalItem?.[key]
                 )
                 .reduce((acc, [k, v]) => {
+                  // k is from the item we are tracking
+                  // eslint-disable-next-line security/detect-object-injection
                   acc[k] = v
                   return acc
                 }, {} as Record<string, unknown>)

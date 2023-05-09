@@ -28,7 +28,7 @@ import { componentBlocks } from '../components/embedVideo'
 // Disable the warning, this regex is only run after checking the max length
 // and only failed with a catastrophic backtrace in testing with extremely
 // large data sets well beyond the current max or anything a url would accept
-// For details see https://github.com/USSF-ORBIT/ussf-portal/blob/main/docs/adr/0017-disable-unsafe-regex-in-cms-slug-code.md
+// For details see https://github.com/USSF-ORBIT/ussf-portal/blob/main/docs/adr/0018-disable-unsafe-regex-in-cms-slug-code.md
 // eslint-disable-next-line security/detect-unsafe-regex
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
