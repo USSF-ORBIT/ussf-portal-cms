@@ -1,4 +1,5 @@
 import { mergeSchemas } from '@graphql-tools/schema'
+import type { GraphQLSchema } from 'graphql'
 import {
   ArticleSearchResult,
   BookmarkSearchResult,
@@ -69,14 +70,20 @@ const typeDefs = `
 
   union AuthenticatedItem = User
 `
+
 // Any custom GraphQL resolvers can be added here
-export const extendGraphqlSchema = (schema: any) =>
+export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
   mergeSchemas({
-    schemas: [schema],
+    schemas: [baseSchema],
     typeDefs,
     resolvers: {
       SearchResultItem: {
-        __resolveType(obj: any) {
+        __resolveType(
+          obj:
+            | BookmarkSearchResult
+            | ArticleSearchResult
+            | DocumentationSearchResult
+        ) {
           if (obj.type === 'Bookmark') return 'BookmarkResult'
           if (obj.type === 'Article') return 'ArticleResult'
           if (obj.type === 'Documentation') return 'DocumentationResult'
