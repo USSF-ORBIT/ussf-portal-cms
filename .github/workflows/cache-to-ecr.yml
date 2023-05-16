@@ -44,3 +44,11 @@ jobs:
         run: |
           ls -l /tmp/keystone-cms
           cat /tmp/keystone-cms/index.json | jq
+
+      - name: Set manifest variable
+        id: set_var
+        run: |
+          content=`cat /tmp/keystone-cms/index.json`
+          echo "index=$content" >> $GITHUB_OUTPUT
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.index)}}"
