@@ -51,4 +51,11 @@ jobs:
           content=`cat /tmp/keystone-cms/index.json`
           echo "index=$content" >> $GITHUB_OUTPUT
       - run: |
-          echo "${{fromJson(steps.set_var.outputs.index)}}"
+          echo "${{fromJson(steps.set_var.outputs.index).manifests}}"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.index).manifests[0]}}"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.index)}}.manifests"
+
