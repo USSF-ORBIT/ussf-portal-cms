@@ -56,8 +56,18 @@ jobs:
           echo "${{fromJson(steps.set_var.outputs.index).manifests[0]}}"
       - run: |
           echo "${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}"
-      - run: |
-          echo "sha256=${digest##sha256:}"
+      - name: print sha
         env:
-          digest: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
+          DIGEST: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
+        run: |
+          echo "${DIGEST##sha256:}"
+      - name: set sha
+        id: set_sha
+        env:
+          DIGEST: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
+        run: |
+          echo "sha256=${DIGEST##sha256:}" >> $GITHUB_OUTPUT
+      - run: |
+          echo "${{ steps.set_sha.outputs.sha256 }}"
+
 
