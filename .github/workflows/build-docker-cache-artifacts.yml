@@ -45,10 +45,21 @@ jobs:
           ls -l /tmp/keystone-cms
           cat /tmp/keystone-cms/index.json | jq
 
-      - name: Set manifest variable
+      - name: Set index.json file variable for extracting json
         id: set_var
         run: |
           content=`cat /tmp/keystone-cms/index.json`
           echo "index=$content" >> $GITHUB_OUTPUT
-      - run: |
-          echo "${{fromJson(steps.set_var.outputs.index)}}"
+
+      - name: Set sha diget of docker manifest
+        id: set_sha
+        env:
+          DIGEST: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
+        run: |
+          echo "sha256=${DIGEST##sha256:}" >> $GITHUB_OUTPUT
+
+      - name: Save docker cache to GHA cache
+        uses: actions/cache/save@v3
+        with:
+          path: /tmp/keystone-cms
+          key: ${{ runner.os }}-docker-keystone-cms-${{ steps.set_sha.outputs.sha256 }}
