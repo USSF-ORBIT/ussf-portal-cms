@@ -57,5 +57,7 @@ jobs:
       - run: |
           echo "${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}"
       - run: |
-          echo "${{fromJson(steps.set_var.outputs.index)}}.manifests"
+          echo "sha256=${digest##sha256:}"
+        env:
+          digest: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
 
