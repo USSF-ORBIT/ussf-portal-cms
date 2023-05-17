@@ -51,7 +51,7 @@ jobs:
           content=`cat /tmp/keystone-cms/index.json`
           echo "index=$content" >> $GITHUB_OUTPUT
 
-      - name: Set sha diget of docker manifest
+      - name: Set sha digest of docker manifest
         id: set_sha
         env:
           DIGEST: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
