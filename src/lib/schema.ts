@@ -1,9 +1,25 @@
 import { mergeSchemas } from '@graphql-tools/schema'
-import { PrismaClient } from '@prisma/client'
-import { DateTime } from 'luxon'
+import type { GraphQLSchema } from 'graphql'
+import {
+  ArticleSearchResult,
+  BookmarkSearchResult,
+  DocumentationSearchResult,
+  ArticleQueryResult,
+  BookmarkQueryResult,
+  DocumentationPageQueryResult,
+  DocumentQueryResult,
+} from '../../types'
+import {
+  parseSearchQuery,
+  buildArticleQuery,
+  buildBookmarkQuery,
+  buildDocumentQuery,
+  buildDocumentationPageQuery,
+} from './search'
 
 // typeDefs for custom functionality
 // Any GraphQL extensions can be added here
+
 const typeDefs = `
   extend type Query {
     search(query: String!): [SearchResultItem]
@@ -13,6 +29,7 @@ const typeDefs = `
   enum SearchResultType {
     Article
     Bookmark
+    Documentation
   }
 
   interface SearchResultItem {
@@ -42,28 +59,34 @@ const typeDefs = `
     tags: [Tag]
   }
 
+  type DocumentationResult implements SearchResultItem {
+    id: String!
+    title: String!
+    type: SearchResultType!
+    preview: String!
+    permalink: String!
+
+  }
+
   union AuthenticatedItem = User
 `
-const articleResult = (article: any) => ({
-  id: article.id,
-  type: 'Article',
-  title: article.title,
-  permalink: article.slug,
-  preview: article.preview,
-  labels: article.labels,
-  tags: article.tags,
-  date: article.publishedDate?.toISOString(),
-})
+
 // Any custom GraphQL resolvers can be added here
-export const extendGraphqlSchema = (schema: any) =>
+export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
   mergeSchemas({
-    schemas: [schema],
+    schemas: [baseSchema],
     typeDefs,
     resolvers: {
       SearchResultItem: {
-        __resolveType(obj: any) {
+        __resolveType(
+          obj:
+            | BookmarkSearchResult
+            | ArticleSearchResult
+            | DocumentationSearchResult
+        ) {
           if (obj.type === 'Bookmark') return 'BookmarkResult'
           if (obj.type === 'Article') return 'ArticleResult'
+          if (obj.type === 'Documentation') return 'DocumentationResult'
           return null
         },
       },
@@ -87,164 +110,134 @@ export const extendGraphqlSchema = (schema: any) =>
         },
 
         search: async (_, { query }, { prisma }) => {
-          // Organize tags, labels, and terms
-          const tags: string[] = []
-          const labels: string[] = []
-          let terms: string[] = []
+          // If an empty query is passed, return an empty array
+          if (!query) return []
 
-          // Filtering v1 - Support list pages for a single tag or label
-          // #TODO extend search to support multiple tags and labels in filtered view
-
-          const filter = query.split(':')
-
-          if (filter[0] === 'tag') {
-            tags.push(filter[1])
-          }
-          if (filter[0] === 'label') {
-            labels.push(filter[1])
+          // Define portal categories that map to different tables in the database
+          const DATA_TABLES = {
+            ARTICLE: 'news',
+            BOOKMARK: 'application',
+            DOCUMENTATION: 'documentation',
           }
 
-          if (tags.length > 0 && labels.length === 0) {
-            const tagResults = await filterArticlesByTags(tags, prisma)
-            return tagResults
-          }
-          if (labels.length > 0 && tags.length === 0) {
-            const labelResults = await filterArticlesByLabels(labels, prisma)
-            return labelResults
-          }
+          // Convert search query into usable data structures for our database query
+          const { terms, tags, labels, categories } = parseSearchQuery(query)
 
-          // If there wasn't a single filter or label, continue with search
-          terms = query.split(' ').join('|')
+          let bookmarkResults: BookmarkSearchResult[] = []
+          let articleResults: ArticleSearchResult[] = []
+          let documentationPageResults: DocumentationSearchResult[] = []
+          let documentResults: DocumentationSearchResult[] = []
 
-          // Search Bookmark table
-          // Fields: label, url, description, keywords
-          const bookmarkResults = (
-            await prisma.bookmark.findMany({
-              where: {
-                OR: [
-                  {
-                    description: {
-                      search: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    label: {
-                      search: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    url: {
-                      contains: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    keywords: {
-                      search: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                ],
-              },
+          const tablesToSearch = [
+            {
+              // If tags or labels, or category:news is specified, we want to search articles
+              [DATA_TABLES.ARTICLE]:
+                categories.includes(DATA_TABLES.ARTICLE) ||
+                labels.length > 0 ||
+                tags.length > 0 ||
+                categories.length === 0,
+            },
+            {
+              // If no tags or labels, or category:application, we want to search bookmarks
+              [DATA_TABLES.BOOKMARK]:
+                categories.includes(DATA_TABLES.BOOKMARK) ||
+                (labels.length === 0 &&
+                  tags.length === 0 &&
+                  categories.length === 0),
+            },
+            {
+              // If no tags or labels, or category is documentation, we want to search docs
+              [DATA_TABLES.DOCUMENTATION]:
+                categories.includes(DATA_TABLES.DOCUMENTATION) ||
+                (labels.length === 0 &&
+                  tags.length === 0 &&
+                  categories.length === 0),
+            },
+          ]
+
+          // Search all tables and add results to the appropriate array
+          await Promise.all(
+            tablesToSearch.map(async (c) => {
+              if (c[DATA_TABLES.ARTICLE]) {
+                const articleQuery = buildArticleQuery(terms, tags, labels)
+
+                articleResults = (
+                  await prisma.article.findMany({
+                    ...articleQuery,
+                  })
+                ).map((article: ArticleQueryResult) => ({
+                  id: article.id,
+                  type: 'Article',
+                  title: article.title,
+                  permalink: article.slug,
+                  preview: article.preview,
+                  labels: article.labels,
+                  tags: article.tags,
+                  date: article.publishedDate?.toISOString(),
+                }))
+              }
+
+              if (c[DATA_TABLES.BOOKMARK]) {
+                bookmarkResults = (
+                  await prisma.bookmark.findMany({
+                    ...buildBookmarkQuery(terms),
+                  })
+                ).map((bookmark: BookmarkQueryResult) => ({
+                  id: bookmark.id,
+                  type: 'Bookmark',
+                  title: bookmark.label,
+                  permalink: bookmark.url,
+                  preview: bookmark.description,
+                }))
+              }
+
+              if (c[DATA_TABLES.DOCUMENTATION]) {
+                documentationPageResults =
+                  // Technically there should only be one page, but there could be more in the future
+                  (
+                    await prisma.documentsPage.findMany({
+                      ...buildDocumentationPageQuery(terms),
+                    })
+                  ).map((doc: DocumentationPageQueryResult) => ({
+                    id: doc.id,
+                    type: 'Documentation',
+                    title: doc.pageTitle,
+                    permalink: '/ussf-documentation',
+                    // #TODO If we are going to allow more dynamic pages in the future, we need to add a permalink to the page model
+
+                    preview: doc.sections[0].title,
+                  }))
+
+                // We also should search the documents themselves
+                documentResults = (
+                  await prisma.document.findMany({
+                    ...buildDocumentQuery(terms),
+                  })
+                ).map((doc: DocumentQueryResult) => {
+                  return {
+                    id: doc.id,
+                    type: 'Documentation',
+                    title: doc.title,
+                    permalink: '/ussf-documentation',
+                    // #TODO Consider adding an anchor tag to the document page so the link can jump to the correct section to give it added value
+                    preview: doc.description,
+                  }
+                })
+              }
             })
-          ).map((bookmark: any) => ({
-            id: bookmark.id,
-            type: 'Bookmark',
-            title: bookmark.label,
-            permalink: bookmark.url,
-            preview: bookmark.description,
-          }))
+          )
 
-          // Search Article table
-          // Fields: title, preview, keywords, labels, tags, searchBody
-          const articleResults = (
-            await prisma.article.findMany({
-              where: {
-                OR: [
-                  {
-                    title: {
-                      search: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    preview: {
-                      search: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    keywords: {
-                      search: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                  {
-                    searchBody: {
-                      search: terms,
-                      mode: 'insensitive',
-                    },
-                  },
-                ],
-                status: 'Published',
-                publishedDate: {
-                  lte: DateTime.now().toJSDate(),
-                },
-                category: 'InternalNews',
-              },
-
-              include: {
-                labels: true,
-                tags: true,
-              },
-            })
-          ).map((article: any) => articleResult(article))
-
-          return [...bookmarkResults, ...articleResults]
+          // Return all search results
+          // bookmarkResults maps to Application
+          // articleResults maps to News
+          // documentationResults and documentResults map to Documentation
+          return [
+            ...bookmarkResults,
+            ...articleResults,
+            ...documentationPageResults,
+            ...documentResults,
+          ]
         },
       },
     },
   })
-
-const filterArticlesByTags = async (tags: string[], prisma: PrismaClient) => {
-  const tagResults = (
-    await prisma.article.findMany({
-      where: {
-        tags: {
-          some: {
-            name: {
-              in: tags,
-              mode: 'insensitive',
-            },
-          },
-        },
-      },
-    })
-  ).map((article: any) => articleResult(article))
-
-  return tagResults
-}
-
-const filterArticlesByLabels = async (
-  labels: string[],
-  prisma: PrismaClient
-) => {
-  const labelResults = (
-    await prisma.article.findMany({
-      where: {
-        labels: {
-          some: {
-            name: {
-              in: labels,
-              mode: 'insensitive',
-            },
-          },
-        },
-      },
-    })
-  ).map((article: any) => articleResult(article))
-
-  return labelResults
-}

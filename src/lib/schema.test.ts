@@ -38,8 +38,13 @@ describe('Search Resolver', () => {
       ... on ArticleResult {
         date
         labels {
+          id
           name
           type
+        }
+        tags {
+          id
+          name
         }
       }
     }
@@ -82,7 +87,6 @@ describe('Search Resolver', () => {
           permalink: searchTermArticleData.slug,
           preview: searchTermArticleData.preview,
           date: expect.any(String),
-          labels: [],
         }),
       ])
     )
@@ -132,6 +136,7 @@ describe('Search Resolver', () => {
         Expected Results:
             publishedArticleData (ArticleResult)
             orders (BookmarkResult)
+            surf (BookmarkResult)
         */
 
     const searchResults: SearchResults = await sudoContext.graphql.run({
@@ -143,22 +148,43 @@ describe('Search Resolver', () => {
 
     const results = searchResults.search
 
-    expect(results).toHaveLength(2)
+    expect(results).toHaveLength(3)
     expect(results).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          __typename: 'ArticleResult',
-          title: publishedArticleData.title,
-          permalink: publishedArticleData.slug,
-          preview: publishedArticleData.preview,
-          labels: [publishedArticleData.labels.create],
-          date: expect.any(String),
+          __typename: 'BookmarkResult',
+          id: expect.any(String),
+          permalink: orders.url,
+          preview: orders.description,
+          title: orders.label,
         }),
         expect.objectContaining({
           __typename: 'BookmarkResult',
-          title: orders.label,
-          permalink: orders.url,
-          preview: orders.description,
+          id: expect.any(String),
+          permalink: surf.url,
+          preview: surf.description,
+          title: surf.label,
+        }),
+        expect.objectContaining({
+          __typename: 'ArticleResult',
+          date: expect.any(String),
+          id: expect.any(String),
+          labels: [
+            {
+              id: expect.any(String),
+              name: publishedArticleData.labels.create.name,
+              type: publishedArticleData.labels.create.type,
+            },
+          ],
+          permalink: publishedArticleData.slug,
+          preview: publishedArticleData.preview,
+          tags: [
+            {
+              id: expect.any(String),
+              name: publishedArticleData.tags.create.name,
+            },
+          ],
+          title: publishedArticleData.title,
         }),
       ])
     )
@@ -230,7 +256,7 @@ describe('Search Resolver', () => {
     const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
-        query: 'lorem ipsum',
+        query: 'dolor sit amet',
       },
     })
 
@@ -244,7 +270,13 @@ describe('Search Resolver', () => {
           title: publishedArticleData.title,
           permalink: publishedArticleData.slug,
           preview: publishedArticleData.preview,
-          labels: [publishedArticleData.labels.create],
+          labels: [
+            {
+              id: expect.any(String),
+              name: publishedArticleData.labels.create.name,
+              type: publishedArticleData.labels.create.type,
+            },
+          ],
           date: expect.any(String),
         }),
       ])
@@ -281,7 +313,7 @@ describe('Search Resolver', () => {
     const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
-        query: 'label:All Guardians',
+        query: 'label:"All Guardians"',
       },
     })
 
@@ -300,12 +332,147 @@ describe('Search Resolver', () => {
     const searchResults: SearchResults = await sudoContext.graphql.run({
       query: searchQuery,
       variables: {
-        query: 'tag:Test Tag',
+        query: 'tag:"Test Tag"',
       },
     })
 
     const results = searchResults.search
 
     expect(results).toHaveLength(1)
+  })
+
+  test('returns all results matching label and tag', async () => {
+    /*
+        Results can contain either tag or label, or both.
+        
+        Query String: 'label:"All Guardians" tag:"Lorem Tag"', case insensitive
+        Search Fields Tested: Article.Labels, Article.Tags
+        Expected Results:
+          publishedArticleData (ArticleResult) (label:"All Guardians")
+          publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Lorem Tag")
+        */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'label:"All Guardians" tag:"Lorem Tag"',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
+  })
+
+  test('returns results matching tag, label, and query', async () => {
+    /*
+      Results must contain query, can contain either tag or label, or both.
+      Query String: 'label:"All Guardians" tag:"Lorem Tag" lorem ipsum', case insensitive
+    Expected Results:
+          publishedArticleData (ArticleResult) (label:"All Guardians" query: "lorem ipsum")
+          publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Lorem Tag", query: "lorem ipsum")
+    */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'label:"All Guardians" tag:"Lorem Tag" lorem ipsum',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
+  })
+
+  test('returns results matching multiple tags', async () => {
+    /*
+      Results can contain either tag, or both.
+      Query String: 'tag:"Lorem Tag" tag:"Test Tag"', case insensitive
+    Expected Results:
+          publishedArticleData (ArticleResult) (tag: "Test Tag")
+          publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Lorem Tag")
+    */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'tag:"Lorem Tag" tag:"Test Tag"',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
+  })
+
+  test('returns results matching multiple labels', async () => {
+    /*
+        Results can contain either label, or both.
+        Query String: 'label:"All Guardians" label: "Civilians", case insensitive
+      Expected Results:
+            publishedArticleData (ArticleResult) (label: "All Guardians")
+            publishedArticleWithMultipleTagsData (ArticleResult) (tag: "Civilians")
+      */
+    const searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'label:"All Guardians" label:Civilians',
+      },
+    })
+
+    const results = searchResults.search
+    expect(results).toHaveLength(2)
+  })
+  test('returns results for a single category', async () => {
+    /*
+        Results must contain query and category
+        Query String: 'category:application foo', case insensitive
+      Expected Results:
+            surf (BookmarkResult) (category:application, keyword: "foo")
+            orders (BookmarkResult) (category:application, keyword: "foo")
+      */
+    // search for query 'bar' in category 'news' and get one result
+    // search for query 'bar' without category and get two results
+    let searchResults: SearchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:application foo',
+      },
+    })
+
+    let results = searchResults.search
+
+    expect(results).toHaveLength(2)
+
+    /*
+        Results must contain query and category
+        Query String: 'category:news foo', case insensitive
+      Expected Results:
+            publishedArticleData (ArticleResult) (category:news, keyword: "foo")
+      */
+    searchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:news foo',
+      },
+    })
+
+    results = searchResults.search
+
+    expect(results).toHaveLength(1)
+
+    /*
+        Results must contain query and at least one category
+        Query String: 'category:news category:application foo', case insensitive
+      Expected Results:
+            publishedArticleData (ArticleResult) (category:news, keyword: "foo")
+            surf (BookmarkResult) (category:application, keyword: "foo")
+            orders (BookmarkResult) (category:application, keyword: "foo")
+      */
+    searchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:news category:application foo',
+      },
+    })
+
+    results = searchResults.search
+
+    expect(results).toHaveLength(3)
   })
 })
