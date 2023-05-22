@@ -62,7 +62,7 @@ jobs:
           username: ${{ secrets.C1_ART_USERNAME }}
           password: ${{ secrets.C1_ARTIFACTORY_TOKEN }}
 
-      - name: Push image to C1 Dev Artifactory
+      - name: Push image to C1 Dev, Test, and Prod Artifactory
         id: build-c1-image
         env:
           IMAGE_TAG: ${{ github.sha }}
