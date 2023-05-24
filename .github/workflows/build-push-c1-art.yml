@@ -62,7 +62,7 @@ jobs:
           username: ${{ secrets.C1_ART_USERNAME }}
           password: ${{ secrets.C1_ARTIFACTORY_TOKEN }}
 
-      - name: Push image to C1 Dev Artifactory
+      - name: Push image to C1 Dev, Test, and Prod Artifactory
         id: build-c1-image
         env:
           IMAGE_TAG: ${{ github.sha }}
@@ -71,4 +71,8 @@ jobs:
 
         run: |
           docker push $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG
+          docker tag $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG $C1_REGISTRY/dockerreadyfortest/portal/keystone:$IMAGE_TAG
+          docker push $C1_REGISTRY/dockerreadyfortest/portal/keystone:$IMAGE_TAG
+          docker tag $C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG $C1_REGISTRY/dockerreadyforprod/portal/keystone:$IMAGE_TAG
+          docker push $C1_REGISTRY/dockerreadyforprod/portal/keystone:$IMAGE_TAG
           echo "image=$C1_REGISTRY/$C1_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
