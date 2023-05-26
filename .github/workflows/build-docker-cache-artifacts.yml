@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - 'docs/**'
       - '**.md**'
-    # branches: [main]
+    branches: [main]
 
 jobs:
   build-and-save-artifact:
