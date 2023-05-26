@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - 'docs/**'
       - '**.md**'
-    branches: [main]
+    # branches: [main]
 
 jobs:
   build-and-save-artifact:
@@ -51,15 +51,10 @@ jobs:
           content=`cat /tmp/keystone-cms/index.json`
           echo "index=$content" >> $GITHUB_OUTPUT
 
-      - name: Set sha digest of docker manifest
-        id: set_sha
+      - name: Save docker cache to GHA cache using image digest as key
+        uses: actions/cache/save@v3
         env:
           DIGEST: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
-        run: |
-          echo "sha256=${DIGEST##sha256:}" >> $GITHUB_OUTPUT
-
-      - name: Save docker cache to GHA cache
-        uses: actions/cache/save@v3
         with:
           path: /tmp/keystone-cms
-          key: ${{ runner.os }}-docker-keystone-cms-${{ steps.set_sha.outputs.sha256 }}
+          key: ${{ runner.os }}-docker-keystone-cms-${{ env.DIGEST }}
