@@ -40,21 +40,14 @@ jobs:
           name: keystone-cms-index
           path: /tmp/keystone-cms/index.json
 
-      - name: ls cache dirs
+      - name: Get docker image digest from manifest
+        id: manifest
         run: |
-          ls -l /tmp/keystone-cms
-          cat /tmp/keystone-cms/index.json | jq
-
-      - name: Set index.json file variable for extracting json
-        id: set_var
-        run: |
-          content=`cat /tmp/keystone-cms/index.json`
-          echo "index=$content" >> $GITHUB_OUTPUT
+          digest=$(cat /tmp/keystone-cms/index.json | jq -r '.manifests[0].digest')
+          echo "docker_tag=${digest##sha256:}" >> $GITHUB_OUTPUT
 
       - name: Save docker cache to GHA cache using image digest as key
         uses: actions/cache/save@v3
-        env:
-          DIGEST: ${{fromJson(steps.set_var.outputs.index).manifests[0].digest}}
         with:
           path: /tmp/keystone-cms
-          key: ${{ runner.os }}-docker-keystone-cms-${{ env.DIGEST }}
+          key: ${{ runner.os }}-docker-keystone-cms-${{ steps.manifest.outputs.docker_tag }}
