@@ -47,7 +47,7 @@ jobs:
           echo "docker_tag=${digest##sha256:}" >> $GITHUB_OUTPUT
 
       - name: Save docker cache to GHA cache using image digest as key
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3
         with:
           path: /tmp/keystone-cms
           key: ${{ runner.os }}-docker-keystone-cms-${{ steps.manifest.outputs.docker_tag }}
