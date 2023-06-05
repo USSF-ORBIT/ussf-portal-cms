@@ -21,7 +21,7 @@ export const logging =
       ? () => {
           /* */
         }
-      : (s: Record<string, unknown>) => console.log(JSON.stringify(s))
+      : (s: Record<string, unknown>) => console.info(JSON.stringify(s))
   ) =>
   <Field extends BaseFields<BaseListTypeInfo>>({
     hooks = {},
