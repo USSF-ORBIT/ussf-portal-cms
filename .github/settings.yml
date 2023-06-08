@@ -177,7 +177,7 @@ branches:
         users: []
         teams:
           [
-            '@USSF-ORBIT/design',
-            '@USSF-ORBIT/eng',
-            '@USSF-ORBIT/code-owners'
+            'USSF-ORBIT/design',
+            'USSF-ORBIT/eng',
+            'USSF-ORBIT/code-owners'
           ]
