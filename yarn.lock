@@ -3872,10 +3872,10 @@
     "@babel/core" "^7.16.0"
     "@babel/runtime" "^7.16.3"
 
-"@keystone-6/auth@5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@keystone-6/auth/-/auth-5.0.1.tgz#bf1c280c9edbffb315e507d1f34f3a10d519c1c4"
-  integrity sha512-q7IXrX4XXkdXVHDIEbxRzzgcz5wX4r3zpt2TEAlsIi63ZaGgeUFKV6RUq2AR7W2zq4kE9aB4gaNL6oqPyYui+g==
+"@keystone-6/auth@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@keystone-6/auth/-/auth-7.0.0.tgz#9825e9a5a7f8e6e6e2b8da2d296dfe4a41d65dc0"
+  integrity sha512-qzKFJUfMOOnPNWupXUwTzJBjjA6Pn0axSO57dAlsjwHvRzVgGmtej8SGIw1zeImTaIwSpq8nlVXDYWIMr/GUHw==
   dependencies:
     "@babel/runtime" "^7.16.3"
     "@keystone-ui/button" "^7.0.2"
