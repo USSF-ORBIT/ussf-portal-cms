@@ -76,7 +76,9 @@ function setUpLogging() {
    */
   const loggingProperties = ['log', 'debug', 'info', 'warn', 'error']
   for (const property of loggingProperties) {
-    // eslint-disable-next-line security/detect-object-injection
+    // property is coming from loggingProperties which is a hard coded array
+    // allowing console here since it is adding to the functionality of server side logs
+    // eslint-disable-next-line no-console, security/detect-object-injection
     console[property] = getLoggingFunction(property)
   }
 
