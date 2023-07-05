@@ -9,7 +9,7 @@ jobs:
   build-and-push-C1:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
 
       - name: Add DoD Certificate Bundle
         env:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@2c0bd771b40637d97bf205cbccdd294a32112176 # v4
+        uses: docker/metadata-action@818d4b7b91585d195f67373fd9cb0332e31a7175 # v4
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -30,7 +30,7 @@ jobs:
           flavor: |
             latest=false
 
-      - uses: docker/setup-buildx-action@6a58db7e0d21ca03e6c44877909e80e45217eed2 # v2
+      - uses: docker/setup-buildx-action@ecf95283f03858871ff00b787d79c419715afc34 # v2
         id: buildx
         with:
           config-inline: |
@@ -44,7 +44,7 @@ jobs:
         id: details
 
       - name: Build
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4
+        uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825 # v4
         with:
           context: .
           push: false
