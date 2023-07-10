@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.10.0...v1.10.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#309](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/309)) ([d3707be](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/d3707be2e9ed02ba41ca64eda571e3a58000b94c))
+* **deps:** update fast-xml-parser and xml2js (security) ([#355](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/355)) ([5695077](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/5695077ccce2cba3e0eea30c7b4ea3fda3d0b227))
+
 ## [1.10.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.9.0...v1.10.0) (2023-06-05)
 
 
