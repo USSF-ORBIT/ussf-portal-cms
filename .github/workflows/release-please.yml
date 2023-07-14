@@ -20,21 +20,20 @@ jobs:
           release-type: node
           package-name: ussf-portal-cms
           include-v-in-tag: false
+          release-labels: 'type: release'
           changelog-types: >
-            { "types":
-              [
-                { "type": "build", "hidden": true },
-                { "type": "chore", "hidden": true },
-                { "type": "ci", "hidden": true },
-                { "type": "dev", "hidden": true },
-                { "type": "feat", "section": "Features" },
-                { "type": "fix", "section": "Bug Fixes" },
-                { "type": "perf", "section": "Performance Improvements" },
-                { "type": "refactor", "hidden": true },
-                { "type": "revert", "section": "Reverted Changes" },
-                { "type": "style", "hidden": true },
-                { "type": "test", "hidden": true },
-                { "type": "docs", "section": "Documentation" },
-                { "type": "security", "section": "Security Improvements" }
-              ]
-            }
+            [
+              { "type": "build", "hidden": true },
+              { "type": "chore", "hidden": true },
+              { "type": "ci", "hidden": true },
+              { "type": "dev", "hidden": true },
+              { "type": "feat", "section": "Features" },
+              { "type": "fix", "section": "Bug Fixes" },
+              { "type": "perf", "section": "Performance Improvements" },
+              { "type": "refactor", "hidden": true },
+              { "type": "revert", "section": "Reverted Changes" },
+              { "type": "style", "hidden": true },
+              { "type": "test", "hidden": true },
+              { "type": "docs", "section": "Documentation" },
+              { "type": "security", "section": "Security Improvements" }
+            ]
