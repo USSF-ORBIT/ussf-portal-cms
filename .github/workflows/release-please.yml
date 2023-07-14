@@ -19,8 +19,8 @@ jobs:
         with:
           release-type: node
           package-name: ussf-portal-cms
-          include-v-in-tag: false
           release-labels: 'type: release'
+          include-v-in-tag: false
           changelog-types: >
             [
               { "type": "build", "hidden": true },
