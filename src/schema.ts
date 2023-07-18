@@ -11,7 +11,7 @@ import Announcement from './lists/Announcement'
 import Document from './lists/Document'
 import DocumentSection from './lists/DocumentSection'
 import DocumentsPage from './lists/DocumentsPage'
-
+import Zipcode from './lists/Zipcode'
 export const lists = {
   Event,
   User,
@@ -26,4 +26,5 @@ export const lists = {
   Document,
   DocumentSection,
   DocumentsPage,
+  Zipcode,
 }
