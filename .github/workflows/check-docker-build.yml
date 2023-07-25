@@ -1,7 +1,6 @@
 name: Docker Build Test
 
 on:
-  push:
   pull_request:
     paths-ignore:
       - 'docs/**'
