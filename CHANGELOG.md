@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.10.0...v1.10.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#309](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/309)) ([d3707be](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/d3707be2e9ed02ba41ca64eda571e3a58000b94c))
+* **deps:** update fast-xml-parser and xml2js (security) ([#355](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/355)) ([5695077](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/5695077ccce2cba3e0eea30c7b4ea3fda3d0b227))
+
+## [1.10.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.9.0...v1.10.0) (2023-06-05)
+
+
+### Features
+
+* Add multi-tag and multi-label support for filtering in search ([#332](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/332)) ([40bef99](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/40bef99b09b2b557962aa4e360d5b041ca4ac303))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @keystone-6/fields-document to v8 ([#337](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/337)) ([5756b7c](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/5756b7c8d2027cc71cc89058b93ca8d91df3e168))
+
 ## [1.9.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.8.2...1.9.0) (2023-04-21)
 
 

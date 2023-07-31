@@ -175,4 +175,9 @@ branches:
       restrictions:
         apps: []
         users: []
-        teams: []
+        teams:
+          [
+            '@USSF-ORBIT/design',
+            '@USSF-ORBIT/eng',
+            '@USSF-ORBIT/code-owners'
+          ]

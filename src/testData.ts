@@ -11,6 +11,7 @@ export const surf = {
   label: 'SURF',
   url: 'https://afpcsecure.us.af.mil/',
   description: 'A one page summary of your career found on AMS',
+  keywords: 'foo',
 }
 
 export const orders = {
@@ -32,10 +33,25 @@ export const publishedArticleData = {
   keywords: 'foo',
   publishedDate: DateTime.now().toISO(),
   body: JSON.parse(
-    `[{"type":"paragraph","children":[{"text":"Lorem ipsum"}]}]`
+    `[{"type":"paragraph","children":[{"text":"Lorem ipsum dolor sit amet"}]}]`
   ),
   labels: { create: { name: 'All Guardians', type: 'Audience' } },
   tags: { create: { name: 'Test Tag' } },
+}
+
+export const publishedArticleWithMultipleTagsData = {
+  title: 'Civilian Article',
+  slug: 'civilian-article',
+  category: 'InternalNews',
+  status: 'Published',
+  preview: 'A civilian test article that is published.',
+  keywords: 'bar',
+  publishedDate: DateTime.now().toISO(),
+  body: JSON.parse(
+    `[{"type":"paragraph","children":[{"text":"Lorem ipsum"}]}]`
+  ),
+  labels: { create: { name: 'Civilians', type: 'Audience' } },
+  tags: { create: { name: 'Lorem Tag' } },
 }
 
 export const scheduledArticleData = {
@@ -74,4 +90,5 @@ export const testArticles = [
   scheduledArticleData,
   draftArticleData,
   searchTermArticleData,
+  publishedArticleWithMultipleTagsData,
 ]
