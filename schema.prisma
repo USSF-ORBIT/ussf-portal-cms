@@ -275,7 +275,7 @@ model DocumentsPage {
 
 model Zipcode {
   id        String @id @default(cuid())
-  code      Int
+  code      String @unique @default("")
   latitude  Float
   longitude Float
 }

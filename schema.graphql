@@ -1106,13 +1106,14 @@ input DocumentSectionRelateToManyForCreateInput {
 
 type Zipcode {
   id: ID!
-  code: Int
+  code: String
   latitude: Float
   longitude: Float
 }
 
 input ZipcodeWhereUniqueInput {
   id: ID
+  code: String
 }
 
 input ZipcodeWhereInput {
@@ -1120,20 +1121,9 @@ input ZipcodeWhereInput {
   OR: [ZipcodeWhereInput!]
   NOT: [ZipcodeWhereInput!]
   id: IDFilter
-  code: IntFilter
+  code: StringFilter
   latitude: FloatFilter
   longitude: FloatFilter
-}
-
-input IntFilter {
-  equals: Int
-  in: [Int!]
-  notIn: [Int!]
-  lt: Int
-  lte: Int
-  gt: Int
-  gte: Int
-  not: IntFilter
 }
 
 input FloatFilter {
@@ -1155,7 +1145,7 @@ input ZipcodeOrderByInput {
 }
 
 input ZipcodeUpdateInput {
-  code: Int
+  code: String
   latitude: Float
   longitude: Float
 }
@@ -1166,7 +1156,7 @@ input ZipcodeUpdateArgs {
 }
 
 input ZipcodeCreateInput {
-  code: Int
+  code: String
   latitude: Float
   longitude: Float
 }

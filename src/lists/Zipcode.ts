@@ -1,10 +1,15 @@
 import { list } from '@keystone-6/core'
-import { float, integer, text } from '@keystone-6/core/fields'
-import { denyAll } from '@keystone-6/core/access'
+import { float, text } from '@keystone-6/core/fields'
+import { allowAll, denyAll } from '@keystone-6/core/access'
 
 const Zipcode = list({
   access: {
-    operation: denyAll,
+    operation: {
+      query: allowAll,
+      create: denyAll,
+      update: denyAll,
+      delete: denyAll,
+    },
   },
 
   ui: {
@@ -13,10 +18,10 @@ const Zipcode = list({
   },
 
   fields: {
-    code: integer({
+    code: text({
+      isIndexed: 'unique',
       validation: {
         isRequired: true,
-        max: 10,
       },
     }),
     latitude: float({
