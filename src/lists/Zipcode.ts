@@ -13,8 +13,7 @@ const Zipcode = list({
   },
 
   ui: {
-    hideCreate: () => true,
-    hideDelete: () => true,
+    isHidden: () => true,
   },
 
   fields: {
