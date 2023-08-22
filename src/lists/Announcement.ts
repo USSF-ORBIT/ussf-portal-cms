@@ -173,6 +173,29 @@ const Announcement = list(
           views: './src/components/callToAction',
         },
         componentBlocks,
+        hooks: {
+          validateInput: async ({
+            inputData,
+            resolvedData,
+            addValidationError,
+          }) => {
+            // Url for call to action is required
+            if (inputData.body && inputData.body.length > 0) {
+              // Check each component of document body for call to action
+              inputData.body.forEach((component: any) => {
+                if (component.component === 'callToAction') {
+                  // Make sure a URL or linked asset is provided
+                  if (!component.props.link.value) {
+                    addValidationError(
+                      'Valid URL or linked asset is required for Call to Action'
+                    )
+                  }
+                }
+              })
+            }
+            return resolvedData.body
+          },
+        },
       }),
     },
   })
