@@ -1104,6 +1104,63 @@ input DocumentSectionRelateToManyForCreateInput {
   connect: [DocumentSectionWhereUniqueInput!]
 }
 
+type Zipcode {
+  id: ID!
+  code: String
+  latitude: Float
+  longitude: Float
+}
+
+input ZipcodeWhereUniqueInput {
+  id: ID
+  code: String
+}
+
+input ZipcodeWhereInput {
+  AND: [ZipcodeWhereInput!]
+  OR: [ZipcodeWhereInput!]
+  NOT: [ZipcodeWhereInput!]
+  id: IDFilter
+  code: StringFilter
+  latitude: FloatFilter
+  longitude: FloatFilter
+}
+
+input FloatFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: FloatFilter
+}
+
+input ZipcodeOrderByInput {
+  id: OrderDirection
+  code: OrderDirection
+  latitude: OrderDirection
+  longitude: OrderDirection
+}
+
+input ZipcodeUpdateInput {
+  code: String
+  latitude: Float
+  longitude: Float
+}
+
+input ZipcodeUpdateArgs {
+  where: ZipcodeWhereUniqueInput!
+  data: ZipcodeUpdateInput!
+}
+
+input ZipcodeCreateInput {
+  code: String
+  latitude: Float
+  longitude: Float
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1188,6 +1245,12 @@ type Mutation {
   updateDocumentsPages(data: [DocumentsPageUpdateArgs!]!): [DocumentsPage]
   deleteDocumentsPage(where: DocumentsPageWhereUniqueInput!): DocumentsPage
   deleteDocumentsPages(where: [DocumentsPageWhereUniqueInput!]!): [DocumentsPage]
+  createZipcode(data: ZipcodeCreateInput!): Zipcode
+  createZipcodes(data: [ZipcodeCreateInput!]!): [Zipcode]
+  updateZipcode(where: ZipcodeWhereUniqueInput!, data: ZipcodeUpdateInput!): Zipcode
+  updateZipcodes(data: [ZipcodeUpdateArgs!]!): [Zipcode]
+  deleteZipcode(where: ZipcodeWhereUniqueInput!): Zipcode
+  deleteZipcodes(where: [ZipcodeWhereUniqueInput!]!): [Zipcode]
   endSession: Boolean!
 }
 
@@ -1231,6 +1294,9 @@ type Query {
   documentsPages(where: DocumentsPageWhereInput! = {}, orderBy: [DocumentsPageOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentsPage!]
   documentsPage(where: DocumentsPageWhereUniqueInput!): DocumentsPage
   documentsPagesCount(where: DocumentsPageWhereInput! = {}): Int
+  zipcodes(where: ZipcodeWhereInput! = {}, orderBy: [ZipcodeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Zipcode!]
+  zipcode(where: ZipcodeWhereUniqueInput!): Zipcode
+  zipcodesCount(where: ZipcodeWhereInput! = {}): Int
   keystone: KeystoneMeta!
   search(query: String!): [SearchResultItem]
   authenticatedItem: AuthenticatedItem
