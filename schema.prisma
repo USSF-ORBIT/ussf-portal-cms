@@ -273,6 +273,13 @@ model DocumentsPage {
   @@index([createdById])
 }
 
+model Zipcode {
+  id        String @id @default(cuid())
+  code      String @unique @default("")
+  latitude  Float
+  longitude Float
+}
+
 enum UserRoleType {
   User
   Author
