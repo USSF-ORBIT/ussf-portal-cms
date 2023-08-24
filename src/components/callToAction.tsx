@@ -26,6 +26,7 @@ export const componentBlocks = {
           options: [
             { label: 'URL', value: 'url' },
             { label: 'Article', value: 'article' },
+            { label: 'Document', value: 'document' },
           ],
           defaultValue: 'url',
         }),
@@ -37,6 +38,11 @@ export const componentBlocks = {
             label: 'Article',
             listKey: 'Article',
             selection: 'id title slug',
+          }),
+          document: fields.relationship({
+            label: 'Document',
+            listKey: 'Document',
+            selection: 'id title file { url }',
           }),
         }
       ),
