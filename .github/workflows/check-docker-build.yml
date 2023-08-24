@@ -13,7 +13,7 @@ jobs:
   check-docker-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: Download keystone-cms image manifest
         uses: dawidd6/action-download-artifact@246dbf436b23d7c49e21a7ab8204ca9ecd1fe615 # v2
@@ -60,7 +60,7 @@ jobs:
           path: /tmp/keystone-cms
           key: ${{ runner.os }}-docker-keystone-cms-${{ steps.keystone_manifest.outputs.keystone_cms_docker_tag }}
 
-      - uses: docker/setup-buildx-action@4b4e9c3e2d4531116a6f8ba8e71fc6e2cb6e6c8c # v2
+      - uses: docker/setup-buildx-action@4c0219f9ac95b02789c1075625400b2acbff50b1 # v2
         id: buildx
         with:
           install: true
@@ -73,7 +73,7 @@ jobs:
           sudo bash scripts/add-dod-cas.sh
 
       - name: Build
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4
+        uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825 # v4
         with:
           context: .
           push: false
