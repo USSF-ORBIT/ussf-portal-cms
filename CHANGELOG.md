@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/v1.10.1...1.11.0) (2023-09-11)
+
+
+### Features
+
+* Add support for CTA to link a document ([#371](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/371)) ([20efa9b](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/20efa9b249f6456f5606e2e60be04adf92e1275b))
+* Add zipcode type and data ([#368](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/368)) ([6394580](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/63945802dd706a7981605d8046ff04103aa66159))
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#367](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/367)) ([26e5977](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/26e5977e2d806ab1ad5606469bafca99b08a5617))
+
 ## [1.10.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.10.0...v1.10.1) (2023-07-10)
 
 
