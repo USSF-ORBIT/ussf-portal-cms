@@ -68,7 +68,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && dumb-init node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:18.17.0-bookworm- AS build-env
+FROM node:18.17.0-bookworm AS build-env
 
 WORKDIR /app
 
