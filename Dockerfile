@@ -4,9 +4,7 @@ FROM node:18.17.0-bookworm AS builder
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends \
-    dumb-init \
-    yarn
+  && apt-get install -y --no-install-recommends dumb-init yarn
 
 WORKDIR /app
 
@@ -54,7 +52,7 @@ FROM node:18.17.0-bookworm AS e2e-local
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends dumb-init libc6 yarn zlib1g
+  && apt-get install -y --no-install-recommends dumb-init yarn
 
 WORKDIR /app
 
@@ -76,7 +74,7 @@ COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends libc6 ca-certificates python wget unzip dumb-init zlib1g \
+  && apt-get install -y --no-install-recommends libc6 ca-certificates wget unzip \
   && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
 
 ##--------- Stage: runner ---------##
