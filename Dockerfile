@@ -68,7 +68,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && dumb-init node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:18.17.0-bookworm-slim AS build-env
+FROM node:18.17.0-bookworm- AS build-env
 
 WORKDIR /app
 
@@ -76,7 +76,7 @@ COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends openssl libc6 ca-certificates python wget unzip dumb-init zlib1g \
+  && apt-get install -y --no-install-recommends libc6 ca-certificates python wget unzip dumb-init zlib1g \
   && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
 
 ##--------- Stage: runner ---------##
