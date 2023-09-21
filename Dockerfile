@@ -83,8 +83,6 @@ FROM gcr.io/distroless/nodejs18-debian12 AS runner
 
 WORKDIR /app
 
-COPY scripts/add-rds-cas.sh .
-
 COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 COPY --from=builder /usr/bin/openssl /usr/bin/openssl
 COPY --from=builder /usr/bin/dumb-init /usr/bin/dumb-init
