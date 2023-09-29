@@ -1,10 +1,10 @@
 ##--------- Stage: builder ---------##
 # Node image variant name explanations: "bookworm" is the codeword for Debian 12
-FROM node:18.17.0-bookworm AS builder
+FROM node:18.17.0-bookworm-slim AS builder
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends dumb-init yarn
+  && apt-get install -y --no-install-recommends dumb-init openssl yarn
 
 WORKDIR /app
 
@@ -48,7 +48,7 @@ CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /usr/bin/
 
 ##--------- Stage: e2e-local ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM node:18.17.0-bookworm AS e2e-local
+FROM node:18.17.0-bookworm-slim AS e2e-local
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
@@ -57,6 +57,7 @@ RUN apt-get update \
 WORKDIR /app
 
 COPY --from=builder /app /app
+COPY --from=builder /usr/bin/openssl /usr/bin/openssl
 
 ENV NODE_ENV production
 
@@ -66,7 +67,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && dumb-init node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:18.17.0-bookworm AS build-env
+FROM node:18.17.0-bookworm-slim AS build-env
 
 WORKDIR /app
 
@@ -74,7 +75,7 @@ COPY scripts/add-rds-cas.sh .
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends libc6 ca-certificates wget unzip \
+  && apt-get install -y --no-install-recommends libc6 ca-certificates openssl wget unzip \
   && chmod +x add-rds-cas.sh && sh add-rds-cas.sh
 
 ##--------- Stage: runner ---------##
@@ -84,6 +85,7 @@ FROM gcr.io/distroless/nodejs18-debian12 AS runner
 WORKDIR /app
 
 COPY --from=builder /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
+
 COPY --from=builder /usr/bin/openssl /usr/bin/openssl
 COPY --from=builder /usr/bin/dumb-init /usr/bin/dumb-init
 
