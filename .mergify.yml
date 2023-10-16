@@ -10,3 +10,4 @@ queue_rules:
   - name: default
     queue_conditions:
       - "#approved-reviews-by >= 1"
+    merge_method: squash
