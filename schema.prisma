@@ -70,6 +70,10 @@ model User {
   from_DocumentSection_createdBy DocumentSection[] @relation("DocumentSection_createdBy")
   from_DocumentsPage_updatedBy   DocumentsPage[]   @relation("DocumentsPage_updatedBy")
   from_DocumentsPage_createdBy   DocumentsPage[]   @relation("DocumentsPage_createdBy")
+  from_LandingPage_updatedBy     LandingPage[]     @relation("LandingPage_updatedBy")
+  from_LandingPage_createdBy     LandingPage[]     @relation("LandingPage_createdBy")
+  from_Category_updatedBy        Category[]        @relation("Category_updatedBy")
+  from_Category_createdBy        Category[]        @relation("Category_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -94,16 +98,17 @@ model Bookmark {
 }
 
 model Collection {
-  id              String     @id @default(cuid())
-  title           String     @default("")
-  bookmarks       Bookmark[] @relation("Bookmark_collections")
-  showInSitesApps Boolean    @default(false)
-  updatedBy       User?      @relation("Collection_updatedBy", fields: [updatedById], references: [id])
-  updatedById     String?    @map("updatedBy")
-  createdBy       User?      @relation("Collection_createdBy", fields: [createdById], references: [id])
-  createdById     String?    @map("createdBy")
-  updatedAt       DateTime?  @updatedAt
-  createdAt       DateTime?  @default(now())
+  id                           String        @id @default(cuid())
+  title                        String        @default("")
+  bookmarks                    Bookmark[]    @relation("Bookmark_collections")
+  showInSitesApps              Boolean       @default(false)
+  updatedBy                    User?         @relation("Collection_updatedBy", fields: [updatedById], references: [id])
+  updatedById                  String?       @map("updatedBy")
+  createdBy                    User?         @relation("Collection_createdBy", fields: [createdById], references: [id])
+  createdById                  String?       @map("createdBy")
+  updatedAt                    DateTime?     @updatedAt
+  createdAt                    DateTime?     @default(now())
+  from_LandingPage_collections LandingPage[] @relation("LandingPage_collections")
 
   @@index([updatedById])
   @@index([createdById])
@@ -171,35 +176,38 @@ model Tag {
 }
 
 model Article {
-  id             String              @id @default(cuid())
-  category       ArticleCategoryType
-  status         ArticleStatusType   @default(Draft)
-  publishedDate  DateTime?
-  archivedDate   DateTime?
-  slug           String              @unique @default("")
-  title          String              @default("")
-  preview        String              @default("")
-  hero_filesize  Int?
-  hero_extension String?
-  hero_width     Int?
-  hero_height    Int?
-  hero_id        String?
-  body           Json                @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  searchBody     String              @default("")
-  keywords       String              @default("")
-  byline         Byline?             @relation("Article_byline", fields: [bylineId], references: [id])
-  bylineId       String?             @map("byline")
-  location       Location?           @relation("Article_location", fields: [locationId], references: [id])
-  locationId     String?             @map("location")
-  labels         Label[]             @relation("Article_labels")
-  tags           Tag[]               @relation("Article_tags")
-  updatedBy      User?               @relation("Article_updatedBy", fields: [updatedById], references: [id])
-  updatedById    String?             @map("updatedBy")
-  createdBy      User?               @relation("Article_createdBy", fields: [createdById], references: [id])
-  createdById    String?             @map("createdBy")
-  updatedAt      DateTime?           @updatedAt
-  createdAt      DateTime?           @default(now())
+  id                        String            @id @default(cuid())
+  category                  Category?         @relation("Article_category", fields: [categoryId], references: [id])
+  categoryId                String?           @map("category")
+  status                    ArticleStatusType @default(Draft)
+  publishedDate             DateTime?
+  archivedDate              DateTime?
+  slug                      String            @unique @default("")
+  title                     String            @default("")
+  preview                   String            @default("")
+  hero_filesize             Int?
+  hero_extension            String?
+  hero_width                Int?
+  hero_height               Int?
+  hero_id                   String?
+  body                      Json              @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  searchBody                String            @default("")
+  keywords                  String            @default("")
+  byline                    Byline?           @relation("Article_byline", fields: [bylineId], references: [id])
+  bylineId                  String?           @map("byline")
+  location                  Location?         @relation("Article_location", fields: [locationId], references: [id])
+  locationId                String?           @map("location")
+  labels                    Label[]           @relation("Article_labels")
+  tags                      Tag[]             @relation("Article_tags")
+  updatedBy                 User?             @relation("Article_updatedBy", fields: [updatedById], references: [id])
+  updatedById               String?           @map("updatedBy")
+  createdBy                 User?             @relation("Article_createdBy", fields: [createdById], references: [id])
+  createdById               String?           @map("createdBy")
+  updatedAt                 DateTime?         @updatedAt
+  createdAt                 DateTime?         @default(now())
+  from_LandingPage_articles LandingPage[]     @relation("LandingPage_articles")
 
+  @@index([categoryId])
   @@index([bylineId])
   @@index([locationId])
   @@index([updatedById])
@@ -253,6 +261,7 @@ model DocumentSection {
   updatedAt                   DateTime?       @updatedAt
   createdAt                   DateTime?       @default(now())
   from_DocumentsPage_sections DocumentsPage[] @relation("DocumentsPage_sections")
+  from_LandingPage_documents  LandingPage[]   @relation("LandingPage_documents")
 
   @@index([updatedById])
   @@index([createdById])
@@ -280,6 +289,44 @@ model Zipcode {
   longitude Float
 }
 
+model LandingPage {
+  id              String            @id @default(cuid())
+  pageTitle       String            @default("")
+  slug            String            @unique @default("")
+  pageDescription String            @default("")
+  category        Category?         @relation("LandingPage_category", fields: [categoryId], references: [id])
+  categoryId      String?           @map("category")
+  articles        Article[]         @relation("LandingPage_articles")
+  documents       DocumentSection[] @relation("LandingPage_documents")
+  collections     Collection[]      @relation("LandingPage_collections")
+  updatedBy       User?             @relation("LandingPage_updatedBy", fields: [updatedById], references: [id])
+  updatedById     String?           @map("updatedBy")
+  createdBy       User?             @relation("LandingPage_createdBy", fields: [createdById], references: [id])
+  createdById     String?           @map("createdBy")
+  updatedAt       DateTime?         @updatedAt
+  createdAt       DateTime?         @default(now())
+
+  @@index([categoryId])
+  @@index([updatedById])
+  @@index([createdById])
+}
+
+model Category {
+  id                        String        @id @default(cuid())
+  name                      String        @unique @default("")
+  updatedBy                 User?         @relation("Category_updatedBy", fields: [updatedById], references: [id])
+  updatedById               String?       @map("updatedBy")
+  createdBy                 User?         @relation("Category_createdBy", fields: [createdById], references: [id])
+  createdById               String?       @map("createdBy")
+  updatedAt                 DateTime?     @updatedAt
+  createdAt                 DateTime?     @default(now())
+  from_Article_category     Article[]     @relation("Article_category")
+  from_LandingPage_category LandingPage[] @relation("LandingPage_category")
+
+  @@index([updatedById])
+  @@index([createdById])
+}
+
 enum UserRoleType {
   User
   Author
@@ -290,11 +337,6 @@ enum LabelTypeType {
   Source
   Audience
   Base
-}
-
-enum ArticleCategoryType {
-  InternalNews
-  ORBITBlog
 }
 
 enum ArticleStatusType {

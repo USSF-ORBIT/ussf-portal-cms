@@ -606,7 +606,7 @@ input TagCreateInput {
 
 type Article {
   id: ID!
-  category: ArticleCategoryType
+  category: Category
   status: ArticleStatusType
   articlePreviewUrl: JSON
   publishedDate: DateTime
@@ -628,11 +628,6 @@ type Article {
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
-}
-
-enum ArticleCategoryType {
-  InternalNews
-  ORBITBlog
 }
 
 enum ArticleStatusType {
@@ -671,7 +666,7 @@ input ArticleWhereInput {
   OR: [ArticleWhereInput!]
   NOT: [ArticleWhereInput!]
   id: IDFilter
-  category: ArticleCategoryTypeNullableFilter
+  category: CategoryWhereInput
   status: ArticleStatusTypeNullableFilter
   publishedDate: DateTimeNullableFilter
   archivedDate: DateTimeNullableFilter
@@ -688,13 +683,6 @@ input ArticleWhereInput {
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
   createdAt: DateTimeNullableFilter
-}
-
-input ArticleCategoryTypeNullableFilter {
-  equals: ArticleCategoryType
-  in: [ArticleCategoryType!]
-  notIn: [ArticleCategoryType!]
-  not: ArticleCategoryTypeNullableFilter
 }
 
 input ArticleStatusTypeNullableFilter {
@@ -718,7 +706,6 @@ input TagManyRelationFilter {
 
 input ArticleOrderByInput {
   id: OrderDirection
-  category: OrderDirection
   status: OrderDirection
   publishedDate: OrderDirection
   archivedDate: OrderDirection
@@ -732,7 +719,7 @@ input ArticleOrderByInput {
 }
 
 input ArticleUpdateInput {
-  category: ArticleCategoryType
+  category: CategoryRelateToOneForUpdateInput
   status: ArticleStatusType
   publishedDate: DateTime
   archivedDate: DateTime
@@ -747,6 +734,12 @@ input ArticleUpdateInput {
   location: LocationRelateToOneForUpdateInput
   labels: LabelRelateToManyForUpdateInput
   tags: TagRelateToManyForUpdateInput
+}
+
+input CategoryRelateToOneForUpdateInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
+  disconnect: Boolean
 }
 
 input ImageFieldInput {
@@ -788,7 +781,7 @@ input ArticleUpdateArgs {
 }
 
 input ArticleCreateInput {
-  category: ArticleCategoryType
+  category: CategoryRelateToOneForCreateInput
   status: ArticleStatusType
   publishedDate: DateTime
   archivedDate: DateTime
@@ -803,6 +796,11 @@ input ArticleCreateInput {
   location: LocationRelateToOneForCreateInput
   labels: LabelRelateToManyForCreateInput
   tags: TagRelateToManyForCreateInput
+}
+
+input CategoryRelateToOneForCreateInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
 }
 
 input BylineRelateToOneForCreateInput {
@@ -1161,6 +1159,145 @@ input ZipcodeCreateInput {
   longitude: Float
 }
 
+type LandingPage {
+  id: ID!
+  pageTitle: String
+  slug: String
+  pageDescription: String
+  category: Category
+  articles(where: ArticleWhereInput! = {}, orderBy: [ArticleOrderByInput!]! = [], take: Int, skip: Int! = 0): [Article!]
+  articlesCount(where: ArticleWhereInput! = {}): Int
+  documents(where: DocumentSectionWhereInput! = {}, orderBy: [DocumentSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentSection!]
+  documentsCount(where: DocumentSectionWhereInput! = {}): Int
+  collections(where: CollectionWhereInput! = {}, orderBy: [CollectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Collection!]
+  collectionsCount(where: CollectionWhereInput! = {}): Int
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input LandingPageWhereUniqueInput {
+  id: ID
+  slug: String
+}
+
+input LandingPageWhereInput {
+  AND: [LandingPageWhereInput!]
+  OR: [LandingPageWhereInput!]
+  NOT: [LandingPageWhereInput!]
+  id: IDFilter
+  pageTitle: StringFilter
+  slug: StringFilter
+  pageDescription: StringFilter
+  category: CategoryWhereInput
+  articles: ArticleManyRelationFilter
+  documents: DocumentSectionManyRelationFilter
+  collections: CollectionManyRelationFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input ArticleManyRelationFilter {
+  every: ArticleWhereInput
+  some: ArticleWhereInput
+  none: ArticleWhereInput
+}
+
+input LandingPageOrderByInput {
+  id: OrderDirection
+  pageTitle: OrderDirection
+  slug: OrderDirection
+  pageDescription: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input LandingPageUpdateInput {
+  pageTitle: String
+  slug: String
+  pageDescription: String
+  category: CategoryRelateToOneForUpdateInput
+  articles: ArticleRelateToManyForUpdateInput
+  documents: DocumentSectionRelateToManyForUpdateInput
+  collections: CollectionRelateToManyForUpdateInput
+}
+
+input ArticleRelateToManyForUpdateInput {
+  disconnect: [ArticleWhereUniqueInput!]
+  set: [ArticleWhereUniqueInput!]
+  create: [ArticleCreateInput!]
+  connect: [ArticleWhereUniqueInput!]
+}
+
+input LandingPageUpdateArgs {
+  where: LandingPageWhereUniqueInput!
+  data: LandingPageUpdateInput!
+}
+
+input LandingPageCreateInput {
+  pageTitle: String
+  slug: String
+  pageDescription: String
+  category: CategoryRelateToOneForCreateInput
+  articles: ArticleRelateToManyForCreateInput
+  documents: DocumentSectionRelateToManyForCreateInput
+  collections: CollectionRelateToManyForCreateInput
+}
+
+input ArticleRelateToManyForCreateInput {
+  create: [ArticleCreateInput!]
+  connect: [ArticleWhereUniqueInput!]
+}
+
+type Category {
+  id: ID!
+  name: String
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+input CategoryWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input CategoryWhereInput {
+  AND: [CategoryWhereInput!]
+  OR: [CategoryWhereInput!]
+  NOT: [CategoryWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input CategoryOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input CategoryUpdateInput {
+  name: String
+}
+
+input CategoryUpdateArgs {
+  where: CategoryWhereUniqueInput!
+  data: CategoryUpdateInput!
+}
+
+input CategoryCreateInput {
+  name: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1251,6 +1388,18 @@ type Mutation {
   updateZipcodes(data: [ZipcodeUpdateArgs!]!): [Zipcode]
   deleteZipcode(where: ZipcodeWhereUniqueInput!): Zipcode
   deleteZipcodes(where: [ZipcodeWhereUniqueInput!]!): [Zipcode]
+  createLandingPage(data: LandingPageCreateInput!): LandingPage
+  createLandingPages(data: [LandingPageCreateInput!]!): [LandingPage]
+  updateLandingPage(where: LandingPageWhereUniqueInput!, data: LandingPageUpdateInput!): LandingPage
+  updateLandingPages(data: [LandingPageUpdateArgs!]!): [LandingPage]
+  deleteLandingPage(where: LandingPageWhereUniqueInput!): LandingPage
+  deleteLandingPages(where: [LandingPageWhereUniqueInput!]!): [LandingPage]
+  createCategory(data: CategoryCreateInput!): Category
+  createCategories(data: [CategoryCreateInput!]!): [Category]
+  updateCategory(where: CategoryWhereUniqueInput!, data: CategoryUpdateInput!): Category
+  updateCategories(data: [CategoryUpdateArgs!]!): [Category]
+  deleteCategory(where: CategoryWhereUniqueInput!): Category
+  deleteCategories(where: [CategoryWhereUniqueInput!]!): [Category]
   endSession: Boolean!
 }
 
@@ -1297,6 +1446,12 @@ type Query {
   zipcodes(where: ZipcodeWhereInput! = {}, orderBy: [ZipcodeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Zipcode!]
   zipcode(where: ZipcodeWhereUniqueInput!): Zipcode
   zipcodesCount(where: ZipcodeWhereInput! = {}): Int
+  landingPages(where: LandingPageWhereInput! = {}, orderBy: [LandingPageOrderByInput!]! = [], take: Int, skip: Int! = 0): [LandingPage!]
+  landingPage(where: LandingPageWhereUniqueInput!): LandingPage
+  landingPagesCount(where: LandingPageWhereInput! = {}): Int
+  categories(where: CategoryWhereInput! = {}, orderBy: [CategoryOrderByInput!]! = [], take: Int, skip: Int! = 0): [Category!]
+  category(where: CategoryWhereUniqueInput!): Category
+  categoriesCount(where: CategoryWhereInput! = {}): Int
   keystone: KeystoneMeta!
   search(query: String!): [SearchResultItem]
   authenticatedItem: AuthenticatedItem

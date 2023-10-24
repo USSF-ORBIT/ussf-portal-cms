@@ -88,15 +88,10 @@ const Article = list(
     },
 
     fields: {
-      category: select({
-        type: 'enum',
-        options: Object.entries(ARTICLE_CATEGORIES).map(([, v]) => ({
-          label: v,
-          value: v,
-        })),
-        validation: {
-          isRequired: true,
-        },
+      category: relationship({
+        ref: 'Category',
+        many: false,
+        isFilterable: true,
       }),
       status: select({
         type: 'enum',

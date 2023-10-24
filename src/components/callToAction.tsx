@@ -37,7 +37,7 @@ export const componentBlocks = {
           article: fields.relationship({
             label: 'Article',
             listKey: 'Article',
-            selection: 'id title slug',
+            selection: 'id title slug category { name }',
           }),
           document: fields.relationship({
             label: 'Document',
