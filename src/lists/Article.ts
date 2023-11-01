@@ -36,6 +36,7 @@ const SLUG_MAX = 1000
 const ARTICLE_CATEGORIES = {
   INTERNAL_NEWS: 'InternalNews',
   ORBIT_BLOG: 'ORBITBlog',
+  LANDING_PAGE: 'LandingPage',
 } as const
 
 type DocumentSubFieldJSON = {

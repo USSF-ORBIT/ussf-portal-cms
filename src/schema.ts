@@ -12,6 +12,7 @@ import Document from './lists/Document'
 import DocumentSection from './lists/DocumentSection'
 import DocumentsPage from './lists/DocumentsPage'
 import Zipcode from './lists/Zipcode'
+import LandingPage from './lists/LandingPage'
 
 export const lists = {
   Event,
@@ -28,4 +29,5 @@ export const lists = {
   DocumentSection,
   DocumentsPage,
   Zipcode,
+  LandingPage,
 }
