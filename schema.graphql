@@ -1183,6 +1183,8 @@ type FilteredArticles {
   id: String
   title: String
   slug: String
+  preview: String
+  publishedDate: String
 }
 
 input LandingPageWhereUniqueInput {

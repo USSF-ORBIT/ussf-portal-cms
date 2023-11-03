@@ -7,7 +7,7 @@ import {
 } from '@keystone-6/core/types'
 
 export function Field({ value }: FieldProps<any>) {
-  if (value.length === 0) {
+  if (!value) {
     return (
       <>
         <h4>Articles</h4>
