@@ -3,10 +3,6 @@ name: Portal Client Docker Build Cache and Save Artifact
 on:
   workflow_dispatch:
   push:
-    paths-ignore:
-      - 'docs/**'
-      - '**.md**'
-    branches: [main]
 
 jobs:
   build-and-cache-portal-client:
