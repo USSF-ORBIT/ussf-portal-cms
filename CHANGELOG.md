@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.11.0...1.11.1) (2023-10-25)
+
+
+### Documentation
+
+* move docs to the ussf-portal repo ([#386](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/386)) ([f95587a](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/f95587a4bfdbfd17acabe72e8f514d2d2b5fcdc9))
+
 ## [1.11.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/v1.10.1...1.11.0) (2023-09-11)
 
 
