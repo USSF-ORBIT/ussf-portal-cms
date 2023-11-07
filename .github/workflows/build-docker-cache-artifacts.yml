@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-cache-portal-client:
-      uses: USSF-ORBIT/ussf-portal/.github/workflows/build-and-cache-keystone-cms.yml@docker-ci/minhlai/re-usable-docker-cache-workflows
+      uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-docker-cache-keystone-cms.yml@docker-ci/minhlai/re-usable-docker-cache-workflows
 
   trigger-build-and-cache-in-cms-repo:
       runs-on: ubuntu-latest
