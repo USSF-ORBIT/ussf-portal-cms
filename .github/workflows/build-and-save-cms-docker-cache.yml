@@ -1,4 +1,4 @@
-name: Keystone CMS Docker Build Cache Save Artifact
+name: Keystone CMS Docker Build and Save Cache
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
     branches: [main]
 
 jobs:
-  build-and-cache-portal-client:
+  build-and-cache-keystone-cms:
       uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-docker-cache-keystone-cms.yml@docker-ci/minhlai/re-usable-docker-cache-workflows
 
   trigger-build-and-cache-in-cms-repo:
