@@ -18,4 +18,4 @@ jobs:
         - name: call GH API to trigger workflow
           run: gh workflow run build-keystone-cms-docker-cache.yml -R USSF-ORBIT/ussf-portal-client --ref docker-ci/minhlai/re-use-docker-cache-workflows
           env:
-            GH_TOKEN: ${{secrets.ACTION_DOWNLOAD_ARTIFACT_GITHUB_TOKEN}} 
+            GH_TOKEN: ${{secrets.PUBLIC_REPO_READ}} 
