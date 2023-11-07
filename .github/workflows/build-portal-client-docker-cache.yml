@@ -2,7 +2,6 @@ name: Portal Client Docker Build Cache and Save Artifact
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   build-and-cache-portal-client:
