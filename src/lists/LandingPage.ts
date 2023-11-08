@@ -105,6 +105,7 @@ const LandingPage = list(
               slug: string
               preview: string
               publishedDate: string
+              labels: { id: string; name: string }[]
             }>()({
               name: 'FilteredArticles',
               fields: {
@@ -113,6 +114,17 @@ const LandingPage = list(
                 slug: graphql.field({ type: graphql.String }),
                 preview: graphql.field({ type: graphql.String }),
                 publishedDate: graphql.field({ type: graphql.String }),
+                labels: graphql.field({
+                  type: graphql.list(
+                    graphql.object<{ id: string; name: string }>()({
+                      name: 'ArticleLabel',
+                      fields: {
+                        id: graphql.field({ type: graphql.String }),
+                        name: graphql.field({ type: graphql.String }),
+                      },
+                    })
+                  ),
+                }),
               },
             })
           ),
@@ -122,7 +134,7 @@ const LandingPage = list(
               where: {
                 tags: { some: { id: { equals: item.articleTagId } } },
               },
-              query: 'id title slug preview publishedDate',
+              query: 'id title slug preview publishedDate labels { id name }',
             })
 
             return articles.map((article) => ({
@@ -131,6 +143,7 @@ const LandingPage = list(
               slug: article.slug,
               preview: article.preview,
               publishedDate: article.publishedDate,
+              labels: article.labels,
             }))
           },
         }),

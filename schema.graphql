@@ -1185,6 +1185,12 @@ type FilteredArticles {
   slug: String
   preview: String
   publishedDate: String
+  labels: [ArticleLabel]
+}
+
+type ArticleLabel {
+  id: String
+  name: String
 }
 
 input LandingPageWhereUniqueInput {
