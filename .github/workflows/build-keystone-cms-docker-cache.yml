@@ -26,6 +26,6 @@ jobs:
             GH_TOKEN: ${{secrets.PUBLIC_REPO_READ}} 
 
         - name: call GH API to trigger caching workflow in ussf-portal repo
-          run: gh workflow run build-docker-cache-e2e.yml -R USSF-ORBIT/ussf-portal --ref main
+          run: gh workflow run reusable-docker-cache-keystone-cms.yml -R USSF-ORBIT/ussf-portal --ref main
           env:
             GH_TOKEN: ${{secrets.PUBLIC_REPO_READ}} 
