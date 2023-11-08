@@ -130,6 +130,11 @@ const LandingPage = list(
           ),
 
           async resolve(item, _, context) {
+            // This means that there are no articles associated with this landing page
+            if (!item.articleTagId) {
+              return []
+            }
+
             const articles = await context.query.Article.findMany({
               where: {
                 tags: { some: { id: { equals: item.articleTagId } } },
