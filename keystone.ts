@@ -3,7 +3,6 @@ import { config } from '@keystone-6/core'
 
 import { lists } from './src/schema'
 import { withSharedAuth } from './src/lib/auth'
-import { getAbsoluteUrl } from './src/util/getAbsoluteUrl'
 import { extendGraphqlSchema } from './src/lib/schema'
 import redisClient from './src/lib/redis'
 import { session } from './src/lib/session'
@@ -94,7 +93,14 @@ export default withSharedAuth(
 
         // If not other public paths & no session, redirect to login page
         if (pathname !== '/api/sysinfo' && pathname !== '/no-access') {
-          const requestUrl = getAbsoluteUrl(req).origin
+          // getAbsoluteUrl gets full path to CMS
+          // however, client knows the full path so we are just passing /cms
+          // this is so we can restrict the locations the client
+          // will redirect to as local to the portal or approved places like the cms
+          // const requestUrl = getAbsoluteUrl(req).origin
+          const requestUrl = '/cms'
+          // Following adds the path that a user was attempting to reach to the end
+          // of the info passed to the login flow
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const redirectUrl = `${requestUrl}${req!.url}`
 
