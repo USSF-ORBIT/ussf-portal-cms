@@ -1167,12 +1167,12 @@ type LandingPage {
   pageTitle: String
   slug: String
   pageDescription: String
-  articles: [FilteredArticles]
-  articleTag: Tag
   documents(where: DocumentSectionWhereInput! = {}, orderBy: [DocumentSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentSection!]
   documentsCount(where: DocumentSectionWhereInput! = {}): Int
   collections(where: CollectionWhereInput! = {}, orderBy: [CollectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Collection!]
   collectionsCount(where: CollectionWhereInput! = {}): Int
+  articles: [FilteredArticles]
+  articleTag: Tag
   updatedBy: User
   createdBy: User
   updatedAt: DateTime
@@ -1206,9 +1206,9 @@ input LandingPageWhereInput {
   pageTitle: StringFilter
   slug: StringFilter
   pageDescription: StringFilter
-  articleTag: TagWhereInput
   documents: DocumentSectionManyRelationFilter
   collections: CollectionManyRelationFilter
+  articleTag: TagWhereInput
   updatedBy: UserWhereInput
   createdBy: UserWhereInput
   updatedAt: DateTimeNullableFilter
@@ -1228,9 +1228,9 @@ input LandingPageUpdateInput {
   pageTitle: String
   slug: String
   pageDescription: String
-  articleTag: TagRelateToOneForUpdateInput
   documents: DocumentSectionRelateToManyForUpdateInput
   collections: CollectionRelateToManyForUpdateInput
+  articleTag: TagRelateToOneForUpdateInput
 }
 
 input TagRelateToOneForUpdateInput {
@@ -1248,9 +1248,9 @@ input LandingPageCreateInput {
   pageTitle: String
   slug: String
   pageDescription: String
-  articleTag: TagRelateToOneForCreateInput
   documents: DocumentSectionRelateToManyForCreateInput
   collections: CollectionRelateToManyForCreateInput
+  articleTag: TagRelateToOneForCreateInput
 }
 
 input TagRelateToOneForCreateInput {

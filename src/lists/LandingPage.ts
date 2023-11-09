@@ -96,6 +96,15 @@ const LandingPage = list(
         },
       }),
 
+      documents: relationship({
+        ref: 'DocumentSection',
+        many: true,
+      }),
+      collections: relationship({
+        ref: 'Collection',
+        many: true,
+      }),
+
       articles: virtual({
         field: graphql.field({
           type: graphql.list(
@@ -166,14 +175,6 @@ const LandingPage = list(
       articleTag: relationship({
         ref: 'Tag',
         many: false,
-      }),
-      documents: relationship({
-        ref: 'DocumentSection',
-        many: true,
-      }),
-      collections: relationship({
-        ref: 'Collection',
-        many: true,
       }),
     },
   })
