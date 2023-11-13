@@ -17,3 +17,4 @@ jobs:
     with:
       release-type: node
       package-name: ussf-portal-cms
+    secrets: inherit
