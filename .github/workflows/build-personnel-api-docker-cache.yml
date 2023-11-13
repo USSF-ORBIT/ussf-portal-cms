@@ -1,0 +1,8 @@
+name: Personnel API Docker Build Cache and Save Artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-cache-personnel-api:
+      uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-docker-cache-personnel-api.yml@main
