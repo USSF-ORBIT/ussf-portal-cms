@@ -3,7 +3,7 @@ import { relationship, text, virtual } from '@keystone-6/core/fields'
 import { withTracking } from '../util/tracking'
 import { slugify } from '../util/formatting'
 import { isAdmin } from '../util/access'
-
+import { ARTICLE_CATEGORIES } from './Article'
 // NOTE:
 // Disable the warning, this regex is only run after checking the max length
 // and only failed with a catastrophic backtrace in testing with extremely
@@ -90,6 +90,31 @@ const LandingPage = list(
           },
         },
       }),
+      viewPageUrl: virtual({
+        // This field is a bit of a work around it uses the resolve function of a virtual
+        // field to create a JSON payload used by the custom view defined to display a
+        // Preview button that opens a new tab to the article being modified.
+        field: graphql.field({
+          type: graphql.JSON,
+          resolve(item) {
+            return JSON.stringify({
+              articlePreviewUrl: `${process.env.PORTAL_URL}/landing/${item.slug}`,
+              label: 'View on Portal',
+              description:
+                'Be sure to save changes before viewing your landing page.',
+            })
+          },
+        }),
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+          views: './src/article-preview-button/views.tsx',
+        },
+      }),
       pageDescription: text({
         ui: {
           displayMode: 'textarea',
@@ -147,6 +172,9 @@ const LandingPage = list(
             const articles = await context.query.Article.findMany({
               where: {
                 tags: { some: { id: { equals: item.articleTagId } } },
+                category: {
+                  equals: ARTICLE_CATEGORIES.LANDING_PAGE,
+                },
               },
               query: 'id title slug preview publishedDate labels { id name }',
             })

@@ -1166,6 +1166,7 @@ type LandingPage {
   id: ID!
   pageTitle: String
   slug: String
+  viewPageUrl: JSON
   pageDescription: String
   documents(where: DocumentSectionWhereInput! = {}, orderBy: [DocumentSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentSection!]
   documentsCount(where: DocumentSectionWhereInput! = {}): Int

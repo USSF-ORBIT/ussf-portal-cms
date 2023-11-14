@@ -35,19 +35,18 @@ export function Field({ value }: FieldProps<any>) {
 }
 
 // #TODO write properly typed controller for this view
-// export const controller = (
-//   config: FieldControllerConfig<JSONValue | undefined>
-// ): FieldController<string | null, string> => {
-//   return {
-//     path: config.path,
-//     label: config.label,
-//     description: config.description,
-//     graphqlSelection: config.path,
-//     defaultValue: null,
-//     deserialize: (data) => {
-//       const value = data[config.path]
-//       return typeof value === 'string' ? value : null
-//     },
-//     serialize: (value) => ({ [config.path]: value }),
-//   }
-// }
+export const controller = (
+  config: FieldControllerConfig<any>
+): FieldController<any> => {
+  return {
+    path: config.path,
+    label: config.label,
+    description: config.description,
+    graphqlSelection: `${config.path}${config.fieldMeta.query}`,
+    defaultValue: null,
+    deserialize: (data) => {
+      return data[config.path]
+    },
+    serialize: () => ({}),
+  }
+}
