@@ -1,0 +1,8 @@
+name: Portal Client Docker Build Cache and Save Artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-cache-portal-client:
+      uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-docker-cache-portal-client.yml@main

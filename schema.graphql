@@ -633,6 +633,7 @@ type Article {
 enum ArticleCategoryType {
   InternalNews
   ORBITBlog
+  LandingPage
 }
 
 enum ArticleStatusType {
@@ -1161,6 +1162,103 @@ input ZipcodeCreateInput {
   longitude: Float
 }
 
+type LandingPage {
+  id: ID!
+  pageTitle: String
+  slug: String
+  viewPageUrl: JSON
+  pageDescription: String
+  documents(where: DocumentSectionWhereInput! = {}, orderBy: [DocumentSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentSection!]
+  documentsCount(where: DocumentSectionWhereInput! = {}): Int
+  collections(where: CollectionWhereInput! = {}, orderBy: [CollectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [Collection!]
+  collectionsCount(where: CollectionWhereInput! = {}): Int
+  articles: [FilteredArticles]
+  articleTag: Tag
+  updatedBy: User
+  createdBy: User
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type FilteredArticles {
+  id: String
+  title: String
+  slug: String
+  preview: String
+  publishedDate: String
+  labels: [ArticleLabel]
+}
+
+type ArticleLabel {
+  id: String
+  name: String
+}
+
+input LandingPageWhereUniqueInput {
+  id: ID
+  slug: String
+}
+
+input LandingPageWhereInput {
+  AND: [LandingPageWhereInput!]
+  OR: [LandingPageWhereInput!]
+  NOT: [LandingPageWhereInput!]
+  id: IDFilter
+  pageTitle: StringFilter
+  slug: StringFilter
+  pageDescription: StringFilter
+  documents: DocumentSectionManyRelationFilter
+  collections: CollectionManyRelationFilter
+  articleTag: TagWhereInput
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  updatedAt: DateTimeNullableFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input LandingPageOrderByInput {
+  id: OrderDirection
+  pageTitle: OrderDirection
+  slug: OrderDirection
+  pageDescription: OrderDirection
+  updatedAt: OrderDirection
+  createdAt: OrderDirection
+}
+
+input LandingPageUpdateInput {
+  pageTitle: String
+  slug: String
+  pageDescription: String
+  documents: DocumentSectionRelateToManyForUpdateInput
+  collections: CollectionRelateToManyForUpdateInput
+  articleTag: TagRelateToOneForUpdateInput
+}
+
+input TagRelateToOneForUpdateInput {
+  create: TagCreateInput
+  connect: TagWhereUniqueInput
+  disconnect: Boolean
+}
+
+input LandingPageUpdateArgs {
+  where: LandingPageWhereUniqueInput!
+  data: LandingPageUpdateInput!
+}
+
+input LandingPageCreateInput {
+  pageTitle: String
+  slug: String
+  pageDescription: String
+  documents: DocumentSectionRelateToManyForCreateInput
+  collections: CollectionRelateToManyForCreateInput
+  articleTag: TagRelateToOneForCreateInput
+}
+
+input TagRelateToOneForCreateInput {
+  create: TagCreateInput
+  connect: TagWhereUniqueInput
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1251,6 +1349,12 @@ type Mutation {
   updateZipcodes(data: [ZipcodeUpdateArgs!]!): [Zipcode]
   deleteZipcode(where: ZipcodeWhereUniqueInput!): Zipcode
   deleteZipcodes(where: [ZipcodeWhereUniqueInput!]!): [Zipcode]
+  createLandingPage(data: LandingPageCreateInput!): LandingPage
+  createLandingPages(data: [LandingPageCreateInput!]!): [LandingPage]
+  updateLandingPage(where: LandingPageWhereUniqueInput!, data: LandingPageUpdateInput!): LandingPage
+  updateLandingPages(data: [LandingPageUpdateArgs!]!): [LandingPage]
+  deleteLandingPage(where: LandingPageWhereUniqueInput!): LandingPage
+  deleteLandingPages(where: [LandingPageWhereUniqueInput!]!): [LandingPage]
   endSession: Boolean!
 }
 
@@ -1297,6 +1401,9 @@ type Query {
   zipcodes(where: ZipcodeWhereInput! = {}, orderBy: [ZipcodeOrderByInput!]! = [], take: Int, skip: Int! = 0): [Zipcode!]
   zipcode(where: ZipcodeWhereUniqueInput!): Zipcode
   zipcodesCount(where: ZipcodeWhereInput! = {}): Int
+  landingPages(where: LandingPageWhereInput! = {}, orderBy: [LandingPageOrderByInput!]! = [], take: Int, skip: Int! = 0): [LandingPage!]
+  landingPage(where: LandingPageWhereUniqueInput!): LandingPage
+  landingPagesCount(where: LandingPageWhereInput! = {}): Int
   keystone: KeystoneMeta!
   search(query: String!): [SearchResultItem]
   authenticatedItem: AuthenticatedItem

@@ -1,0 +1,31 @@
+name: Keystone CMS Docker Build and Save Cache
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '**.md**'
+    branches: [main]
+
+jobs:
+  build-and-cache-keystone-cms:
+      uses: USSF-ORBIT/ussf-portal/.github/workflows/reusable-docker-cache-keystone-cms.yml@main
+
+  trigger-build-and-cache-in-other-repos:
+      runs-on: ubuntu-latest
+      steps:
+        - name: call GH API to trigger workflow in portal client repo
+          run: gh workflow run build-keystone-cms-docker-cache.yml -R USSF-ORBIT/ussf-portal-client --ref main
+          env:
+            GH_TOKEN: ${{secrets.PUBLIC_REPO_READ}} 
+
+        - name: call GH API to trigger workflow in personnel api repo
+          run: gh workflow run build-keystone-cms-docker-cache.yml -R USSF-ORBIT/ussf-personnel-api --ref main
+          env:
+            GH_TOKEN: ${{secrets.PUBLIC_REPO_READ}} 
+
+        - name: call GH API to trigger caching workflow in ussf-portal repo
+          run: gh workflow run reusable-docker-cache-keystone-cms.yml -R USSF-ORBIT/ussf-portal --ref main
+          env:
+            GH_TOKEN: ${{secrets.PUBLIC_REPO_READ}} 

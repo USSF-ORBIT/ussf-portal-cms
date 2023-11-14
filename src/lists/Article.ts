@@ -33,9 +33,10 @@ import { componentBlocks } from '../components/embedVideo'
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const SLUG_MAX = 1000
 
-const ARTICLE_CATEGORIES = {
+export const ARTICLE_CATEGORIES = {
   INTERNAL_NEWS: 'InternalNews',
   ORBIT_BLOG: 'ORBITBlog',
+  LANDING_PAGE: 'LandingPage',
 } as const
 
 type DocumentSubFieldJSON = {
@@ -146,10 +147,13 @@ const Article = list(
               item.status === ARTICLE_STATUSES.PUBLISHED &&
               (item.publishedDate as DateTime) <= DateTime.now()
             const label = isPublished ? 'View Article' : 'Preview Article'
+            const description =
+              'Be sure to save changes before previewing your article.'
             return JSON.stringify({
               articlePreviewUrl: `${process.env.PORTAL_URL}/articles/${item.slug}`,
               label,
               isPublished,
+              description,
             })
           },
         }),

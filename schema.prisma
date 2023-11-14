@@ -70,6 +70,8 @@ model User {
   from_DocumentSection_createdBy DocumentSection[] @relation("DocumentSection_createdBy")
   from_DocumentsPage_updatedBy   DocumentsPage[]   @relation("DocumentsPage_updatedBy")
   from_DocumentsPage_createdBy   DocumentsPage[]   @relation("DocumentsPage_createdBy")
+  from_LandingPage_updatedBy     LandingPage[]     @relation("LandingPage_updatedBy")
+  from_LandingPage_createdBy     LandingPage[]     @relation("LandingPage_createdBy")
 
   @@index([updatedById])
   @@index([createdById])
@@ -94,16 +96,17 @@ model Bookmark {
 }
 
 model Collection {
-  id              String     @id @default(cuid())
-  title           String     @default("")
-  bookmarks       Bookmark[] @relation("Bookmark_collections")
-  showInSitesApps Boolean    @default(false)
-  updatedBy       User?      @relation("Collection_updatedBy", fields: [updatedById], references: [id])
-  updatedById     String?    @map("updatedBy")
-  createdBy       User?      @relation("Collection_createdBy", fields: [createdById], references: [id])
-  createdById     String?    @map("createdBy")
-  updatedAt       DateTime?  @updatedAt
-  createdAt       DateTime?  @default(now())
+  id                           String        @id @default(cuid())
+  title                        String        @default("")
+  bookmarks                    Bookmark[]    @relation("Bookmark_collections")
+  showInSitesApps              Boolean       @default(false)
+  updatedBy                    User?         @relation("Collection_updatedBy", fields: [updatedById], references: [id])
+  updatedById                  String?       @map("updatedBy")
+  createdBy                    User?         @relation("Collection_createdBy", fields: [createdById], references: [id])
+  createdById                  String?       @map("createdBy")
+  updatedAt                    DateTime?     @updatedAt
+  createdAt                    DateTime?     @default(now())
+  from_LandingPage_collections LandingPage[] @relation("LandingPage_collections")
 
   @@index([updatedById])
   @@index([createdById])
@@ -156,15 +159,16 @@ model Label {
 }
 
 model Tag {
-  id                String    @id @default(cuid())
-  name              String    @unique @default("")
-  updatedBy         User?     @relation("Tag_updatedBy", fields: [updatedById], references: [id])
-  updatedById       String?   @map("updatedBy")
-  createdBy         User?     @relation("Tag_createdBy", fields: [createdById], references: [id])
-  createdById       String?   @map("createdBy")
-  updatedAt         DateTime? @updatedAt
-  createdAt         DateTime? @default(now())
-  from_Article_tags Article[] @relation("Article_tags")
+  id                          String        @id @default(cuid())
+  name                        String        @unique @default("")
+  updatedBy                   User?         @relation("Tag_updatedBy", fields: [updatedById], references: [id])
+  updatedById                 String?       @map("updatedBy")
+  createdBy                   User?         @relation("Tag_createdBy", fields: [createdById], references: [id])
+  createdById                 String?       @map("createdBy")
+  updatedAt                   DateTime?     @updatedAt
+  createdAt                   DateTime?     @default(now())
+  from_Article_tags           Article[]     @relation("Article_tags")
+  from_LandingPage_articleTag LandingPage[] @relation("LandingPage_articleTag")
 
   @@index([updatedById])
   @@index([createdById])
@@ -253,6 +257,7 @@ model DocumentSection {
   updatedAt                   DateTime?       @updatedAt
   createdAt                   DateTime?       @default(now())
   from_DocumentsPage_sections DocumentsPage[] @relation("DocumentsPage_sections")
+  from_LandingPage_documents  LandingPage[]   @relation("LandingPage_documents")
 
   @@index([updatedById])
   @@index([createdById])
@@ -280,6 +285,27 @@ model Zipcode {
   longitude Float
 }
 
+model LandingPage {
+  id              String            @id @default(cuid())
+  pageTitle       String            @default("")
+  slug            String            @unique @default("")
+  pageDescription String            @default("")
+  documents       DocumentSection[] @relation("LandingPage_documents")
+  collections     Collection[]      @relation("LandingPage_collections")
+  articleTag      Tag?              @relation("LandingPage_articleTag", fields: [articleTagId], references: [id])
+  articleTagId    String?           @map("articleTag")
+  updatedBy       User?             @relation("LandingPage_updatedBy", fields: [updatedById], references: [id])
+  updatedById     String?           @map("updatedBy")
+  createdBy       User?             @relation("LandingPage_createdBy", fields: [createdById], references: [id])
+  createdById     String?           @map("createdBy")
+  updatedAt       DateTime?         @updatedAt
+  createdAt       DateTime?         @default(now())
+
+  @@index([articleTagId])
+  @@index([updatedById])
+  @@index([createdById])
+}
+
 enum UserRoleType {
   User
   Author
@@ -295,6 +321,7 @@ enum LabelTypeType {
 enum ArticleCategoryType {
   InternalNews
   ORBITBlog
+  LandingPage
 }
 
 enum ArticleStatusType {
