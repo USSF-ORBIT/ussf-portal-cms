@@ -139,7 +139,8 @@ const LandingPage = list(
               slug: string
               preview: string
               publishedDate: string
-              labels: { id: string; name: string }[]
+              status: string
+              labels: { id: string; name: string; type: string }[]
             }>()({
               name: 'FilteredArticles',
               fields: {
@@ -148,13 +149,19 @@ const LandingPage = list(
                 slug: graphql.field({ type: graphql.String }),
                 preview: graphql.field({ type: graphql.String }),
                 publishedDate: graphql.field({ type: graphql.String }),
+                status: graphql.field({ type: graphql.String }),
                 labels: graphql.field({
                   type: graphql.list(
-                    graphql.object<{ id: string; name: string }>()({
+                    graphql.object<{
+                      id: string
+                      name: string
+                      type: string
+                    }>()({
                       name: 'ArticleLabel',
                       fields: {
                         id: graphql.field({ type: graphql.String }),
                         name: graphql.field({ type: graphql.String }),
+                        type: graphql.field({ type: graphql.String }),
                       },
                     })
                   ),
@@ -175,8 +182,12 @@ const LandingPage = list(
                 category: {
                   equals: ARTICLE_CATEGORIES.LANDING_PAGE,
                 },
+                status: {
+                  equals: 'Published',
+                },
               },
-              query: 'id title slug preview publishedDate labels { id name }',
+              query:
+                'id title slug preview publishedDate status labels { id name type }',
             })
 
             return articles.map((article) => ({
@@ -185,6 +196,7 @@ const LandingPage = list(
               slug: article.slug,
               preview: article.preview,
               publishedDate: article.publishedDate,
+              status: article.status,
               labels: article.labels,
             }))
           },

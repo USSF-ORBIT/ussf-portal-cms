@@ -1186,12 +1186,14 @@ type FilteredArticles {
   slug: String
   preview: String
   publishedDate: String
+  status: String
   labels: [ArticleLabel]
 }
 
 type ArticleLabel {
   id: String
   name: String
+  type: String
 }
 
 input LandingPageWhereUniqueInput {
