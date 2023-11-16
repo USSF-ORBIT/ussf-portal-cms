@@ -3439,6 +3439,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.47.0.tgz#5478fdf443ff8158f9de171c704ae45308696c7d"
   integrity sha512-P6omY1zv5MItm93kLM8s2vr1HICJH8v0dvddDhysbIuZ+vcjOHg5Zbkf1mTkcmi2JA9oBG2anOkRnW8WJTS8Og==
 
+"@fastify/busboy@^2.0.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-2.1.0.tgz#0709e9f4cb252351c609c6e6d8d6779a8d25edff"
+  integrity sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==
+
 "@graphql-tools/merge@8.3.1":
   version "8.3.1"
   resolved "https://registry.yarnpkg.com/@graphql-tools/merge/-/merge-8.3.1.tgz#06121942ad28982a14635dbc87b5d488a041d722"
@@ -12476,12 +12481,12 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
-undici@5.10.0, undici@5.23.0:
-  version "5.23.0"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.23.0.tgz#e7bdb0ed42cebe7b7aca87ced53e6eaafb8f8ca0"
-  integrity sha512-1D7w+fvRsqlQ9GscLBwcAJinqcZGHUKjbOmXdlE/v8BvEGXjeWAax+341q44EuTcHXXnfyKNbKRq4Lg7OzhMmg==
+undici@5.10.0, undici@5.26.2:
+  version "5.26.2"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.26.2.tgz#fa61bfe40f732540d15e58b0c1271872d8e3c995"
+  integrity sha512-a4PDLQgLTPHVzOK+x3F79/M4GtyYPl+aX9AAK7aQxpwxDwCqkeZCScy7Gk5kWT3JtdFq1uhO3uZJdLtHI4dK9A==
   dependencies:
-    busboy "^1.6.0"
+    "@fastify/busboy" "^2.0.0"
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
