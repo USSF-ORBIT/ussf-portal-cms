@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.11.1...1.12.0) (2023-11-17)
+
+
+### Features
+
+* Add landing page list type ([#395](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/395)) ([a10117d](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/a10117de9ded263a584579a2e25488f448113ae8))
+* Allow only published articles to link to a landing page ([#403](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/403)) ([5fac3bd](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/5fac3bd0b3bd0ad565736f93f91236a861693a37))
+* redirect to support ([#399](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/399)) ([0598c20](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/0598c20c745e1bf7bff94c979746b0417f720966))
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#393](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/393)) ([68f14eb](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/68f14ebd4e20cef1b97abefa420ccd66afe4e096))
+
+
+### Security Improvements
+
+* **deps:** update dependency undici to v5.26.2 [security] ([#397](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/397)) ([14ef483](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/14ef483c7378e2e6af1953ecdfbd73f65fa86b4b))
+
 ## [1.11.1](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.11.0...1.11.1) (2023-10-25)
 
 
