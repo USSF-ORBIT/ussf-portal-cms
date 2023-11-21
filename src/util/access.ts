@@ -205,3 +205,10 @@ export const documentPageItemView: ItemViewFn = ({ session }) => {
 
   return 'read'
 }
+
+/* Landing Page helpers */
+export const canUpdateLandingPage: OperationAccessFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
+
+  return false
+}

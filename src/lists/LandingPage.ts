@@ -2,7 +2,7 @@ import { graphql, list } from '@keystone-6/core'
 import { relationship, text, virtual } from '@keystone-6/core/fields'
 import { withTracking } from '../util/tracking'
 import { slugify } from '../util/formatting'
-import { isAdmin } from '../util/access'
+import { isAdmin, canUpdateLandingPage } from '../util/access'
 import { ARTICLE_CATEGORIES } from './Article'
 // NOTE:
 // Disable the warning, this regex is only run after checking the max length
@@ -19,11 +19,11 @@ const LandingPage = list(
       operation: {
         create: isAdmin,
         query: () => true,
-        update: isAdmin,
+        update: canUpdateLandingPage,
         delete: isAdmin,
       },
       filter: {
-        update: isAdmin,
+        update: canUpdateLandingPage,
         delete: isAdmin,
       },
     },
