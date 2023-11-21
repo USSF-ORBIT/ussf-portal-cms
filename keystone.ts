@@ -98,7 +98,7 @@ export default withSharedAuth(
           // this is so we can restrict the locations the client
           // will redirect to as local to the portal or approved places like the cms
           // const requestUrl = getAbsoluteUrl(req).origin
-          const requestUrl = '/cms'
+          const requestUrl = '/redirect'
           // Following adds the path that a user was attempting to reach to the end
           // of the info passed to the login flow
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
