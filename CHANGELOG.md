@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.12.0...1.13.0) (2023-11-22)
+
+
+### Features
+
+* Managers can update existing landing pages ([#406](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/406)) ([ea2a248](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/ea2a248f6dfa0b45a145993038482445538c15b6))
+
+
+### Bug Fixes
+
+* update redirect path for portal ([#408](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/408)) ([ffba43e](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/ffba43e57bc5a063b6001acfc41baf2f24210e7c))
+
 ## [1.12.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.11.1...1.12.0) (2023-11-17)
 
 
