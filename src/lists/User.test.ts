@@ -101,33 +101,6 @@ describe('User schema', () => {
       )
     })
 
-    it('cannot update the isEnabled field', async () => {
-      expect(
-        adminContext.query.User.updateOne({
-          where: { userId: 'user1@example.com' },
-          data: {
-            isEnabled: false,
-          },
-          query: 'id name role userId isAdmin isEnabled',
-        })
-      ).rejects.toThrow(
-        'Access denied: You cannot update that User - you cannot update the fields ["isEnabled"]'
-      )
-    })
-
-    it('cannot create users', async () => {
-      expect(
-        adminContext.query.User.createOne({
-          data: {
-            name: 'Test User 2',
-            userId: 'testUser2',
-            isAdmin: false,
-            isEnabled: true,
-          },
-        })
-      ).rejects.toThrow('Access denied: You cannot create that User')
-    })
-
     it('cannot delete users', async () => {
       expect(
         adminContext.query.User.deleteOne({

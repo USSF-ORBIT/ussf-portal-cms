@@ -94,13 +94,7 @@ const User = list(
       isEnabled: checkbox({
         isFilterable: true,
         access: {
-          // Access can only be set using SLAM groups
-          update: () => false,
-        },
-        ui: {
-          itemView: {
-            fieldMode: () => 'read',
-          },
+          update: isAdmin,
         },
       }),
 
