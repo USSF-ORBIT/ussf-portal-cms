@@ -13,12 +13,12 @@ import { withTracking } from '../util/tracking'
 
 const User = list(
   withTracking({
-    // No one can create or delete users
-    // Admin can view & edit all users
+    // No one can delete users
+    // Admin can create, view & edit all users
     // Users can view & edit themselves
     access: {
       operation: {
-        create: () => false,
+        create: isAdmin,
         delete: () => false,
         update: () => true,
         query: () => true,
@@ -33,8 +33,8 @@ const User = list(
       labelField: 'userId',
       searchFields: ['userId'],
       description: 'Keystone users',
-      isHidden: false, // TODO - only show complete UI to admin
-      hideCreate: true,
+      isHidden: !isAdmin,
+      hideCreate: (args) => !isAdmin(args.context),
       hideDelete: true,
       itemView: {
         defaultFieldMode: userItemView,
