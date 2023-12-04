@@ -46,6 +46,7 @@ describe('User schema', () => {
         data: {
           name: 'Test User 1 New Name',
           role: 'Author',
+          isEnabled: false,
         },
         query: 'id name role userId isAdmin isEnabled',
       })
@@ -55,6 +56,7 @@ describe('User schema', () => {
         ...testUsers[1],
         name: 'Test User 1 New Name',
         role: 'Author',
+        isEnabled: false,
       })
 
       data = await adminContext.query.User.updateOne({
@@ -62,6 +64,7 @@ describe('User schema', () => {
         data: {
           name: 'User 1',
           role: 'User',
+          isEnabled: true,
         },
         query: 'id name role userId isAdmin isEnabled',
       })
@@ -70,6 +73,8 @@ describe('User schema', () => {
         id: expect.any(String),
         ...testUsers[1],
         name: 'User 1',
+        role: 'User',
+        isEnabled: true,
       })
     })
 
