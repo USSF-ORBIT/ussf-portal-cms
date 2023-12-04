@@ -271,7 +271,7 @@ describe('Article schema', () => {
         expect(originalArticle.publishedDate).toBe(null)
         expect(originalArticle.archivedDate).toBe(null)
         expect(JSON.parse(originalArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://example.com/articles/${originalArticle.slug}`,
+          url: `http://example.com/articles/${originalArticle.slug}`,
           label: 'Preview Article',
           isPublished: false,
         })
@@ -293,7 +293,7 @@ describe('Article schema', () => {
         })
 
         expect(JSON.parse(publishedArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://example.com/articles/${publishedArticle.slug}`,
+          url: `http://example.com/articles/${publishedArticle.slug}`,
           label: 'View Article',
           isPublished: true,
         })
@@ -315,7 +315,7 @@ describe('Article schema', () => {
         })
 
         expect(JSON.parse(archivedArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://example.com/articles/${archivedArticle.slug}`,
+          url: `http://example.com/articles/${archivedArticle.slug}`,
           label: 'Preview Article',
           isPublished: false,
         })
@@ -707,7 +707,7 @@ describe('Article schema', () => {
         expect(publishedArticle.archivedDate).toBe(null)
 
         expect(JSON.parse(publishedArticle.articlePreviewUrl)).toMatchObject({
-          articlePreviewUrl: `http://example.com/articles/${testManagerArticle.slug}`,
+          url: `http://example.com/articles/${testManagerArticle.slug}`,
           label: 'Preview Article',
           isPublished: false,
         })

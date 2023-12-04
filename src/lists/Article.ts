@@ -150,7 +150,7 @@ const Article = list(
             const description =
               'Be sure to save changes before previewing your article.'
             return JSON.stringify({
-              articlePreviewUrl: `${process.env.PORTAL_URL}/articles/${item.slug}`,
+              url: `${process.env.PORTAL_URL}/articles/${item.slug}`,
               label,
               isPublished,
               description,
@@ -164,7 +164,7 @@ const Article = list(
           itemView: {
             fieldMode: () => 'read',
           },
-          views: './src/article-preview-button/views.tsx',
+          views: './src/portal-preview-button/views.tsx',
         },
       }),
       publishedDate: timestamp({

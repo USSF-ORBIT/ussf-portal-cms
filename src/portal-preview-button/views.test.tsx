@@ -24,7 +24,7 @@ test('returns button with label and target when in preview mode', async () => {
   // a full FieldProps object for that, and making the type checking
   // happy with a partial one was difficult
   const value = {
-    articlePreviewUrl: 'http://url.to.portal/articles/slug-goes-here',
+    url: 'http://url.to.portal/articles/slug-goes-here',
     label: 'Preview Article',
     isPublished: false,
   }
@@ -38,7 +38,7 @@ test('returns button with label and target when in preview mode', async () => {
   expect(button).toHaveTextContent(value.label)
   await user.click(button)
   expect(global.open).toHaveBeenCalledWith(
-    value.articlePreviewUrl,
+    value.url,
     'ussf_portal_article_preview'
   )
 })
@@ -51,7 +51,7 @@ test('returns button with label and target when in published mode', async () => 
   // a full FieldProps object for that, and making the type checking
   // happy with a partial one was difficult
   const value = {
-    articlePreviewUrl: 'http://url.to.portal/articles/slug-goes-here',
+    url: 'http://url.to.portal/articles/slug-goes-here',
     label: 'View Article',
     isPublished: true,
   }
@@ -64,5 +64,5 @@ test('returns button with label and target when in published mode', async () => 
   const button = screen.getByRole('button')
   expect(button).toHaveTextContent(value.label)
   await user.click(button)
-  expect(global.open).toHaveBeenCalledWith(value.articlePreviewUrl, '_blank')
+  expect(global.open).toHaveBeenCalledWith(value.url, '_blank')
 })

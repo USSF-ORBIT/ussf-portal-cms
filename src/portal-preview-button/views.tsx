@@ -14,12 +14,7 @@ export function Field({ value }: FieldProps<typeof controller>) {
   }
   // This is parsing and reading the JSON payload created in the virutal field
   // that uses this view.
-  const {
-    articlePreviewUrl: url,
-    label,
-    isPublished,
-    description,
-  } = JSON.parse(value)
+  const { url, label, isPublished, description } = JSON.parse(value)
   return (
     <>
       <Button

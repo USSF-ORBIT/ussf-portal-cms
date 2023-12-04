@@ -97,11 +97,12 @@ const LandingPage = list(
         field: graphql.field({
           type: graphql.JSON,
           resolve(item) {
+            const description =
+              'Be sure to save changes before viewing your landing page.'
             return JSON.stringify({
-              articlePreviewUrl: `${process.env.PORTAL_URL}/landing/${item.slug}`,
+              url: `${process.env.PORTAL_URL}/landing/${item.slug}`,
               label: 'View on Portal',
-              description:
-                'Be sure to save changes before viewing your landing page.',
+              description,
             })
           },
         }),
@@ -112,7 +113,7 @@ const LandingPage = list(
           itemView: {
             fieldMode: () => 'read',
           },
-          views: './src/article-preview-button/views.tsx',
+          views: './src/portal-preview-button/views.tsx',
         },
       }),
       pageDescription: text({
