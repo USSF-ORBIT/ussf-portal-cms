@@ -80,6 +80,9 @@ const User = list(
           update: () => false,
         },
         ui: {
+          createView: {
+            fieldMode: () => 'hidden',
+          },
           itemView: {
             fieldMode: () => 'read',
           },
@@ -126,6 +129,9 @@ const User = list(
           update: () => false,
         },
         ui: {
+          createView: {
+            fieldMode: () => 'hidden',
+          },
           itemView: {
             fieldMode: () => 'read',
           },
