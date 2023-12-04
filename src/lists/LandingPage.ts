@@ -1,8 +1,21 @@
 import { graphql, list } from '@keystone-6/core'
-import { relationship, text, virtual } from '@keystone-6/core/fields'
+import {
+  relationship,
+  select,
+  text,
+  timestamp,
+  virtual,
+} from '@keystone-6/core/fields'
+import { DateTime } from 'luxon'
 import { withTracking } from '../util/tracking'
 import { slugify } from '../util/formatting'
-import { isAdmin, canUpdateLandingPage } from '../util/access'
+import {
+  isAdmin,
+  canUpdateLandingPage,
+  canPublishArchiveLanding,
+  landingStatusView,
+} from '../util/access'
+import { LANDING_STATUSES } from '../util/workflows'
 import { ARTICLE_CATEGORIES } from './Article'
 // NOTE:
 // Disable the warning, this regex is only run after checking the max length
@@ -90,6 +103,43 @@ const LandingPage = list(
           },
         },
       }),
+      status: select({
+        type: 'enum',
+        options: Object.entries(LANDING_STATUSES).map(([, v]) => ({
+          label: v,
+          value: v,
+        })),
+        defaultValue: LANDING_STATUSES.DRAFT,
+        validation: {
+          isRequired: true,
+        },
+        access: {
+          create: () => false,
+          update: canPublishArchiveLanding,
+        },
+        ui: {
+          displayMode: 'segmented-control',
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: landingStatusView,
+          },
+        },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.publishedDate &&
+              (inputData.status !== LANDING_STATUSES.PUBLISHED ||
+                item?.status !== LANDING_STATUSES.PUBLISHED)
+            ) {
+              // Set status if publishedDate is being changed and status is not changed or not already Published
+              return LANDING_STATUSES.PUBLISHED
+            }
+            return resolvedData.status
+          },
+        },
+      }),
       viewPageUrl: virtual({
         // This field is a bit of a work around it uses the resolve function of a virtual
         // field to create a JSON payload used by the custom view defined to display a
@@ -97,11 +147,18 @@ const LandingPage = list(
         field: graphql.field({
           type: graphql.JSON,
           resolve(item) {
+            const isPublished =
+              item.status === LANDING_STATUSES.PUBLISHED &&
+              (item.publishedDate as DateTime) <= DateTime.now()
+            const label = isPublished
+              ? 'View Landing Page'
+              : 'Preview Landing Page'
             const description =
               'Be sure to save changes before viewing your landing page.'
             return JSON.stringify({
               url: `${process.env.PORTAL_URL}/landing/${item.slug}`,
-              label: 'View on Portal',
+              label,
+              isPublished,
               description,
             })
           },
@@ -114,6 +171,79 @@ const LandingPage = list(
             fieldMode: () => 'read',
           },
           views: './src/portal-preview-button/views.tsx',
+        },
+      }),
+      publishedDate: timestamp({
+        access: {
+          create: () => false,
+          update: canPublishArchiveLanding,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: landingStatusView,
+          },
+        },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.status === LANDING_STATUSES.PUBLISHED &&
+              item?.status !== LANDING_STATUSES.PUBLISHED &&
+              !inputData.publishedDate
+            ) {
+              // Set publishedDate if status is being changed to "Published"
+              // only set publishedDate if they didn't set one
+              return DateTime.now().toJSDate()
+            }
+            return resolvedData.publishedDate
+          },
+          validateInput: async ({
+            operation,
+            inputData,
+            resolvedData,
+            addValidationError,
+          }) => {
+            if (operation === 'update' && inputData.publishedDate) {
+              const publishedDate = DateTime.fromJSDate(
+                resolvedData.publishedDate
+              )
+              // if the selected publish date is in the past it is invalid
+              // but if it's recent then allow it since they could have been
+              // editing the page for this amount of time after setting
+              // date and saving
+              if (publishedDate < DateTime.now().minus({ hours: 4 })) {
+                addValidationError('Published date cannot be in the past')
+              }
+            }
+          },
+        },
+      }),
+      archivedDate: timestamp({
+        access: {
+          create: () => false,
+          update: () => false,
+        },
+        ui: {
+          createView: {
+            fieldMode: 'hidden',
+          },
+          itemView: {
+            fieldMode: () => 'read',
+          },
+        },
+        hooks: {
+          resolveInput: async ({ inputData, item, resolvedData }) => {
+            if (
+              inputData.status === LANDING_STATUSES.ARCHIVED &&
+              item?.status !== LANDING_STATUSES.ARCHIVED
+            ) {
+              // Set archivedDate if status is being changed to "Archived"
+              return DateTime.now().toJSDate()
+            }
+            return resolvedData.archivedDate
+          },
         },
       }),
       pageDescription: text({

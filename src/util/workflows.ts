@@ -5,7 +5,7 @@ export const ARTICLE_STATUSES = {
 }
 
 export type ArticleStatus =
-  typeof ARTICLE_STATUSES[keyof typeof ARTICLE_STATUSES]
+  (typeof ARTICLE_STATUSES)[keyof typeof ARTICLE_STATUSES]
 
 export const ANNOUNCEMENT_STATUSES = {
   DRAFT: 'Draft',
@@ -14,4 +14,13 @@ export const ANNOUNCEMENT_STATUSES = {
 }
 
 export type AnnouncementStatus =
-  typeof ANNOUNCEMENT_STATUSES[keyof typeof ANNOUNCEMENT_STATUSES]
+  (typeof ANNOUNCEMENT_STATUSES)[keyof typeof ANNOUNCEMENT_STATUSES]
+
+export const LANDING_STATUSES = {
+  DRAFT: 'Draft',
+  PUBLISHED: 'Published',
+  ARCHIVED: 'Archived',
+}
+
+export type LandingStatus =
+  (typeof LANDING_STATUSES)[keyof typeof LANDING_STATUSES]

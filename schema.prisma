@@ -286,20 +286,23 @@ model Zipcode {
 }
 
 model LandingPage {
-  id              String            @id @default(cuid())
-  pageTitle       String            @default("")
-  slug            String            @unique @default("")
-  pageDescription String            @default("")
-  documents       DocumentSection[] @relation("LandingPage_documents")
-  collections     Collection[]      @relation("LandingPage_collections")
-  articleTag      Tag?              @relation("LandingPage_articleTag", fields: [articleTagId], references: [id])
-  articleTagId    String?           @map("articleTag")
-  updatedBy       User?             @relation("LandingPage_updatedBy", fields: [updatedById], references: [id])
-  updatedById     String?           @map("updatedBy")
-  createdBy       User?             @relation("LandingPage_createdBy", fields: [createdById], references: [id])
-  createdById     String?           @map("createdBy")
-  updatedAt       DateTime?         @updatedAt
-  createdAt       DateTime?         @default(now())
+  id              String                @id @default(cuid())
+  pageTitle       String                @default("")
+  slug            String                @unique @default("")
+  status          LandingPageStatusType @default(Draft)
+  publishedDate   DateTime?
+  archivedDate    DateTime?
+  pageDescription String                @default("")
+  documents       DocumentSection[]     @relation("LandingPage_documents")
+  collections     Collection[]          @relation("LandingPage_collections")
+  articleTag      Tag?                  @relation("LandingPage_articleTag", fields: [articleTagId], references: [id])
+  articleTagId    String?               @map("articleTag")
+  updatedBy       User?                 @relation("LandingPage_updatedBy", fields: [updatedById], references: [id])
+  updatedById     String?               @map("updatedBy")
+  createdBy       User?                 @relation("LandingPage_createdBy", fields: [createdById], references: [id])
+  createdById     String?               @map("createdBy")
+  updatedAt       DateTime?             @updatedAt
+  createdAt       DateTime?             @default(now())
 
   @@index([articleTagId])
   @@index([updatedById])
@@ -331,6 +334,12 @@ enum ArticleStatusType {
 }
 
 enum AnnouncementStatusType {
+  Draft
+  Published
+  Archived
+}
+
+enum LandingPageStatusType {
   Draft
   Published
   Archived

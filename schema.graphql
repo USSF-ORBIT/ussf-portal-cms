@@ -1166,7 +1166,10 @@ type LandingPage {
   id: ID!
   pageTitle: String
   slug: String
+  status: LandingPageStatusType
   viewPageUrl: JSON
+  publishedDate: DateTime
+  archivedDate: DateTime
   pageDescription: String
   documents(where: DocumentSectionWhereInput! = {}, orderBy: [DocumentSectionOrderByInput!]! = [], take: Int, skip: Int! = 0): [DocumentSection!]
   documentsCount(where: DocumentSectionWhereInput! = {}): Int
@@ -1178,6 +1181,12 @@ type LandingPage {
   createdBy: User
   updatedAt: DateTime
   createdAt: DateTime
+}
+
+enum LandingPageStatusType {
+  Draft
+  Published
+  Archived
 }
 
 type FilteredArticles {
@@ -1208,6 +1217,9 @@ input LandingPageWhereInput {
   id: IDFilter
   pageTitle: StringFilter
   slug: StringFilter
+  status: LandingPageStatusTypeNullableFilter
+  publishedDate: DateTimeNullableFilter
+  archivedDate: DateTimeNullableFilter
   pageDescription: StringFilter
   documents: DocumentSectionManyRelationFilter
   collections: CollectionManyRelationFilter
@@ -1218,10 +1230,20 @@ input LandingPageWhereInput {
   createdAt: DateTimeNullableFilter
 }
 
+input LandingPageStatusTypeNullableFilter {
+  equals: LandingPageStatusType
+  in: [LandingPageStatusType!]
+  notIn: [LandingPageStatusType!]
+  not: LandingPageStatusTypeNullableFilter
+}
+
 input LandingPageOrderByInput {
   id: OrderDirection
   pageTitle: OrderDirection
   slug: OrderDirection
+  status: OrderDirection
+  publishedDate: OrderDirection
+  archivedDate: OrderDirection
   pageDescription: OrderDirection
   updatedAt: OrderDirection
   createdAt: OrderDirection
@@ -1230,6 +1252,9 @@ input LandingPageOrderByInput {
 input LandingPageUpdateInput {
   pageTitle: String
   slug: String
+  status: LandingPageStatusType
+  publishedDate: DateTime
+  archivedDate: DateTime
   pageDescription: String
   documents: DocumentSectionRelateToManyForUpdateInput
   collections: CollectionRelateToManyForUpdateInput
@@ -1250,6 +1275,9 @@ input LandingPageUpdateArgs {
 input LandingPageCreateInput {
   pageTitle: String
   slug: String
+  status: LandingPageStatusType
+  publishedDate: DateTime
+  archivedDate: DateTime
   pageDescription: String
   documents: DocumentSectionRelateToManyForCreateInput
   collections: CollectionRelateToManyForCreateInput

@@ -132,6 +132,12 @@ export const canPublishArchiveArticle: OperationAccessFn = ({ session }) => {
   return false
 }
 
+export const canPublishArchiveLanding: OperationAccessFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
+
+  return false
+}
+
 export const articleCreateView: CreateViewFn = ({ session }) =>
   canCreateArticle({ session }) ? 'edit' : 'hidden'
 
@@ -148,6 +154,12 @@ export const articleItemView: ItemViewFn = ({ session, item }) => {
 }
 
 export const articleStatusView: ItemViewFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
+
+  return 'read'
+}
+
+export const landingStatusView: ItemViewFn = ({ session }) => {
   if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return 'edit'
 
   return 'read'
