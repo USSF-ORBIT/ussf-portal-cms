@@ -117,6 +117,26 @@ describe('User schema', () => {
         'Access denied: You cannot delete that User - it may not exist'
       )
     })
+
+    it('can create users', async () => {
+      const data = await adminContext.query.User.createOne({
+        data: {
+          name: 'Created By Admin',
+          userId: 'createdByAdmin',
+          isAdmin: false,
+          isEnabled: true,
+        },
+        query: 'id name role userId isAdmin isEnabled',
+      })
+
+      expect(data).toMatchObject({
+        id: expect.any(String),
+        name: 'Created By Admin',
+        userId: 'createdByAdmin',
+        isAdmin: false,
+        isEnabled: true,
+      })
+    })
   })
 
   describe('as a non admin user', () => {
