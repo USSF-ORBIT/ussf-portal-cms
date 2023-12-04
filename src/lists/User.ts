@@ -65,12 +65,7 @@ const User = list(
         isFilterable: true,
         access: {
           read: () => true,
-          update: () => false,
-        },
-        ui: {
-          itemView: {
-            fieldMode: 'read',
-          },
+          update: isAdmin,
         },
       }),
 
