@@ -89,6 +89,7 @@ const withAuthData = (
           keystoneUser = (await sudoContext.query.User.updateOne({
             where: { userId: user.userId },
             data: {
+              isEnabled: userHasAccess,
               isAdmin: userIsAdmin,
               syncedAt: new Date(),
             },
