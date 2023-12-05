@@ -93,11 +93,9 @@ export default withSharedAuth(
 
         // If not other public paths & no session, redirect to login page
         if (pathname !== '/api/sysinfo' && pathname !== '/no-access') {
-          // getAbsoluteUrl gets full path to CMS
-          // however, client knows the full path so we are just passing /cms
+          // client knows the full path so we are just passing /cms
           // this is so we can restrict the locations the client
           // will redirect to as local to the portal or approved places like the cms
-          // const requestUrl = getAbsoluteUrl(req).origin
           const requestUrl = '/redirect'
           // Following adds the path that a user was attempting to reach to the end
           // of the info passed to the login flow
