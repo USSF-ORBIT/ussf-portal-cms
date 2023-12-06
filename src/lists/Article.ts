@@ -164,7 +164,7 @@ const Article = list(
           itemView: {
             fieldMode: () => 'read',
           },
-          views: './src/portal-preview-button/views.tsx',
+          views: './src/preview-button/views.tsx',
         },
       }),
       publishedDate: timestamp({

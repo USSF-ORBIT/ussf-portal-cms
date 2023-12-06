@@ -160,6 +160,7 @@ const LandingPage = list(
               label,
               isPublished,
               description,
+              target: 'ussf_portal_landing_page_preview',
             })
           },
         }),
@@ -170,7 +171,7 @@ const LandingPage = list(
           itemView: {
             fieldMode: () => 'read',
           },
-          views: './src/portal-preview-button/views.tsx',
+          views: './src/preview-button/views.tsx',
         },
       }),
       publishedDate: timestamp({

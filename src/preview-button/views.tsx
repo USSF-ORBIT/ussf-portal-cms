@@ -14,7 +14,13 @@ export function Field({ value }: FieldProps<typeof controller>) {
   }
   // This is parsing and reading the JSON payload created in the virutal field
   // that uses this view.
-  const { url, label, isPublished, description } = JSON.parse(value)
+  const {
+    url,
+    label,
+    isPublished,
+    description,
+    target = 'ussf_portal_preview',
+  } = JSON.parse(value)
   return (
     <>
       <Button
@@ -22,17 +28,12 @@ export function Field({ value }: FieldProps<typeof controller>) {
         tone="active"
         // This warning is a false positive since this isn't a file system open
         // call but a URL open call. The URL is constructed by our application and
-        // limited to the pattern https://url.to.portal/articles/slug-value
+        // limited to the pattern https://url.to.portal/path/to/specific/page
         // The value is created in src/lists/Article.ts during the resolve
         // method of articleUrlPreviewButton field configuration
         // The only user input is the slug-value portion
         // eslint-disable-next-line security/detect-non-literal-fs-filename
-        onClick={() =>
-          window.open(
-            url,
-            isPublished ? '_blank' : 'ussf_portal_article_preview'
-          )
-        }>
+        onClick={() => window.open(url, isPublished ? '_blank' : target)}>
         {label}
       </Button>
       &nbsp;
