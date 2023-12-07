@@ -33,7 +33,7 @@ const User = list(
       labelField: 'userId',
       searchFields: ['userId'],
       description: 'Keystone users',
-      isHidden: !isAdmin,
+      isHidden: false,
       hideCreate: (args) => !isAdmin(args.context),
       hideDelete: true,
       itemView: {
