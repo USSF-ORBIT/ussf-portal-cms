@@ -91,6 +91,11 @@ const User = list(
 
       isEnabled: checkbox({
         isFilterable: true,
+        ui: {
+          itemView: {
+            fieldMode: editReadAdminUI,
+          },
+        },
         access: {
           update: isAdmin,
         },
