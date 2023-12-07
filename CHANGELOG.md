@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.13.0...1.14.0) (2023-12-07)
+
+
+### Features
+
+* Admin can create users ([#409](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/409)) ([0f942d4](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/0f942d4913f962a44ec5bf65572db13eacad5dc1))
+
 ## [1.13.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.12.0...1.13.0) (2023-11-22)
 
 
