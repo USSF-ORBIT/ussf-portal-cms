@@ -50,6 +50,9 @@ const LandingPage = list(
       itemView: {
         defaultFieldMode: 'edit',
       },
+      listView: {
+        initialColumns: ['pageTitle', 'slug', 'status', 'publishedDate'],
+      },
     },
 
     fields: {
