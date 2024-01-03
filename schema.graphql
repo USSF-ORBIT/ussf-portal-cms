@@ -1166,6 +1166,7 @@ type LandingPage {
   id: ID!
   pageTitle: String
   slug: String
+  hero: ImageFieldOutput
   status: LandingPageStatusType
   viewPageUrl: JSON
   publishedDate: DateTime
@@ -1252,6 +1253,7 @@ input LandingPageOrderByInput {
 input LandingPageUpdateInput {
   pageTitle: String
   slug: String
+  hero: ImageFieldInput
   status: LandingPageStatusType
   publishedDate: DateTime
   archivedDate: DateTime
@@ -1275,6 +1277,7 @@ input LandingPageUpdateArgs {
 input LandingPageCreateInput {
   pageTitle: String
   slug: String
+  hero: ImageFieldInput
   status: LandingPageStatusType
   publishedDate: DateTime
   archivedDate: DateTime

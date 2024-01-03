@@ -1,5 +1,6 @@
 import { graphql, list } from '@keystone-6/core'
 import {
+  image,
   relationship,
   select,
   text,
@@ -15,6 +16,7 @@ import {
   canPublishArchiveLanding,
   landingStatusView,
 } from '../util/access'
+import { isLocalStorage } from '../util/getStorage'
 import { LANDING_STATUSES } from '../util/workflows'
 import { ARTICLE_CATEGORIES } from './Article'
 // NOTE:
@@ -105,6 +107,9 @@ const LandingPage = list(
             }
           },
         },
+      }),
+      hero: image({
+        storage: isLocalStorage() ? 'local_images' : 'cms_images',
       }),
       status: select({
         type: 'enum',
