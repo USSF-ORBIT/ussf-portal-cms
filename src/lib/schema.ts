@@ -165,16 +165,20 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
                   await prisma.article.findMany({
                     ...articleQuery,
                   })
-                ).map((article: ArticleQueryResult) => ({
-                  id: article.id,
-                  type: 'Article',
-                  title: article.title,
-                  permalink: article.slug,
-                  preview: article.preview,
-                  labels: article.labels,
-                  tags: article.tags,
-                  date: article.publishedDate?.toISOString(),
-                }))
+                ).map((article: ArticleQueryResult) => {
+                  // TODO: need to handle landing page articles differently here
+                  const permalink = `${process.env.PORTAL_URL}/articles/${article.slug}`
+                  return {
+                    id: article.id,
+                    type: 'Article',
+                    title: article.title,
+                    permalink: permalink,
+                    preview: article.preview,
+                    labels: article.labels,
+                    tags: article.tags,
+                    date: article.publishedDate?.toISOString(),
+                  }
+                })
               }
 
               if (c[DATA_TABLES.BOOKMARK]) {
