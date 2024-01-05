@@ -63,6 +63,12 @@ const LandingPage = list(
           isRequired: true,
         },
       }),
+      badge: image({
+        storage: isLocalStorage() ? 'local_images' : 'cms_images',
+        ui: {
+          description: 'If no badge is provided, a default badge will be used.',
+        },
+      }),
       // Slug field is copied over from Article
       slug: text({
         isIndexed: 'unique',

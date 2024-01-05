@@ -1165,6 +1165,7 @@ input ZipcodeCreateInput {
 type LandingPage {
   id: ID!
   pageTitle: String
+  badge: ImageFieldOutput
   slug: String
   hero: ImageFieldOutput
   status: LandingPageStatusType
@@ -1252,6 +1253,7 @@ input LandingPageOrderByInput {
 
 input LandingPageUpdateInput {
   pageTitle: String
+  badge: ImageFieldInput
   slug: String
   hero: ImageFieldInput
   status: LandingPageStatusType
@@ -1276,6 +1278,7 @@ input LandingPageUpdateArgs {
 
 input LandingPageCreateInput {
   pageTitle: String
+  badge: ImageFieldInput
   slug: String
   hero: ImageFieldInput
   status: LandingPageStatusType
