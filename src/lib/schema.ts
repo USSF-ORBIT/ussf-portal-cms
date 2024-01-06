@@ -4,6 +4,7 @@ import {
   ArticleSearchResult,
   BookmarkSearchResult,
   DocumentationSearchResult,
+  LandingPageSearchResult,
   ArticleQueryResult,
   BookmarkQueryResult,
   DocumentationPageQueryResult,
@@ -30,6 +31,7 @@ const typeDefs = `
     Article
     Bookmark
     Documentation
+    LandingPage
   }
 
   interface SearchResultItem {
@@ -65,7 +67,14 @@ const typeDefs = `
     type: SearchResultType!
     preview: String!
     permalink: String!
+  }
 
+  type LandingPageResult implements SearchResultItem {
+    id: String!
+    title: String!
+    type: SearchResultType!
+    preview: String!
+    permalink: String!
   }
 
   union AuthenticatedItem = User
@@ -83,10 +92,12 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
             | BookmarkSearchResult
             | ArticleSearchResult
             | DocumentationSearchResult
+            | LandingPageSearchResult
         ) {
           if (obj.type === 'Bookmark') return 'BookmarkResult'
           if (obj.type === 'Article') return 'ArticleResult'
           if (obj.type === 'Documentation') return 'DocumentationResult'
+          if (obj.type === 'LandingPage') return 'LandingPageResult'
           return null
         },
       },
@@ -118,6 +129,7 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
             ARTICLE: 'news',
             BOOKMARK: 'application',
             DOCUMENTATION: 'documentation',
+            LANDING_PAGE: 'landingPage',
           }
 
           // Convert search query into usable data structures for our database query
@@ -127,6 +139,7 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
           let articleResults: ArticleSearchResult[] = []
           let documentationPageResults: DocumentationSearchResult[] = []
           let documentResults: DocumentationSearchResult[] = []
+          let landingPageResults: LandingPageSearchResult[] = []
 
           const tablesToSearch = [
             {
@@ -152,6 +165,14 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
                 (labels.length === 0 &&
                   tags.length === 0 &&
                   categories.length === 0),
+            },
+            {
+              // If any combination of tags or labels, or category is landing page, we want to search landing pages
+              [DATA_TABLES.LANDING_PAGE]:
+                categories.includes(DATA_TABLES.LANDING_PAGE) ||
+                (labels.length >= 0 &&
+                  tags.length >= 0 &&
+                  categories.length >= 0),
             },
           ]
 
@@ -228,6 +249,26 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
                   }
                 })
               }
+
+              if (c[DATA_TABLES.LANDING_PAGE]) {
+                // FIX: permalink for landing page needs to be consturcted like we do for articles
+                landingPageResults = (
+                  await prisma.landingPage.findMany({
+                    where: {
+                      pageTitle: {
+                        search: terms,
+                        mode: 'insensitive',
+                      },
+                    },
+                  })
+                ).map((landingPage: LandingPageSearchResult) => ({
+                  id: landingPage.id,
+                  type: 'LandingPage',
+                  title: landingPage.pageTitle,
+                  permalink: 'landingPage.permalink',
+                  preview: landingPage.pageDescription,
+                }))
+              }
             })
           )
 
@@ -235,11 +276,13 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
           // bookmarkResults maps to Application
           // articleResults maps to News
           // documentationResults and documentResults map to Documentation
+          // landingPageResults maps to LandingPage
           return [
             ...bookmarkResults,
             ...articleResults,
             ...documentationPageResults,
             ...documentResults,
+            ...landingPageResults,
           ]
         },
       },

@@ -96,6 +96,14 @@ export type DocumentationSearchResult = {
   permalink: string
 }
 
+export type LandingPageSearchResult = {
+  id: string
+  type: 'LandingPage'
+  title: string
+  preview: string
+  permalink: string
+}
+
 // Query sent to the CMS database
 export type ArticleQuery = {
   where: {

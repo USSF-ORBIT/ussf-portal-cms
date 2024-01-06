@@ -1544,6 +1544,7 @@ enum SearchResultType {
   Article
   Bookmark
   Documentation
+  LandingPage
 }
 
 interface SearchResultItem {
@@ -1574,6 +1575,14 @@ type ArticleResult implements SearchResultItem {
 }
 
 type DocumentationResult implements SearchResultItem {
+  id: String!
+  title: String!
+  type: SearchResultType!
+  preview: String!
+  permalink: String!
+}
+
+type LandingPageResult implements SearchResultItem {
   id: String!
   title: String!
   type: SearchResultType!
