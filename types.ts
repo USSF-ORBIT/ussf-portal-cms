@@ -99,9 +99,25 @@ export type DocumentationSearchResult = {
 export type LandingPageSearchResult = {
   id: string
   type: 'LandingPage'
-  title: string
-  preview: string
+  pageTitle: string
+  pageDescription: string
   permalink: string
+  slug: string
+}
+
+// Query sent to the CMS database
+export type LandingPageQuery = {
+  where: {
+    status: string
+    publishedDate: {
+      lte: Date
+    }
+    OR?: any[]
+    AND?: [{ OR?: any[] }, { OR?: any[] }]
+  }
+  include: {
+    articleTag: boolean
+  }
 }
 
 // Query sent to the CMS database

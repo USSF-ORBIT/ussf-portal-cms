@@ -16,6 +16,7 @@ import {
   buildBookmarkQuery,
   buildDocumentQuery,
   buildDocumentationPageQuery,
+  buildLandingPageQuery,
 } from './search'
 
 // typeDefs for custom functionality
@@ -251,23 +252,20 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
               }
 
               if (c[DATA_TABLES.LANDING_PAGE]) {
-                // FIX: permalink for landing page needs to be consturcted like we do for articles
                 landingPageResults = (
                   await prisma.landingPage.findMany({
-                    where: {
-                      pageTitle: {
-                        search: terms,
-                        mode: 'insensitive',
-                      },
-                    },
+                    ...buildLandingPageQuery(terms, tags),
                   })
-                ).map((landingPage: LandingPageSearchResult) => ({
-                  id: landingPage.id,
-                  type: 'LandingPage',
-                  title: landingPage.pageTitle,
-                  permalink: 'landingPage.permalink',
-                  preview: landingPage.pageDescription,
-                }))
+                ).map((landingPage: LandingPageSearchResult) => {
+                  const permalink = `${process.env.PORTAL_URL}/landing/${landingPage.slug}`
+                  return {
+                    id: landingPage.id,
+                    type: 'LandingPage',
+                    title: landingPage.pageTitle,
+                    permalink: permalink,
+                    preview: landingPage.pageDescription,
+                  }
+                })
               }
             })
           )
