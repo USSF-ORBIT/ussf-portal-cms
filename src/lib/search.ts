@@ -191,7 +191,7 @@ export const buildLandingPageQuery = (terms?: string, tags?: string[]) => {
   // We can have tags, labels, terms, or any combination of the three
   const tagsQuery = {
     articleTag: {
-      some: {
+      is: {
         name: {
           in: tags,
           mode: 'insensitive',
