@@ -25,6 +25,9 @@ type SearchResults = {
   search: []
 }
 
+// Set the portal url to a test url for expectations
+process.env.PORTAL_URL = 'https://example.com'
+
 describe('Search Resolver', () => {
   // Define the search query we'll use in every request
   const searchQuery = `
@@ -84,7 +87,7 @@ describe('Search Resolver', () => {
         expect.objectContaining({
           __typename: 'ArticleResult',
           title: searchTermArticleData.title,
-          permalink: searchTermArticleData.slug,
+          permalink: `${process.env.PORTAL_URL}/articles/${searchTermArticleData.slug}`,
           preview: searchTermArticleData.preview,
           date: expect.any(String),
         }),
@@ -176,7 +179,7 @@ describe('Search Resolver', () => {
               type: publishedArticleData.labels.create.type,
             },
           ],
-          permalink: publishedArticleData.slug,
+          permalink: `${process.env.PORTAL_URL}/articles/${publishedArticleData.slug}`,
           preview: publishedArticleData.preview,
           tags: [
             {
@@ -268,7 +271,7 @@ describe('Search Resolver', () => {
         expect.objectContaining({
           __typename: 'ArticleResult',
           title: publishedArticleData.title,
-          permalink: publishedArticleData.slug,
+          permalink: `${process.env.PORTAL_URL}/articles/${publishedArticleData.slug}`,
           preview: publishedArticleData.preview,
           labels: [
             {
