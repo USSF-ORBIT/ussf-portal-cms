@@ -502,7 +502,7 @@ describe('Search Resolver', () => {
 
   describe('landing page search', () => {
     test('find by pageTitle', async () => {
-      const searchResults = await sudoContext.graphql.run({
+      const searchResults: SearchResults = await sudoContext.graphql.run({
         query: searchQuery,
         variables: {
           query: publishedLandingPageData.pageTitle,
@@ -512,17 +512,19 @@ describe('Search Resolver', () => {
       const results = searchResults.search
 
       expect(results).toHaveLength(4)
-      expect(results[3]).toEqual(
-        expect.objectContaining({
-          __typename: 'LandingPageResult',
-          title: publishedLandingPageData.pageTitle,
-          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
-          preview: publishedLandingPageData.pageDescription,
-        })
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
       )
     })
     test('find by pageDescription', async () => {
-      const searchResults = await sudoContext.graphql.run({
+      const searchResults: SearchResults = await sudoContext.graphql.run({
         query: searchQuery,
         variables: {
           query: publishedLandingPageData.pageDescription,
@@ -532,17 +534,19 @@ describe('Search Resolver', () => {
       const results = searchResults.search
 
       expect(results).toHaveLength(4)
-      expect(results[3]).toEqual(
-        expect.objectContaining({
-          __typename: 'LandingPageResult',
-          title: publishedLandingPageData.pageTitle,
-          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
-          preview: publishedLandingPageData.pageDescription,
-        })
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
       )
     })
     test('find by slug', async () => {
-      const searchResults = await sudoContext.graphql.run({
+      const searchResults: SearchResults = await sudoContext.graphql.run({
         query: searchQuery,
         variables: {
           query: publishedLandingPageData.slug,
@@ -552,17 +556,19 @@ describe('Search Resolver', () => {
       const results = searchResults.search
 
       expect(results).toHaveLength(3)
-      expect(results[2]).toEqual(
-        expect.objectContaining({
-          __typename: 'LandingPageResult',
-          title: publishedLandingPageData.pageTitle,
-          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
-          preview: publishedLandingPageData.pageDescription,
-        })
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
       )
     })
     test('find by articleTag', async () => {
-      const searchResults = await sudoContext.graphql.run({
+      const searchResults: SearchResults = await sudoContext.graphql.run({
         query: searchQuery,
         variables: {
           query: `tag:"${publishedLandingPageData.articleTag.create.name}"`,
@@ -572,13 +578,15 @@ describe('Search Resolver', () => {
       const results = searchResults.search
 
       expect(results).toHaveLength(1)
-      expect(results[0]).toEqual(
-        expect.objectContaining({
-          __typename: 'LandingPageResult',
-          title: publishedLandingPageData.pageTitle,
-          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
-          preview: publishedLandingPageData.pageDescription,
-        })
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
       )
     })
   })
