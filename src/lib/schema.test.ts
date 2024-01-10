@@ -4,10 +4,13 @@ import {
   myVector,
   publishedArticleData,
   searchTermArticleData,
+  publishedLandingPageData,
+  draftLandingPageData,
   surf,
   orders,
   testArticles,
   testBookmarks,
+  testLandingPages,
 } from '../testData'
 
 import { configTestEnv } from '../testHelpers'
@@ -19,6 +22,7 @@ beforeAll(async () => {
   sudoContext = context.sudoContext
   await sudoContext.query.Article.createMany({ data: testArticles })
   await sudoContext.query.Bookmark.createMany({ data: testBookmarks })
+  await sudoContext.query.LandingPage.createMany({ data: testLandingPages })
 })
 
 type SearchResults = {
@@ -477,5 +481,105 @@ describe('Search Resolver', () => {
     results = searchResults.search
 
     expect(results).toHaveLength(3)
+
+    /*
+        Results must contain query and at least one category
+        Query String: 'category:landingPage landing', case insensitive
+      Expected Results:
+            publishedLandingPage (LandingPageResult) (category:landingPage, keyword: "landing")
+      */
+    searchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:landingPage landing',
+      },
+    })
+
+    results = searchResults.search
+
+    expect(results).toHaveLength(1)
+  })
+
+  describe('landing page search', () => {
+    test('find by pageTitle', async () => {
+      const searchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: publishedLandingPageData.pageTitle,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(4)
+      expect(results[3]).toEqual(
+        expect.objectContaining({
+          __typename: 'LandingPageResult',
+          title: publishedLandingPageData.pageTitle,
+          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+          preview: publishedLandingPageData.pageDescription,
+        })
+      )
+    })
+    test('find by pageDescription', async () => {
+      const searchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: publishedLandingPageData.pageDescription,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(4)
+      expect(results[3]).toEqual(
+        expect.objectContaining({
+          __typename: 'LandingPageResult',
+          title: publishedLandingPageData.pageTitle,
+          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+          preview: publishedLandingPageData.pageDescription,
+        })
+      )
+    })
+    test('find by slug', async () => {
+      const searchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: publishedLandingPageData.slug,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(3)
+      expect(results[2]).toEqual(
+        expect.objectContaining({
+          __typename: 'LandingPageResult',
+          title: publishedLandingPageData.pageTitle,
+          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+          preview: publishedLandingPageData.pageDescription,
+        })
+      )
+    })
+    test('find by articleTag', async () => {
+      const searchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: `tag:"${publishedLandingPageData.articleTag.create.name}"`,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(1)
+      expect(results[0]).toEqual(
+        expect.objectContaining({
+          __typename: 'LandingPageResult',
+          title: publishedLandingPageData.pageTitle,
+          permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+          preview: publishedLandingPageData.pageDescription,
+        })
+      )
+    })
   })
 })

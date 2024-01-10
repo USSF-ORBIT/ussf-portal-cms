@@ -92,3 +92,43 @@ export const testArticles = [
   searchTermArticleData,
   publishedArticleWithMultipleTagsData,
 ]
+
+// Landing Pages
+export const publishedLandingPageData = {
+  pageTitle: 'Published Landing Page',
+  slug: 'published-landing-page',
+  pageDescription: 'A published landing page.',
+  status: 'Published',
+  publishedDate: DateTime.now().toISO(),
+  articleTag: { create: { name: 'Test Landing Page Tag' } },
+}
+
+export const futurePublishedLandingPageData = {
+  pageTitle: 'Future Published Landing Page',
+  slug: 'future-published-landing-page',
+  pageDescription: 'A soon to be published landing page.',
+  status: 'Published',
+  publishedDate: DateTime.now().plus({ week: 1 }).toISO(),
+}
+
+export const draftLandingPageData = {
+  pageTitle: 'Draft Landing Page',
+  slug: 'draft-landing-page',
+  pageDescription: 'A draft landing page.',
+  status: 'Draft',
+}
+
+export const archivedLandingPageData = {
+  pageTitle: 'Archived Landing Page',
+  slug: 'archived-landing-page',
+  pageDescription: 'An archived landing page.',
+  status: 'Archived',
+  archivedDate: DateTime.now().toISO(),
+}
+
+export const testLandingPages = [
+  publishedLandingPageData,
+  futurePublishedLandingPageData,
+  draftLandingPageData,
+  archivedLandingPageData,
+]
