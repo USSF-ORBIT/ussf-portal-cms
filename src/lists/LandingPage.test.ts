@@ -277,17 +277,19 @@ describe('LandingPage', () => {
     })
 
     describe('as a non-admin user with the Manager role', () => {
-      test('unable to create a landing page', async () => {
+      test('can create a landing page', async () => {
         const data = {
-          pageTitle: 'Test Landing Page',
-          slug: 'test-landing-page',
+          pageTitle: 'Manager Landing Page',
+          slug: 'manager-landing-page',
         }
 
-        await expect(async () => {
-          await managerContext.query.LandingPage.createOne({
-            data,
-          })
-        }).rejects.toThrow('Access denied')
+        const landingPage = await managerContext.query.LandingPage.createOne({
+          data,
+          query: landingPageQuery,
+        })
+
+        expect(landingPage.id).toBeTruthy()
+        expect(landingPage.pageTitle).toEqual('Manager Landing Page')
       })
 
       test('unable to delete a landing page', async () => {

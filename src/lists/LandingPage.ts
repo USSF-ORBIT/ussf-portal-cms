@@ -12,6 +12,7 @@ import { withTracking } from '../util/tracking'
 import { slugify } from '../util/formatting'
 import {
   isAdmin,
+  canCreateLandingPage,
   canUpdateLandingPage,
   canPublishArchiveLanding,
   landingStatusView,
@@ -32,7 +33,7 @@ const LandingPage = list(
   withTracking({
     access: {
       operation: {
-        create: isAdmin,
+        create: canCreateLandingPage,
         query: () => true,
         update: canUpdateLandingPage,
         delete: isAdmin,
@@ -43,8 +44,8 @@ const LandingPage = list(
       },
     },
     ui: {
-      hideCreate: () => false,
-      hideDelete: () => false,
+      hideCreate: ({ session }) => !canCreateLandingPage({ session }),
+      hideDelete: ({ session }) => !isAdmin({ session }),
       label: 'Landing Page',
       createView: {
         defaultFieldMode: 'edit',

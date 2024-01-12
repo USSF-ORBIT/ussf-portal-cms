@@ -219,6 +219,12 @@ export const documentPageItemView: ItemViewFn = ({ session }) => {
 }
 
 /* Landing Page helpers */
+export const canCreateLandingPage: OperationAccessFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
+
+  return false
+}
+
 export const canUpdateLandingPage: OperationAccessFn = ({ session }) => {
   if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
 
