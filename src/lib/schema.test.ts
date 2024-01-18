@@ -5,7 +5,6 @@ import {
   publishedArticleData,
   searchTermArticleData,
   publishedLandingPageData,
-  draftLandingPageData,
   surf,
   orders,
   testArticles,
