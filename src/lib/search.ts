@@ -101,7 +101,6 @@ export const buildArticleQuery = (
       publishedDate: {
         lte: DateTime.now().toJSDate(),
       },
-      category: 'InternalNews',
     },
 
     include: {

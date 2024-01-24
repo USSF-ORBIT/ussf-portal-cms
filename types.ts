@@ -127,7 +127,6 @@ export type ArticleQuery = {
     publishedDate: {
       lte: Date
     }
-    category: string
     OR?: any[]
     AND?: [{ OR?: any[] }, { OR?: any[] }]
   }
@@ -137,15 +136,21 @@ export type ArticleQuery = {
   }
 }
 
+export type Tag = {
+  id: string
+  name: string
+}
+
 // Results returned from querying the database
 export type ArticleQueryResult = {
   id: string
   type: 'Article'
+  category: 'InternalNews' | 'ORBITBlog' | 'LandingPage'
   title: string
   slug: string
   preview: string
   labels: string[]
-  tags: string[]
+  tags: Tag[]
   publishedDate: Date
 }
 
