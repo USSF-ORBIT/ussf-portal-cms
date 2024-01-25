@@ -288,7 +288,17 @@ model Zipcode {
 model LandingPage {
   id              String                @id @default(cuid())
   pageTitle       String                @default("")
+  badge_filesize  Int?
+  badge_extension String?
+  badge_width     Int?
+  badge_height    Int?
+  badge_id        String?
   slug            String                @unique @default("")
+  hero_filesize   Int?
+  hero_extension  String?
+  hero_width      Int?
+  hero_height     Int?
+  hero_id         String?
   status          LandingPageStatusType @default(Draft)
   publishedDate   DateTime?
   archivedDate    DateTime?

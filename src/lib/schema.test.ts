@@ -4,10 +4,12 @@ import {
   myVector,
   publishedArticleData,
   searchTermArticleData,
+  publishedLandingPageData,
   surf,
   orders,
   testArticles,
   testBookmarks,
+  testLandingPages,
 } from '../testData'
 
 import { configTestEnv } from '../testHelpers'
@@ -19,11 +21,15 @@ beforeAll(async () => {
   sudoContext = context.sudoContext
   await sudoContext.query.Article.createMany({ data: testArticles })
   await sudoContext.query.Bookmark.createMany({ data: testBookmarks })
+  await sudoContext.query.LandingPage.createMany({ data: testLandingPages })
 })
 
 type SearchResults = {
   search: []
 }
+
+// Set the portal url to a test url for expectations
+process.env.PORTAL_URL = 'https://example.com'
 
 describe('Search Resolver', () => {
   // Define the search query we'll use in every request
@@ -84,7 +90,7 @@ describe('Search Resolver', () => {
         expect.objectContaining({
           __typename: 'ArticleResult',
           title: searchTermArticleData.title,
-          permalink: searchTermArticleData.slug,
+          permalink: `${process.env.PORTAL_URL}/articles/${searchTermArticleData.slug}`,
           preview: searchTermArticleData.preview,
           date: expect.any(String),
         }),
@@ -176,7 +182,7 @@ describe('Search Resolver', () => {
               type: publishedArticleData.labels.create.type,
             },
           ],
-          permalink: publishedArticleData.slug,
+          permalink: `${process.env.PORTAL_URL}/articles/${publishedArticleData.slug}`,
           preview: publishedArticleData.preview,
           tags: [
             {
@@ -268,7 +274,7 @@ describe('Search Resolver', () => {
         expect.objectContaining({
           __typename: 'ArticleResult',
           title: publishedArticleData.title,
-          permalink: publishedArticleData.slug,
+          permalink: `${process.env.PORTAL_URL}/articles/${publishedArticleData.slug}`,
           preview: publishedArticleData.preview,
           labels: [
             {
@@ -474,5 +480,113 @@ describe('Search Resolver', () => {
     results = searchResults.search
 
     expect(results).toHaveLength(3)
+
+    /*
+        Results must contain query and at least one category
+        Query String: 'category:landingPage landing', case insensitive
+      Expected Results:
+            publishedLandingPage (LandingPageResult) (category:landingPage, keyword: "landing")
+      */
+    searchResults = await sudoContext.graphql.run({
+      query: searchQuery,
+      variables: {
+        query: 'category:landingPage landing',
+      },
+    })
+
+    results = searchResults.search
+
+    expect(results).toHaveLength(1)
+  })
+
+  describe('landing page search', () => {
+    test('find by pageTitle', async () => {
+      const searchResults: SearchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: publishedLandingPageData.pageTitle,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(4)
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
+      )
+    })
+    test('find by pageDescription', async () => {
+      const searchResults: SearchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: publishedLandingPageData.pageDescription,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(4)
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
+      )
+    })
+    test('find by slug', async () => {
+      const searchResults: SearchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: publishedLandingPageData.slug,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(3)
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
+      )
+    })
+    test('find by articleTag', async () => {
+      const searchResults: SearchResults = await sudoContext.graphql.run({
+        query: searchQuery,
+        variables: {
+          query: `tag:"${publishedLandingPageData.articleTag.create.name}"`,
+        },
+      })
+
+      const results = searchResults.search
+
+      expect(results).toHaveLength(1)
+      expect(results).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            __typename: 'LandingPageResult',
+            title: publishedLandingPageData.pageTitle,
+            permalink: `${process.env.PORTAL_URL}/landing/${publishedLandingPageData.slug}`,
+            preview: publishedLandingPageData.pageDescription,
+          }),
+        ])
+      )
+    })
   })
 })

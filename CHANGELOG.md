@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.16.0...1.17.0) (2024-01-18)
+
+
+### Features
+
+* Add hero image support for landing page ([#417](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/417)) ([c3415fa](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/c3415fa51fc00eae1856052442b88f5cbbfb637c))
+* landing pages show in search results ([#418](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/418)) ([1e2ffde](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/1e2ffde0d012f18ce8ee8b6b28da562a5d187b4c))
+
+## [1.16.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.15.0...1.16.0) (2024-01-09)
+
+
+### Features
+
+* Managers can create landing pages ([#419](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/419)) ([da332e9](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/da332e9b3d6919d9f0966ff9b12caf3339204d14))
+
 ## [1.15.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.14.0...1.15.0) (2023-12-14)
 
 

@@ -1,5 +1,9 @@
 import { DateTime } from 'luxon'
-import type { ParsedSearchQuery, ArticleQuery } from '../../types'
+import type {
+  ParsedSearchQuery,
+  ArticleQuery,
+  LandingPageQuery,
+} from '../../types'
 
 export const buildBookmarkQuery = (terms?: string) => ({
   where: {
@@ -181,6 +185,74 @@ export const buildDocumentQuery = (terms?: string) => ({
     ],
   },
 })
+
+export const buildLandingPageQuery = (terms?: string, tags?: string[]) => {
+  // Building blocks of the LandingPage query
+  // We can have tags, labels, terms, or any combination of the three
+  const tagsQuery = {
+    articleTag: {
+      is: {
+        name: {
+          in: tags,
+          mode: 'insensitive',
+        },
+      },
+    },
+  }
+
+  const termsQuery = {
+    OR: [
+      {
+        pageTitle: {
+          search: terms,
+          mode: 'insensitive',
+        },
+      },
+      {
+        pageDescription: {
+          search: terms,
+          mode: 'insensitive',
+        },
+      },
+      {
+        slug: {
+          search: terms,
+          mode: 'insensitive',
+        },
+      },
+    ],
+  }
+
+  // Establish the base query
+  const query: LandingPageQuery = {
+    where: {
+      status: 'Published',
+      publishedDate: {
+        lte: DateTime.now().toJSDate(),
+      },
+    },
+
+    include: {
+      articleTag: true,
+    },
+  }
+
+  if (terms && terms.length > 0) {
+    query.where.AND = [termsQuery, { OR: [] }]
+  } else {
+    query.where.OR = []
+  }
+
+  if (tags && tags.length > 0) {
+    if (terms) {
+      query.where.AND?.[1].OR?.push(tagsQuery)
+    } else {
+      query.where.OR?.push(tagsQuery)
+    }
+  }
+
+  return query
+}
 
 export const parseSearchQuery = (query: string): ParsedSearchQuery => {
   const tags: string[] = []

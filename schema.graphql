@@ -1165,7 +1165,9 @@ input ZipcodeCreateInput {
 type LandingPage {
   id: ID!
   pageTitle: String
+  badge: ImageFieldOutput
   slug: String
+  hero: ImageFieldOutput
   status: LandingPageStatusType
   viewPageUrl: JSON
   publishedDate: DateTime
@@ -1251,7 +1253,9 @@ input LandingPageOrderByInput {
 
 input LandingPageUpdateInput {
   pageTitle: String
+  badge: ImageFieldInput
   slug: String
+  hero: ImageFieldInput
   status: LandingPageStatusType
   publishedDate: DateTime
   archivedDate: DateTime
@@ -1274,7 +1278,9 @@ input LandingPageUpdateArgs {
 
 input LandingPageCreateInput {
   pageTitle: String
+  badge: ImageFieldInput
   slug: String
+  hero: ImageFieldInput
   status: LandingPageStatusType
   publishedDate: DateTime
   archivedDate: DateTime
@@ -1538,6 +1544,7 @@ enum SearchResultType {
   Article
   Bookmark
   Documentation
+  LandingPage
 }
 
 interface SearchResultItem {
@@ -1568,6 +1575,14 @@ type ArticleResult implements SearchResultItem {
 }
 
 type DocumentationResult implements SearchResultItem {
+  id: String!
+  title: String!
+  type: SearchResultType!
+  preview: String!
+  permalink: String!
+}
+
+type LandingPageResult implements SearchResultItem {
   id: String!
   title: String!
   type: SearchResultType!

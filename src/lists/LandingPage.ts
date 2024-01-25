@@ -1,5 +1,6 @@
 import { graphql, list } from '@keystone-6/core'
 import {
+  image,
   relationship,
   select,
   text,
@@ -11,10 +12,12 @@ import { withTracking } from '../util/tracking'
 import { slugify } from '../util/formatting'
 import {
   isAdmin,
+  canCreateLandingPage,
   canUpdateLandingPage,
   canPublishArchiveLanding,
   landingStatusView,
 } from '../util/access'
+import { isLocalStorage } from '../util/getStorage'
 import { LANDING_STATUSES } from '../util/workflows'
 import { ARTICLE_CATEGORIES } from './Article'
 // NOTE:
@@ -30,7 +33,7 @@ const LandingPage = list(
   withTracking({
     access: {
       operation: {
-        create: isAdmin,
+        create: canCreateLandingPage,
         query: () => true,
         update: canUpdateLandingPage,
         delete: isAdmin,
@@ -41,8 +44,8 @@ const LandingPage = list(
       },
     },
     ui: {
-      hideCreate: () => false,
-      hideDelete: () => false,
+      hideCreate: ({ session }) => !canCreateLandingPage({ session }),
+      hideDelete: ({ session }) => !isAdmin({ session }),
       label: 'Landing Page',
       createView: {
         defaultFieldMode: 'edit',
@@ -59,6 +62,12 @@ const LandingPage = list(
       pageTitle: text({
         validation: {
           isRequired: true,
+        },
+      }),
+      badge: image({
+        storage: isLocalStorage() ? 'local_images' : 'cms_images',
+        ui: {
+          description: 'If no badge is provided, a default badge will be used.',
         },
       }),
       // Slug field is copied over from Article
@@ -105,6 +114,9 @@ const LandingPage = list(
             }
           },
         },
+      }),
+      hero: image({
+        storage: isLocalStorage() ? 'local_images' : 'cms_images',
       }),
       status: select({
         type: 'enum',

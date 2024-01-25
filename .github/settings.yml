@@ -160,9 +160,12 @@ branches:
         strict: true
         # Required. The list of status checks to require in order to merge into this branch
         contexts:
-          # TODO Temporarily removing e2e tests from required builds as they are flakey and need to be stabilized first
-          # ['lint-and-test', 'action-semantic-pull-request', 'run-e2e-tests']
-          [ 'lint-and-test', 'action-semantic-pull-request' ]
+          [
+            "lint-and-test", "action-semantic-pull-request",
+            "run-e2e-tests / run-e2e-tests (chromium)",
+            "run-e2e-tests / run-e2e-tests (chrome)",
+            "run-e2e-tests / run-e2e-tests (msedge)",
+            ]
       # Required. Allow owners to by pass restrictions for PRs that are just release notes or github settings changes which do not affect tests
       # Enforce all configured restrictions for administrators. Set to true to enforce required status checks for repository administrators.
       enforce_admins: false
