@@ -1,6 +1,6 @@
 ##--------- Stage: builder ---------##
 # Node image variant name explanations: "bookworm" is the codeword for Debian 12
-FROM node:18.17.0-bookworm-slim AS builder
+FROM node:18.19.0-bookworm-slim AS builder
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
@@ -48,7 +48,7 @@ CMD ["/nodejs/bin/node /app/node_modules/.bin/prisma migrate deploy && /usr/bin/
 
 ##--------- Stage: e2e-local ---------##
 # E2E image for running tests (same as prod but without certs)
-FROM node:18.17.0-bookworm-slim AS e2e-local
+FROM node:18.19.0-bookworm-slim AS e2e-local
 
 RUN apt-get update \
   && apt-get dist-upgrade -y \
@@ -67,7 +67,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 CMD ["bash", "-c", "/app/node_modules/.bin/prisma migrate deploy && dumb-init node -r /app/startup/index.js /app/node_modules/.bin/keystone start"]
 
 ##--------- Stage: build-env ---------##
-FROM node:18.17.0-bookworm-slim AS build-env
+FROM node:18.19.0-bookworm-slim AS build-env
 
 WORKDIR /app
 
