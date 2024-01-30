@@ -1,27 +1,29 @@
 import { list } from '@keystone-6/core'
 import { relationship, text } from '@keystone-6/core/fields'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
+import {
+  canCreateBookmark,
+  canUpdateBookmark,
+  bookmarkCreateView,
+} from '../util/access'
 import { withTracking } from '../util/tracking'
 
 const Bookmark = list(
   withTracking({
-    // Admin can create and update bookmarks
-    // Users can view all bookmarks
     access: {
       operation: {
-        create: isAdmin,
+        create: canCreateBookmark,
         query: () => true,
-        update: isAdmin,
+        update: canUpdateBookmark,
         delete: () => false,
       },
     },
 
     ui: {
-      hideCreate: ({ session }) => !isAdmin({ session }),
+      hideCreate: ({ session }) => !canCreateBookmark({ session }),
       hideDelete: true,
       itemView: {
-        defaultFieldMode: editReadAdminUI,
+        defaultFieldMode: bookmarkCreateView,
       },
     },
 

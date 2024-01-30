@@ -117,6 +117,18 @@ export const canUpdateCollection: OperationAccessFn = ({ session }) => {
 export const collectionCreateView: CreateViewFn = ({ session }) =>
   canCreateCollection({ session }) ? 'edit' : 'hidden'
 
+/** Bookmark helpers */
+export const canCreateBookmark: OperationAccessFn = ({ session }) => {
+  return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+}
+
+export const canUpdateBookmark: OperationAccessFn = ({ session }) => {
+  return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+}
+
+export const bookmarkCreateView: CreateViewFn = ({ session }) =>
+  canCreateBookmark({ session }) ? 'edit' : 'hidden'
+
 /** Article helpers */
 export const canCreateArticle: OperationAccessFn = ({ session }) => {
   return (
