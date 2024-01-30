@@ -18,6 +18,12 @@ import {
   articleCreateView,
   articleItemView,
   articleStatusView,
+  canCreateCollection,
+  canUpdateCollection,
+  collectionCreateView,
+  canCreateBookmark,
+  canUpdateBookmark,
+  bookmarkCreateView,
   canCreateOrUpdateDocument,
   canUpdateDocument,
   canDeleteDocument,
@@ -160,6 +166,117 @@ describe('userItemView', () => {
   })
 })
 
+/* Collection Access */
+describe('canCreateCollection', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canCreateCollection({ session: testAdminSession })).toBe(true)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canCreateCollection({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is an author', () => {
+    expect(canCreateCollection({ session: testAuthorSession })).toBe(false)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canCreateCollection({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canCreateCollection({})).toBe(false)
+  })
+})
+
+describe('canUpdateCollection', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canUpdateCollection({ session: testAdminSession })).toBe(true)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canUpdateCollection({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is an author', () => {
+    expect(canUpdateCollection({ session: testAuthorSession })).toBe(false)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canUpdateCollection({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canUpdateCollection({})).toBe(false)
+  })
+})
+
+describe('collectionCreateView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(collectionCreateView({ session: testAdminSession })).toBe('edit')
+  })
+  it('returns edit if the logged in user is a manager', () => {
+    expect(collectionCreateView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns hidden if the logged in user is an author', () => {
+    expect(collectionCreateView({ session: testAuthorSession })).toBe('hidden')
+  })
+  it('returns hidden if the logged in user is a user', () => {
+    expect(collectionCreateView({ session: testUserSession })).toBe('hidden')
+  })
+  it('returns hidden if there is no logged in user', () => {
+    expect(collectionCreateView({})).toBe('hidden')
+  })
+})
+
+/* Bookmark Access */
+describe('canCreateBookmark', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canCreateBookmark({ session: testAdminSession })).toBe(true)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canCreateBookmark({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is an author', () => {
+    expect(canCreateBookmark({ session: testAuthorSession })).toBe(false)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canCreateBookmark({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canCreateBookmark({})).toBe(false)
+  })
+})
+
+describe('canUpdateBookmark', () => {
+  it('returns true if the logged in user is an admin', () => {
+    expect(canUpdateBookmark({ session: testAdminSession })).toBe(true)
+  })
+  it('returns true if the logged in user is a manager', () => {
+    expect(canUpdateBookmark({ session: testManagerSession })).toBe(true)
+  })
+  it('returns false if the logged in user is an author', () => {
+    expect(canUpdateBookmark({ session: testAuthorSession })).toBe(false)
+  })
+  it('returns false if the logged in user is a user', () => {
+    expect(canUpdateBookmark({ session: testUserSession })).toBe(false)
+  })
+  it('returns false if there is no logged in user', () => {
+    expect(canUpdateBookmark({})).toBe(false)
+  })
+})
+
+describe('bookmarkCreateView', () => {
+  it('returns edit if the logged in user is an admin', () => {
+    expect(bookmarkCreateView({ session: testAdminSession })).toBe('edit')
+  })
+  it('returns edit if the logged in user is a manager', () => {
+    expect(bookmarkCreateView({ session: testManagerSession })).toBe('edit')
+  })
+  it('returns hidden if the logged in user is an author', () => {
+    expect(bookmarkCreateView({ session: testAuthorSession })).toBe('hidden')
+  })
+  it('returns hidden if the logged in user is a user', () => {
+    expect(bookmarkCreateView({ session: testUserSession })).toBe('hidden')
+  })
+  it('returns hidden if there is no logged in user', () => {
+    expect(bookmarkCreateView({})).toBe('hidden')
+  })
+})
+
+/* Article Access */
 describe('canCreateArticle', () => {
   it('returns true if the logged in user is an admin', () => {
     expect(canCreateArticle({ session: testAdminSession })).toBe(true)
