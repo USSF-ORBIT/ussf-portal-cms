@@ -1,16 +1,21 @@
 import { list } from '@keystone-6/core'
 import { checkbox, relationship, text } from '@keystone-6/core/fields'
 
-import { isAdmin, editReadAdminUI } from '../util/access'
+import {
+  isAdmin,
+  editReadAdminUI,
+  canCreateCollection,
+  canUpdateCollection,
+} from '../util/access'
 import { withTracking } from '../util/tracking'
 
 const Collection = list(
   withTracking({
     access: {
       operation: {
-        create: isAdmin,
+        create: canCreateCollection,
         query: () => true,
-        update: isAdmin,
+        update: canUpdateCollection,
         delete: () => false,
       },
     },
