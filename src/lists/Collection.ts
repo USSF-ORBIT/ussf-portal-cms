@@ -2,10 +2,9 @@ import { list } from '@keystone-6/core'
 import { checkbox, relationship, text } from '@keystone-6/core/fields'
 
 import {
-  isAdmin,
-  editReadAdminUI,
   canCreateCollection,
   canUpdateCollection,
+  collectionCreateView,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -21,10 +20,10 @@ const Collection = list(
     },
 
     ui: {
-      hideCreate: ({ session }) => !isAdmin({ session }),
+      hideCreate: ({ session }) => !canCreateCollection({ session }),
       hideDelete: true,
       itemView: {
-        defaultFieldMode: editReadAdminUI,
+        defaultFieldMode: collectionCreateView,
       },
     },
 

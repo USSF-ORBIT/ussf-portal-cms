@@ -114,6 +114,9 @@ export const canUpdateCollection: OperationAccessFn = ({ session }) => {
   return session?.isAdmin || session?.role === USER_ROLES.MANAGER
 }
 
+export const collectionCreateView: CreateViewFn = ({ session }) =>
+  canCreateCollection({ session }) ? 'edit' : 'hidden'
+
 /** Article helpers */
 export const canCreateArticle: OperationAccessFn = ({ session }) => {
   return (
