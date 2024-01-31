@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.17.0...1.18.0) (2024-01-31)
+
+
+### Features
+
+* Add LandingPage articles to search results ([#422](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/422)) ([3acaf45](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/3acaf452ef5507c9c1fb2bb9a50d87a0f23a6990))
+* Manager role can create/update Collections and Bookmarks ([#426](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/426)) ([0c026e6](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/0c026e63dff25935417adcc030406c02e5bcb4ea))
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#405](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/405)) ([6d237d6](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/6d237d6daf1b68360ec1a3b3ef1581c41ec5ad07))
+
 ## [1.17.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.16.0...1.17.0) (2024-01-18)
 
 
