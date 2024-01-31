@@ -187,9 +187,30 @@ export const extendGraphqlSchema = (baseSchema: GraphQLSchema) =>
                   await prisma.article.findMany({
                     ...articleQuery,
                   })
-                ).map((article: ArticleQueryResult) => {
-                  // TODO: need to handle landing page articles differently here
-                  const permalink = `${process.env.PORTAL_URL}/articles/${article.slug}`
+                ).map(async (article: ArticleQueryResult) => {
+                  let permalink = ''
+
+                  if (article.category === 'LandingPage') {
+                    let landingPage
+
+                    for (const tag of article.tags) {
+                      landingPage = await prisma.landingPage.findFirst({
+                        where: {
+                          articleTagId: {
+                            equals: tag.id,
+                          },
+                        },
+                      })
+
+                      if (landingPage) {
+                        permalink = `${process.env.PORTAL_URL}/landing/${landingPage.slug}/${article.slug}`
+                        break
+                      }
+                    }
+                  } else {
+                    permalink = `${process.env.PORTAL_URL}/articles/${article.slug}`
+                  }
+
                   return {
                     id: article.id,
                     type: 'Article',
