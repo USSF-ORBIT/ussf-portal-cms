@@ -13,6 +13,7 @@ import DocumentSection from './lists/DocumentSection'
 import DocumentsPage from './lists/DocumentsPage'
 import Zipcode from './lists/Zipcode'
 import LandingPage from './lists/LandingPage'
+import SiteHeader from './lists/SiteHeader'
 
 export const lists = {
   Event,
@@ -30,4 +31,5 @@ export const lists = {
   DocumentsPage,
   Zipcode,
   LandingPage,
+  SiteHeader,
 }
