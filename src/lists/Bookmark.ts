@@ -5,6 +5,7 @@ import {
   canCreateBookmark,
   canUpdateBookmark,
   bookmarkCreateView,
+  canDeleteBookmark,
 } from '../util/access'
 import { withTracking } from '../util/tracking'
 
@@ -15,13 +16,13 @@ const Bookmark = list(
         create: canCreateBookmark,
         query: () => true,
         update: canUpdateBookmark,
-        delete: () => false,
+        delete: canDeleteBookmark,
       },
     },
 
     ui: {
       hideCreate: ({ session }) => !canCreateBookmark({ session }),
-      hideDelete: true,
+      hideDelete: ({ session }) => !canDeleteBookmark({ session }),
       itemView: {
         defaultFieldMode: bookmarkCreateView,
       },

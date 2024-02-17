@@ -16,7 +16,7 @@ describe('Bookmark schema', () => {
   beforeAll(async () => ({ adminContext, userContext } = await configTestEnv()))
 
   describe('as an admin user', () => {
-    it('can create new bookmarks', async () => {
+    test('can create new bookmarks', async () => {
       const data = await adminContext.query.Bookmark.createOne({
         data: testBookmark,
         query: 'id url label description keywords createdAt updatedAt',
@@ -30,7 +30,7 @@ describe('Bookmark schema', () => {
       })
     })
 
-    it('can query all bookmarks', async () => {
+    test('can query all bookmarks', async () => {
       const data = await adminContext.query.Bookmark.findMany({
         query: 'id url label description keywords createdAt updatedAt',
       })
@@ -44,7 +44,7 @@ describe('Bookmark schema', () => {
       })
     })
 
-    it('can update a bookmark', async () => {
+    test('can update a bookmark', async () => {
       const existingBookmarks = await adminContext.query.Bookmark.findMany({
         query: 'id',
       })
@@ -69,23 +69,27 @@ describe('Bookmark schema', () => {
       expect(data.createdAt).not.toBe(data.updatedAt)
     })
 
-    it('cannot delete bookmarks', async () => {
-      const existingBookmarks = await adminContext.query.Bookmark.findMany({
-        query: 'id',
+    test('can delete bookmarks', async () => {
+      const bookmark = await adminContext.query.Bookmark.createOne({
+        data: { ...testBookmark, label: 'To be deleted' },
+        query: 'id url label description keywords createdAt updatedAt',
       })
 
-      expect(
-        adminContext.query.Bookmark.deleteOne({
-          where: { id: existingBookmarks[0].id },
-        })
-      ).rejects.toThrow(
-        'Access denied: You cannot delete that Bookmark - it may not exist'
-      )
+      await adminContext.query.Bookmark.deleteOne({
+        where: { id: bookmark.id },
+      })
+
+      const data = await adminContext.query.Bookmark.findOne({
+        where: { id: bookmark.id },
+        query: 'id url label description',
+      })
+
+      expect(data).toEqual(null)
     })
   })
 
   describe('as a non admin user', () => {
-    it('can query all bookmarks', async () => {
+    test('can query all bookmarks', async () => {
       const data = await userContext.query.Bookmark.findMany({
         query: 'id url label description keywords createdAt updatedAt',
       })
@@ -99,7 +103,7 @@ describe('Bookmark schema', () => {
       })
     })
 
-    it('cannot create bookmarks', async () => {
+    test('cannot create bookmarks', async () => {
       expect(
         userContext.query.Bookmark.createOne({
           data: testBookmark,
@@ -108,7 +112,7 @@ describe('Bookmark schema', () => {
       ).rejects.toThrow('Access denied: You cannot create that Bookmark')
     })
 
-    it('cannot update bookmarks', async () => {
+    test('cannot update bookmarks', async () => {
       const existingBookmarks = await userContext.query.Bookmark.findMany({
         query: 'id',
       })
@@ -126,7 +130,7 @@ describe('Bookmark schema', () => {
       )
     })
 
-    it('cannot delete bookmarks', async () => {
+    test('cannot delete bookmarks', async () => {
       const existingBookmarks = await userContext.query.Bookmark.findMany({
         query: 'id',
       })
