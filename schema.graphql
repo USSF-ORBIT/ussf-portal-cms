@@ -1297,9 +1297,9 @@ input TagRelateToOneForCreateInput {
 
 type SiteHeader {
   id: ID!
-  buttonLabel: String
-  buttonSource: String
-  dropdownLabel: String
+  headerButtonLabel: String
+  headerButtonSource: String
+  headerDropdownLabel: String
   dropdownItem1Label: String
   dropdownItem1Source: String
   dropdownItem2Label: String
@@ -1319,9 +1319,9 @@ input SiteHeaderWhereInput {
   OR: [SiteHeaderWhereInput!]
   NOT: [SiteHeaderWhereInput!]
   id: IDFilter
-  buttonLabel: StringFilter
-  buttonSource: StringFilter
-  dropdownLabel: StringFilter
+  headerButtonLabel: StringFilter
+  headerButtonSource: StringFilter
+  headerDropdownLabel: StringFilter
   dropdownItem1Label: StringFilter
   dropdownItem1Source: StringFilter
   dropdownItem2Label: StringFilter
@@ -1334,9 +1334,9 @@ input SiteHeaderWhereInput {
 
 input SiteHeaderOrderByInput {
   id: OrderDirection
-  buttonLabel: OrderDirection
-  buttonSource: OrderDirection
-  dropdownLabel: OrderDirection
+  headerButtonLabel: OrderDirection
+  headerButtonSource: OrderDirection
+  headerDropdownLabel: OrderDirection
   dropdownItem1Label: OrderDirection
   dropdownItem1Source: OrderDirection
   dropdownItem2Label: OrderDirection
@@ -1348,9 +1348,9 @@ input SiteHeaderOrderByInput {
 }
 
 input SiteHeaderUpdateInput {
-  buttonLabel: String
-  buttonSource: String
-  dropdownLabel: String
+  headerButtonLabel: String
+  headerButtonSource: String
+  headerDropdownLabel: String
   dropdownItem1Label: String
   dropdownItem1Source: String
   dropdownItem2Label: String
@@ -1367,9 +1367,9 @@ input SiteHeaderUpdateArgs {
 }
 
 input SiteHeaderCreateInput {
-  buttonLabel: String
-  buttonSource: String
-  dropdownLabel: String
+  headerButtonLabel: String
+  headerButtonSource: String
+  headerDropdownLabel: String
   dropdownItem1Label: String
   dropdownItem1Source: String
   dropdownItem2Label: String

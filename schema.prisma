@@ -321,9 +321,9 @@ model LandingPage {
 
 model SiteHeader {
   id                  Int    @id
-  buttonLabel         String @default("News")
-  buttonSource        String @default("/news")
-  dropdownLabel       String @default("About us")
+  headerButtonLabel   String @default("News")
+  headerButtonSource  String @default("/news")
+  headerDropdownLabel String @default("About us")
   dropdownItem1Label  String @default("About the USSF")
   dropdownItem1Source String @default("/about-us")
   dropdownItem2Label  String @default("ORBIT blog")

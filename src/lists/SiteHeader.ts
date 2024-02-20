@@ -22,20 +22,25 @@ const SiteHeader = list({
     },
   },
   fields: {
-    buttonLabel: text({
+    headerButtonLabel: text({
       defaultValue: 'News',
       validation: {
         isRequired: true,
       },
-      label: 'Button label',
+      label: 'Header button label',
       hooks: {
         validateInput: async ({ resolvedData }) => {
-          if (resolvedData.buttonLabel.length > 30)
-            throw new Error('Button label must be less than 30 characters')
+          if (
+            resolvedData.headerButtonLabel &&
+            resolvedData.headerButtonLabel.length > 30
+          )
+            throw new Error(
+              'Header button label must be less than 30 characters'
+            )
         },
       },
     }),
-    buttonSource: text({
+    headerButtonSource: text({
       defaultValue: '/news',
       validation: {
         isRequired: true,
@@ -43,26 +48,34 @@ const SiteHeader = list({
       ui: {
         description: 'The source must be a relative (/) URL from the portal.',
       },
-      label: 'Button source',
+      label: 'Header button source',
       hooks: {
         validateInput: async ({ resolvedData }) => {
-          if (!resolvedData.buttonSource.match(/^\/\S*$/))
+          if (
+            resolvedData.headerButtonSource &&
+            !resolvedData.headerButtonSource.match(/^\/\S*$/)
+          )
             throw new Error(
               'The source must be a relative (/) URL from the portal.'
             )
         },
       },
     }),
-    dropdownLabel: text({
+    headerDropdownLabel: text({
       defaultValue: 'About us',
       validation: {
         isRequired: true,
       },
-      label: 'Dropdown label',
+      label: 'Header dropdown label',
       hooks: {
         validateInput: async ({ resolvedData }) => {
-          if (resolvedData.dropdownLabel.length > 30)
-            throw new Error('Dropdown label must be less than 30 characters')
+          if (
+            resolvedData.headerDropdownLabel &&
+            resolvedData.headerDropdownLabel.length > 30
+          )
+            throw new Error(
+              'Header dropdown label must be less than 30 characters'
+            )
         },
       },
     }),
@@ -74,7 +87,10 @@ const SiteHeader = list({
       label: 'Dropdown item 1 label',
       hooks: {
         validateInput: async ({ resolvedData }) => {
-          if (resolvedData.dropdownItem1Label.length > 30)
+          if (
+            resolvedData.dropdownItem1Label &&
+            resolvedData.dropdownItem1Label.length > 30
+          )
             throw new Error(
               'Dropdown item 1 label must be less than 30 characters'
             )
@@ -109,7 +125,10 @@ const SiteHeader = list({
             )
           }
 
-          if (resolvedData.dropdownItem2Label.length > 30)
+          if (
+            resolvedData.dropdownItem2Label &&
+            resolvedData.dropdownItem2Label.length > 30
+          )
             throw new Error(
               'Dropdown item 2 label must be less than 30 characters'
             )
@@ -133,7 +152,10 @@ const SiteHeader = list({
             )
           }
 
-          if (!resolvedData.dropdownItem2Source.match(/^\/\S*$/))
+          if (
+            resolvedData.dropdownItem2Source &&
+            !resolvedData.dropdownItem2Source.match(/^\/\S*$/)
+          )
             throw new Error(
               'The source must be a relative (/) URL from the portal.'
             )
@@ -153,7 +175,10 @@ const SiteHeader = list({
             )
           }
 
-          if (resolvedData.dropdownItem3Label.length > 30)
+          if (
+            resolvedData.dropdownItem3Label &&
+            resolvedData.dropdownItem3Label.length > 30
+          )
             throw new Error(
               'Dropdown item 3 label must be less than 30 characters'
             )
@@ -199,7 +224,10 @@ const SiteHeader = list({
             )
           }
 
-          if (resolvedData.dropdownItem4Label.length > 30)
+          if (
+            resolvedData.dropdownItem4Label &&
+            resolvedData.dropdownItem4Label.length > 30
+          )
             throw new Error(
               'Dropdown item 4 label must be less than 30 characters'
             )

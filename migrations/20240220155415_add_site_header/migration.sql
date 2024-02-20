@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE "SiteHeader" (
     "id" INTEGER NOT NULL,
-    "buttonLabel" TEXT NOT NULL DEFAULT 'News',
-    "buttonSource" TEXT NOT NULL DEFAULT '/news',
-    "dropdownLabel" TEXT NOT NULL DEFAULT 'About us',
+    "headerButtonLabel" TEXT NOT NULL DEFAULT 'News',
+    "headerButtonSource" TEXT NOT NULL DEFAULT '/news',
+    "headerDropdownLabel" TEXT NOT NULL DEFAULT 'About us',
     "dropdownItem1Label" TEXT NOT NULL DEFAULT 'About the USSF',
     "dropdownItem1Source" TEXT NOT NULL DEFAULT '/about-us',
     "dropdownItem2Label" TEXT NOT NULL DEFAULT 'ORBIT blog',
