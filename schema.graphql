@@ -1295,6 +1295,91 @@ input TagRelateToOneForCreateInput {
   connect: TagWhereUniqueInput
 }
 
+type SiteHeader {
+  id: ID!
+  headerButtonLabel: String
+  headerButtonSource: String
+  headerDropdownLabel: String
+  dropdownItem1Label: String
+  dropdownItem1Source: String
+  dropdownItem2Label: String
+  dropdownItem2Source: String
+  dropdownItem3Label: String
+  dropdownItem3Source: String
+  dropdownItem4Label: String
+  dropdownItem4Source: String
+}
+
+input SiteHeaderWhereUniqueInput {
+  id: ID
+}
+
+input SiteHeaderWhereInput {
+  AND: [SiteHeaderWhereInput!]
+  OR: [SiteHeaderWhereInput!]
+  NOT: [SiteHeaderWhereInput!]
+  id: IDFilter
+  headerButtonLabel: StringFilter
+  headerButtonSource: StringFilter
+  headerDropdownLabel: StringFilter
+  dropdownItem1Label: StringFilter
+  dropdownItem1Source: StringFilter
+  dropdownItem2Label: StringFilter
+  dropdownItem2Source: StringFilter
+  dropdownItem3Label: StringFilter
+  dropdownItem3Source: StringFilter
+  dropdownItem4Label: StringFilter
+  dropdownItem4Source: StringFilter
+}
+
+input SiteHeaderOrderByInput {
+  id: OrderDirection
+  headerButtonLabel: OrderDirection
+  headerButtonSource: OrderDirection
+  headerDropdownLabel: OrderDirection
+  dropdownItem1Label: OrderDirection
+  dropdownItem1Source: OrderDirection
+  dropdownItem2Label: OrderDirection
+  dropdownItem2Source: OrderDirection
+  dropdownItem3Label: OrderDirection
+  dropdownItem3Source: OrderDirection
+  dropdownItem4Label: OrderDirection
+  dropdownItem4Source: OrderDirection
+}
+
+input SiteHeaderUpdateInput {
+  headerButtonLabel: String
+  headerButtonSource: String
+  headerDropdownLabel: String
+  dropdownItem1Label: String
+  dropdownItem1Source: String
+  dropdownItem2Label: String
+  dropdownItem2Source: String
+  dropdownItem3Label: String
+  dropdownItem3Source: String
+  dropdownItem4Label: String
+  dropdownItem4Source: String
+}
+
+input SiteHeaderUpdateArgs {
+  where: SiteHeaderWhereUniqueInput! = {id: 1}
+  data: SiteHeaderUpdateInput!
+}
+
+input SiteHeaderCreateInput {
+  headerButtonLabel: String
+  headerButtonSource: String
+  headerDropdownLabel: String
+  dropdownItem1Label: String
+  dropdownItem1Source: String
+  dropdownItem2Label: String
+  dropdownItem2Source: String
+  dropdownItem3Label: String
+  dropdownItem3Source: String
+  dropdownItem4Label: String
+  dropdownItem4Source: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1391,6 +1476,12 @@ type Mutation {
   updateLandingPages(data: [LandingPageUpdateArgs!]!): [LandingPage]
   deleteLandingPage(where: LandingPageWhereUniqueInput!): LandingPage
   deleteLandingPages(where: [LandingPageWhereUniqueInput!]!): [LandingPage]
+  createSiteHeader(data: SiteHeaderCreateInput!): SiteHeader
+  createSiteHeaders(data: [SiteHeaderCreateInput!]!): [SiteHeader]
+  updateSiteHeader(where: SiteHeaderWhereUniqueInput! = {id: 1}, data: SiteHeaderUpdateInput!): SiteHeader
+  updateSiteHeaders(data: [SiteHeaderUpdateArgs!]!): [SiteHeader]
+  deleteSiteHeader(where: SiteHeaderWhereUniqueInput! = {id: 1}): SiteHeader
+  deleteSiteHeaders(where: [SiteHeaderWhereUniqueInput!]!): [SiteHeader]
   endSession: Boolean!
 }
 
@@ -1440,6 +1531,9 @@ type Query {
   landingPages(where: LandingPageWhereInput! = {}, orderBy: [LandingPageOrderByInput!]! = [], take: Int, skip: Int! = 0): [LandingPage!]
   landingPage(where: LandingPageWhereUniqueInput!): LandingPage
   landingPagesCount(where: LandingPageWhereInput! = {}): Int
+  siteHeaders(where: SiteHeaderWhereInput! = {id: {equals: 1}}, orderBy: [SiteHeaderOrderByInput!]! = [], take: Int, skip: Int! = 0): [SiteHeader!]
+  siteHeader(where: SiteHeaderWhereUniqueInput! = {id: 1}): SiteHeader
+  siteHeadersCount(where: SiteHeaderWhereInput! = {id: {equals: 1}}): Int
   keystone: KeystoneMeta!
   search(query: String!): [SearchResultItem]
   authenticatedItem: AuthenticatedItem
