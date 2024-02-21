@@ -254,3 +254,17 @@ export const canUpdateLandingPage: OperationAccessFn = ({ session }) => {
 
   return false
 }
+
+/* Site header helpers */
+
+export const canCreateSiteHeader: OperationAccessFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
+
+  return false
+}
+
+export const canUpdateSiteHeader: OperationAccessFn = ({ session }) => {
+  if (session?.isAdmin || session?.role === USER_ROLES.MANAGER) return true
+
+  return false
+}
