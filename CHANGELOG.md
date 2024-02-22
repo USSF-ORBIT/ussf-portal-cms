@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.19.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.18.0...1.19.0) (2024-02-22)
+
+
+### Features
+
+* Add Site Header ([#427](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/427)) ([1b5f7a9](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/1b5f7a9df2010b94c3c1f9c1e3cda7f3ceb45869))
+
+
+### Bug Fixes
+
+* allow admins and managers to delete bookmarks ([#429](https://github.com/USSF-ORBIT/ussf-portal-cms/issues/429)) ([601eeb4](https://github.com/USSF-ORBIT/ussf-portal-cms/commit/601eeb49daff23b8a64f1a3961ca1c222b543492))
+
 ## [1.18.0](https://github.com/USSF-ORBIT/ussf-portal-cms/compare/1.17.0...1.18.0) (2024-01-31)
 
 
