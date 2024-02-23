@@ -126,6 +126,10 @@ export const canUpdateBookmark: OperationAccessFn = ({ session }) => {
   return session?.isAdmin || session?.role === USER_ROLES.MANAGER
 }
 
+export const canDeleteBookmark: OperationAccessFn = ({ session }) => {
+  return session?.isAdmin || session?.role === USER_ROLES.MANAGER
+}
+
 export const bookmarkCreateView: CreateViewFn = ({ session }) =>
   canCreateBookmark({ session }) ? 'edit' : 'hidden'
 
