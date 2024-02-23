@@ -3332,10 +3332,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@braintree/sanitize-url@^6.0.0":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.2.tgz#6110f918d273fe2af8ea1c4398a88774bb9fc12f"
-  integrity sha512-Tbsj02wXCbqGmzdnXNk0SOF19ChhRU70BsroIi4Pm6Ehp56in6vch94mfbdQ17DozxkL3BAVjbZ4Qc1a0HFRAg==
+"@braintree/sanitize-url@^6.0.1":
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.4.tgz#923ca57e173c6b232bbbb07347b1be982f03e783"
+  integrity sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==
 
 "@dnd-kit/accessibility@^3.0.0":
   version "3.0.1"
@@ -4007,6 +4007,11 @@
   resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-5.2.0.tgz#fcebb14cffbf25adaaeec20d4579530e896ecd4a"
   integrity sha512-0OriPYIaMLB3XiLQMe0BXKVIqeriTn3H7JMOzTsHEtt7Zqq+TetCu97KnAhU3ckiQZKBxfZshft+H1OC4D1lXw==
 
+"@juggle/resize-observer@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
+  integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
+
 "@k6-contrib/list-plugins@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@k6-contrib/list-plugins/-/list-plugins-3.0.0.tgz#48013d13a8c7de381090e55799294f7f11beb7df"
@@ -4127,13 +4132,13 @@
   resolved "https://registry.yarnpkg.com/@keystone-6/document-renderer/-/document-renderer-1.1.2.tgz#30f8bbc95ac905ba3971e0699b635172d2aff08e"
   integrity sha512-fxnQL6xYTK/2xSrZ0dzBTC1Qpa4VVeXmZ+7mMvaZOWquttgvDQzBRY57q9zScRa0dAALNWU1xzq14OL8Kc+eBw==
 
-"@keystone-6/fields-document@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@keystone-6/fields-document/-/fields-document-8.0.0.tgz#db6b7604f276d19e6822d78b3e62234ce14f404b"
-  integrity sha512-q4deL9QSZ/kMgNn04d2E2pLdwg6Jb2P1QW29XgsRDSLoGbXi4dq4n70I86mPugSIyr4UFZCV24h6mtkjHTtCBQ==
+"@keystone-6/fields-document@8.0.2":
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/@keystone-6/fields-document/-/fields-document-8.0.2.tgz#1d1dee04fe3db5ce1bcde04a95aa7de500003481"
+  integrity sha512-3AEIFueDTVqJYIk35GAd2a00CkAZOEr6Dkn7eVcVgQm+qE4in3RiAcUJVw5HVJH7imXd3sZ/F9kg2Egbd6r+AA==
   dependencies:
     "@babel/runtime" "^7.16.3"
-    "@braintree/sanitize-url" "^6.0.0"
+    "@braintree/sanitize-url" "^6.0.1"
     "@dnd-kit/core" "^6.0.6"
     "@dnd-kit/modifiers" "^6.0.1"
     "@dnd-kit/sortable" "^7.0.1"
@@ -4148,7 +4153,6 @@
     "@keystone-ui/tooltip" "^6.0.2"
     "@types/react" "^18.0.9"
     apply-ref "^1.0.0"
-    fp-ts "^2.11.5"
     graphql "^16.6.0"
     io-ts "^2.2.16"
     io-ts-excess "^1.0.1"
@@ -4162,9 +4166,9 @@
     react "^18.2.0"
     react-dom "^18.2.0"
     scroll-into-view-if-needed "^3.0.0"
-    slate "^0.81.1"
-    slate-history "^0.66.0"
-    slate-react "^0.81.0"
+    slate "^0.94.1"
+    slate-history "^0.93.0"
+    slate-react "^0.97.1"
 
 "@keystone-ui/button@7.0.2", "@keystone-ui/button@^7.0.2":
   version "7.0.2"
@@ -8113,11 +8117,6 @@ fp-ts@2.12.2:
   resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.12.2.tgz#a191db2dbbb04f48a0e75050b94f57cc876c7b40"
   integrity sha512-v8J7ud+nTkP5Zz17GhpCsY19wiRbB9miuj61nBcCJyDpu52zs9Z4O7OLDfYoKFQMJ9EsSZA7W1vRgC1d3jy5qw==
 
-fp-ts@^2.11.5:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/fp-ts/-/fp-ts-2.12.1.tgz#e389488bfd1507af06bd5965e97367edcd4fabad"
-  integrity sha512-oxvgqUYR6O9VkKXrxkJ0NOyU0FrE705MeqgBUMEPWyTu6Pwn768cJbHChw2XOBlgFLKfIHxjr2OOBFpv2mUGZw==
-
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
@@ -11887,18 +11886,19 @@ slash@^4.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-4.0.0.tgz#2422372176c4c6c5addb5e2ada885af984b396a7"
   integrity sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==
 
-slate-history@^0.66.0:
-  version "0.66.0"
-  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.66.0.tgz#ac63fddb903098ceb4c944433e3f75fe63acf940"
-  integrity sha512-6MWpxGQZiMvSINlCbMW43E2YBSVMCMCIwQfBzGssjWw4kb0qfvj0pIdblWNRQZD0hR6WHP+dHHgGSeVdMWzfng==
+slate-history@^0.93.0:
+  version "0.93.0"
+  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.93.0.tgz#d2fad47e4e8b262ab7c86b653f5dd6d9b6d85277"
+  integrity sha512-Gr1GMGPipRuxIz41jD2/rbvzPj8eyar56TVMyJBvBeIpQSSjNISssvGNDYfJlSWM8eaRqf6DAcxMKzsLCYeX6g==
   dependencies:
     is-plain-object "^5.0.0"
 
-slate-react@^0.81.0:
-  version "0.81.0"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.81.0.tgz#248eb688ce01f23680ce2554625fd60676614962"
-  integrity sha512-bwryad4EvOmc7EFKb8aGg9DWNDh3KvToaggGieIgGTTbHJYHc9ADFC3A87Ittlpd5XUVopR0MpChQ3g3ODyvqw==
+slate-react@^0.97.1:
+  version "0.97.2"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.97.2.tgz#c22affaa9755ec1525699afa8e92b29fdb86c63d"
+  integrity sha512-jVUbTU+0MnbT7l09thQnWfM7gneTFGMsybmXX9utryQnbttKwIo3NynPI6chGwiz0N4/6k5Yb4fc8N/eZkYHUw==
   dependencies:
+    "@juggle/resize-observer" "^3.4.0"
     "@types/is-hotkey" "^0.1.1"
     "@types/lodash" "^4.14.149"
     direction "^1.0.3"
@@ -11908,10 +11908,10 @@ slate-react@^0.81.0:
     scroll-into-view-if-needed "^2.2.20"
     tiny-invariant "1.0.6"
 
-slate@^0.81.1:
-  version "0.81.3"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.81.3.tgz#47563c50a094274112bd46a856dcb1e3ddf94dab"
-  integrity sha512-9rME3rSOsR76BsTGezNp6kiwjJL4yVJLwVQawj9xUf8wEZqoPU8d38hyQ3Jeg1SG6me2aS43m6H+n163/BhGWw==
+slate@^0.94.1:
+  version "0.94.1"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.94.1.tgz#13b0ba7d0a7eeb0ec89a87598e9111cbbd685696"
+  integrity sha512-GH/yizXr1ceBoZ9P9uebIaHe3dC/g6Plpf9nlUwnvoyf6V1UOYrRwkabtOCd3ZfIGxomY4P7lfgLr7FPH8/BKA==
   dependencies:
     immer "^9.0.6"
     is-plain-object "^5.0.0"
