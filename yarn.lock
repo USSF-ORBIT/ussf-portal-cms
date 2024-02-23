@@ -4007,10 +4007,10 @@
   resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-5.2.0.tgz#fcebb14cffbf25adaaeec20d4579530e896ecd4a"
   integrity sha512-0OriPYIaMLB3XiLQMe0BXKVIqeriTn3H7JMOzTsHEtt7Zqq+TetCu97KnAhU3ckiQZKBxfZshft+H1OC4D1lXw==
 
-"@k6-contrib/list-plugins@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@k6-contrib/list-plugins/-/list-plugins-3.0.0.tgz#48013d13a8c7de381090e55799294f7f11beb7df"
-  integrity sha512-XWKoaj3m4EsamdKIrrLCKDRC+W0LQ3ZqKCxBjW2JgkyYmNvPCyBl+7IJG5lwcVGw2NPCvW7DCNBoSpRKXhyd2Q==
+"@k6-contrib/list-plugins@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@k6-contrib/list-plugins/-/list-plugins-5.1.0.tgz#a673c0c4d6eb59f5607cce16a6b22bee023ec44c"
+  integrity sha512-x0Rt1OpQJWnK47RvKZUO3gggzXlyj+3KdxoMZGcpLen+sAhbX+tLBP1sstl/Te0/nqh7bUMar68pWAwY4ntbdg==
   dependencies:
     "@babel/core" "^7.16.0"
     "@babel/runtime" "^7.16.3"
