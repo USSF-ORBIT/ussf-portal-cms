@@ -25,7 +25,7 @@
     "@babel/core": "7.23.7",
     "@babel/preset-env": "7.23.8",
     "@babel/preset-typescript": "7.23.3",
-    "@graphql-tools/schema": "9.0.19",
+    "@graphql-tools/schema": "10.0.3",
     "@k6-contrib/list-plugins": "3.0.0",
     "@keystone-6/auth": "5.0.1",
     "@keystone-6/core": "3.1.3",
