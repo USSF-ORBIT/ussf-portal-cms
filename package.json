@@ -73,10 +73,14 @@
     "tsconfig-paths": "4.2.0",
     "jsonwebtoken": "9.0.2",
     "fast-xml-parser": "4.2.5",
-    "xml2js": "0.6.2"
+    "xml2js": "0.6.2",
+    "@prisma/migrate": "5.8.1"
+  },
+  "resolutionsComments": {
+    "@prisma/migrate": "Required until https://github.com/keystonejs/keystone/issues/8987 is resolved!"
   },
   "engines": {
-    "node": "^18.14.2"
+    "node": "^20.11.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [
